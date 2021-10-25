@@ -1,5 +1,15 @@
+@font-face {
+  font-family: "VCR";
+  src: local("VCR"), url(/fonts/VCR_OSD_MONO.ttf) format("truetype");
+}
+
 html,
 body {
+
+  /* ========================== change ========================== */
+  background-color: #030309;
+  /* ========================== change ========================== */
+
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,

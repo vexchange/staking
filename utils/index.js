@@ -1,0 +1,49 @@
+import { formatUnits } from '@ethersproject/units'
+import currency from 'currency.js'
+
+export const getExploreURI = () => 'https://explore.vechain.org/'
+
+export const getDefaultSignificantDecimalsFromAssetDecimals = decimals => {
+  switch (decimals) {
+    case 18:
+      return 6
+    case 8:
+      return 5
+    case 6:
+    default:
+      return 2
+  }
+}
+
+export const copyTextToClipboard = text => {
+  const textField = document.createElement('textarea')
+  textField.innerText = text
+  document.body.appendChild(textField)
+  if (window.navigator.platform === 'iPhone') {
+    textField.setSelectionRange(0, 99999)
+  } else {
+    textField.select()
+  }
+  document.execCommand('copy')
+  textField.remove()
+}
+
+export const formatBigNumber = (num, decimals, significantDecimals) => {
+  const _significantDecimals = significantDecimals 
+  || getDefaultSignificantDecimalsFromAssetDecimals(decimals)
+  return parseFloat(formatUnits(num, decimals)).toLocaleString(undefined, {
+    maximumFractionDigits: _significantDecimals,
+  })
+}
+
+export const truncateAddress = address => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`
+
+export const formatAmount = n => {
+  if (n < 1e4) return `${currency(n, { separator: ',', symbol: '' }).format()}`
+  if (n >= 1e4 && n < 1e6) return `${parseFloat((n / 1e3).toFixed(2))}K`
+  if (n >= 1e6 && n < 1e9) return `${parseFloat((n / 1e6).toFixed(2))}M`
+  if (n >= 1e9 && n < 1e12) return `${parseFloat((n / 1e9).toFixed(2))}B`
+  if (n >= 1e12) return `${parseFloat((n / 1e12).toFixed(2))}T`
+
+  return ''
+}
