@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
-import { BigNumber } from 'ethers'
-import moment from 'moment'
 
+import useStakingPoolData from '../../hooks/useStakingPoolData'
 import { Title } from '../../design'
 import { useTransactions } from '../../context/transactions'
 
@@ -12,19 +11,9 @@ import ApproveModal from './ApproveModal'
 import ActionModal from '../ActionModal'
 import ClaimModal from './ClaimModal'
 
-const stakingPoolData = {
-  claimableRbn: BigNumber.from('1'),
-  claimHistory: [BigNumber.from(2)],
-  unstakedBalance: BigNumber.from('3'),
-  periodFinish: moment().add(4, 'days'),
-  poolRewardForDuration: BigNumber.from('1'),
-  poolSize: BigNumber.from('100000'),
-  currentStake: BigNumber.from('100'),
-}
-
 const StakingPool = ({ vaultOption }) => {
   const { transactions } = useTransactions()
-
+  const { data: stakingPoolData } = useStakingPoolData(vaultOption)
   const [isStakeAction, setIsStakeAction] = useState(true)
   const [modal, setModal] = useState(null)
 

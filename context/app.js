@@ -5,6 +5,9 @@ import {
   useEffect,
   useState,
 } from 'react'
+import PropTypes from 'prop-types'
+
+import useFetchStakingPoolData from '../hooks/useFetchStakingPoolData'
 
 const AppContext = createContext()
 
@@ -13,6 +16,7 @@ export function useAppContext() {
 }
 
 export function AppStateProvider({ children }) {
+  const stakingPool = useFetchStakingPoolData()
   const [connex, setConnex] = useState(null)
   const [account, setAccount] = useState(null)
   const ref = useRef(connex)
@@ -51,7 +55,7 @@ export function AppStateProvider({ children }) {
     try {
       const { annex } = await sign.request()
       setAccount(annex.signer)
-    } catch(error) {
+    } catch (error) {
       console.warn(`Unable to get account: ${error}`)
     }
   }
@@ -62,9 +66,14 @@ export function AppStateProvider({ children }) {
         connex,
         account,
         initAccount,
+        stakingPool,
       }}
     >
       {children}
     </AppContext.Provider>
   )
+}
+
+AppStateProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 }

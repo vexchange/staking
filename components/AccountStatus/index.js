@@ -21,14 +21,11 @@ import {
 
 function AccountStatus() {
   const {
-    connex,
     account,
     initAccount,
   } = useAppContext()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [copyState, setCopyState] = useState('hidden')
-
-  const active = false
 
   // Track clicked area outside of desktop menu
   const desktopMenuRef = useRef(null)
@@ -79,7 +76,6 @@ function AccountStatus() {
   }, [account, onToggleMenu])
 
   const handleChangeWallet = useCallback(() => {
-    // setShowConnectModal(true);
     initAccount()
     onCloseMenu()
   }, [onCloseMenu])

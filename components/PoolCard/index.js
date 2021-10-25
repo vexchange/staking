@@ -71,7 +71,7 @@ export default function PoolCard({
       return '---'
     }
 
-    return formatBigNumber(constants.Zero, 18)
+    return formatBigNumber(stakingPoolData.unstakedBalance, 18)
   }, [active])
 
   const primaryActionLoadingText = useTextAnimation(
@@ -88,23 +88,24 @@ export default function PoolCard({
   )
 
   const renderEstimatedRewards = useCallback(() => {
-    if (!active) {
-      return '---'
+    if (!active || stakingPoolData.currentStake.isZero()) {
+      return "---"
     }
 
-    return formatBigNumber(BigNumber.from('100')
+    return formatBigNumber(
+      stakingPoolData.currentStake
         .mul(BigNumber.from(10).pow(18))
-        .div(BigNumber.from('2'))
-        .mul(BigNumber.from('1'))
+        .div(stakingPoolData.poolSize)
+        .mul(stakingPoolData.poolRewardForDuration)
         .div(BigNumber.from(10).pow(18)),
       0
     )
-  }, [active])
+  }, [active, stakingPoolData])
 
   const rbnPill = useMemo(() => {
     if (
       moment(stakingPoolData.periodFinish, 'X').diff(moment()) &&
-      stakingPoolData.claimableRbn.isZero()
+      stakingPoolData.claimableVex.isZero()
     ) {
       return (
         <ClaimableTokenPillContainer>
@@ -112,7 +113,14 @@ export default function PoolCard({
             <BaseIndicator size={8} color={color} className="mr-2" />
             <Subtitle className="mt-2">AMOUNT CLAIMED</Subtitle>
             <ClaimableTokenAmount color={color}>
-              {formatBigNumber(constants.Zero, 18, 2)}
+              {formatBigNumber(
+                stakingPoolData.claimHistory.reduce(
+                  (acc, curr) => acc.add(curr.amount),
+                  BigNumber.from(0)
+                ),
+                18,
+                2
+              )}
             </ClaimableTokenAmount>
           </ClaimableTokenPill>
         </ClaimableTokenPillContainer>
@@ -126,8 +134,8 @@ export default function PoolCard({
           <Subtitle className="mr-2">EARNED $VEX</Subtitle>
           <ClaimableTokenAmount color={color}>
             {active
-              ? formatBigNumber(constants.Zero, 18, 2)
-              : "---"}
+              ? formatBigNumber(stakingPoolData.claimableVex, 18, 2)
+              : '---'}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>
       </ClaimableTokenPillContainer>
@@ -151,7 +159,7 @@ export default function PoolCard({
     }
 
     if (
-      !stakingPoolData.claimableRbn.isZero() ||
+      !stakingPoolData.claimableVex.isZero() ||
       stakingPoolData.claimHistory.length
     ) {
       return (
@@ -167,7 +175,7 @@ export default function PoolCard({
                 (stakingPoolData.periodFinish &&
                   moment(stakingPoolData.periodFinish, 'X').diff(moment()) >
                     0) ||
-                stakingPoolData.claimableRbn.isZero()
+                stakingPoolData.claimableVex.isZero()
                   ? "Claim Info"
                   : "Unstake & Claim"
               }`}
@@ -197,7 +205,6 @@ export default function PoolCard({
     ongoingTransaction,
     primaryActionLoadingText,
     setModal,
-    // setShowConnectWalletModal,
     stakingPoolData,
   ])
 
@@ -227,6 +234,7 @@ export default function PoolCard({
             </div>
             <PoolSubtitle>
               Your Unstaked Balance:
+              {' '}
               {renderUnstakeBalance()}
             </PoolSubtitle>
           </div>
@@ -240,9 +248,9 @@ export default function PoolCard({
           <CapBar
             loading={false}
             current={parseFloat(
-              ethers.utils.formatUnits(constants.Zero, 18)
+              ethers.utils.formatUnits(stakingPoolData.currentStake, 18)
             )}
-            cap={parseFloat(ethers.utils.formatUnits(constants.Zero, 18))}
+            cap={parseFloat(ethers.utils.formatUnits(stakingPoolData.poolSize, 18))}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",

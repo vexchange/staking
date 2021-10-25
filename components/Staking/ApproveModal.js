@@ -1,6 +1,7 @@
 import { useCallback, useState, useMemo } from 'react'
-import Modal from '../Modal'
+import { find } from 'lodash'
 
+import IERC20 from '../../constants/abis/IERC20.json'
 import { getExploreURI } from '../../utils'
 
 import {
@@ -12,6 +13,7 @@ import {
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
 
+import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
 
 export default function ApproveModal({
@@ -22,11 +24,13 @@ export default function ApproveModal({
 }) {
   const { addPendingTransaction } = useTransactions()
   const { connex } = useAppContext()
-  // const tokenContract = useERC20Token(vaultOption)
   const tokenContract = null
 
   const [step, setStep] = useState('info')
   const [txId, setTxId] = useState('');
+
+  // const abi = find(IERC20, { name: 'approve' })
+  // const method = connex.thor.account(amountToApprove?.token?.address).method(abi)
 
   const handleApprove = useCallback(async () => {
     if (!tokenContract) {

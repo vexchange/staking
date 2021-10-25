@@ -7,7 +7,6 @@ import AccountStatus from '../AccountStatus'
 
 import {
   SecondaryMobileNavItem,
-  HeaderButtonContainer,
   HeaderAbsoluteContainer,
   HeaderContainer,
   LinksContainer,
@@ -19,10 +18,6 @@ import {
 function Header() {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const onToggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
 
   const renderLinkItem = (
     title,
@@ -65,19 +60,9 @@ function Header() {
       <HeaderAbsoluteContainer>
         <LinksContainer>
           {renderLinkItem(
-            'PRODUCTS',
-            '/',
-            router.asPath === '/',
-          )}
-          {renderLinkItem(
-            'PORTFOLIO',
-            '/portfolio',
-            router.asPath === '/portfolio',
-          )}
-          {renderLinkItem(
             'STAKING',
-            '/staking',
-            router.asPath === '/staking',
+            '/',
+            router.asPath === '',
           )}
         </LinksContainer>
       </HeaderAbsoluteContainer>

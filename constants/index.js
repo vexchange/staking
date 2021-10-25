@@ -1,3 +1,5 @@
+export const FullVaultList = ['vex-vet']
+
 export const NETWORK_NAMES = {
   1: 'mainnet',
   42: 'testnet',

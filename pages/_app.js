@@ -1,6 +1,7 @@
 import Layout from '../components/Layout'
 
 import { AppStateProvider } from '../context/app'
+import { DataContextProvider } from '../context/data'
 import { TransactionsProvider } from '../context/transactions'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -10,9 +11,11 @@ function App({ Component, pageProps }) {
   return (
     <AppStateProvider>
       <TransactionsProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <DataContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </DataContextProvider>
       </TransactionsProvider>
     </AppStateProvider>
   )

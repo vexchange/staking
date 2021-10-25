@@ -60,7 +60,7 @@ export default function ClaimModal({
       addTransaction({
         txhash,
         type: 'rewardClaim',
-        amount: formatBigNumber(stakingPoolData.claimableRbn, 18),
+        amount: formatBigNumber(stakingPoolData.claimableVex, 18),
         stakeAsset: vaultOption,
       })
 
@@ -134,7 +134,7 @@ export default function ClaimModal({
             <InfoColumn marginTop={40}>
               <SecondaryText>Unclaimed $VEX</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.claimableRbn, 18)}
+                {formatBigNumber(stakingPoolData.claimableVex, 18)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -185,7 +185,7 @@ export default function ClaimModal({
                   className="btn py-3 mb-2"
                   onClick={handleClaim}
                   color={color}
-                  disabled={stakingPoolData.claimableRbn.isZero()}
+                  disabled={stakingPoolData.claimableVex.isZero()}
                 >
                   {"Unstake & Claim"}
                 </ActionButton>

@@ -2,8 +2,13 @@ import { useMemo } from 'react'
 import moment from 'moment'
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { FullVaultList } from '../../constants'
 import { Subtitle, Title, PrimaryText } from '../../design'
 import { formatBigNumber } from '../../utils'
+
+import useTextAnimation from '../../hooks/useTextAnimation'
+import useVEXToken from '../../hooks/useVEXToken'
+import useStakingPool from '../../hooks/useStakingPool'
 
 import {
   OverviewContainer,
@@ -19,13 +24,35 @@ import {
 import { ExternalIcon } from '../Icons'
 
 export default function Overview() {
+  const { stakingPools, loading: stakingLoading } = useStakingPool('vex-vet')
+  const { data: tokenData, loading: tokenLoading } = useVEXToken()
+  const loadingText = useTextAnimation(stakingLoading || tokenLoading)
+
   const totalRewardDistributed = useMemo(() => {
-    const totalDistributed = BigNumber.from(0)
+    if (stakingLoading) {
+      return loadingText
+    }
+
+    let totalDistributed = BigNumber.from(0)
+
+    for (let i = 0; i < FullVaultList.length; i++) {
+      const stakingPool = stakingPools[FullVaultList[i]]
+      if (!stakingPool) {
+        continue
+      }
+      totalDistributed = totalDistributed.add(stakingPool.totalRewardClaimed)
+    }
 
     return formatBigNumber(totalDistributed, 18)
-  }, [])
+  }, [stakingLoading, loadingText, stakingPools])
 
-  const numHolderText = useMemo(() => 10, [])
+  const numHolderText = useMemo(() => {
+    if (tokenLoading || !tokenData) {
+      return loadingText
+    }
+
+    return tokenData.numHolders.toLocaleString()
+  }, [loadingText, tokenData, tokenLoading])
 
   const timeTillProgramsEnd = useMemo(() => {
     const endStakeReward = moment
