@@ -1,9 +1,12 @@
 import { useCallback, useState, useMemo } from 'react'
 import moment from 'moment'
 import { BigNumber } from '@ethersproject/bignumber'
+import { find } from 'lodash'
 
 import { formatBigNumber } from '../../utils'
 
+import { REWARDS_ADDRESSES } from '../../constants/'
+import MultiRewards from '../../constants/abis/MultiRewards.json'
 import { useTransactions } from '../../context/transactions'
 import { useAppContext } from '../../context/app'
 
@@ -33,9 +36,13 @@ export default function ClaimModal({
 }) {
   const { addTransaction } = useTransactions()
   const { connex } = useAppContext()
-  const [step, setStep] = useState('claim')
-  // const stakingReward = useStakingReward('vex-vet')
-  const stakingReward = null
+  const [step, setStep] = useState('info')
+
+  const exitABI = find(MultiRewards.abi, { name: 'exit' })
+  const method = connex?.thor
+    .account(REWARDS_ADDRESSES.testnet)
+    .method(exitABI)
+  const clause = method?.asClause()
 
   const handleClose = useCallback(() => {
     onClose()
@@ -45,18 +52,17 @@ export default function ClaimModal({
   }, [onClose, step])
 
   const handleClaim = useCallback(async () => {
-    if (!stakingReward) {
-      return
-    }
-
     setStep('claim')
 
     try {
-      const tx = await stakingReward.exit()
+      const response = await connex.vendor
+        .sign('tx', [{ ...clause }])
+        .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.claimableVex)}`)
+        .request()
 
       setStep('claiming')
 
-      const txhash = tx.hash
+      const txhash = response.txid
 
       addTransaction({
         txhash,
@@ -73,8 +79,8 @@ export default function ClaimModal({
   }, [
     addTransaction,
     connex,
+    clause,
     stakingPoolData,
-    stakingReward,
     vaultOption,
   ])
 
@@ -171,31 +177,20 @@ export default function ClaimModal({
                 </>
               </BaseUnderlineLink>
             </BaseModalContentColumn>
-            {periodFinish && periodFinish.diff(moment()) > 0 ? (
-              <ModalContentExtra>
-                <WarningText color={color}>
-                  In order to claim your VEX rewards you must remain staked
-                  until the end of the liquidity mining program (
-                  {periodFinish.format('MMM Do, YYYY')}
-                  ).
-                </WarningText>
-              </ModalContentExtra>
-            ) : (
-              <BaseModalContentColumn>
-                <ActionButton
-                  className="btn py-3 mb-2"
-                  onClick={handleClaim}
-                  color={color}
-                  disabled={stakingPoolData.claimableVex.isZero()}
-                >
-                  {"Unstake & Claim"}
-                </ActionButton>
-              </BaseModalContentColumn>
-            )}
+            <BaseModalContentColumn>
+              <ActionButton
+                className="btn py-3 mb-2"
+                onClick={handleClaim}
+                color={color}
+                // disabled={stakingPoolData.claimableVex.isZero()}
+              >
+                {"Unstake & Claim"}
+              </ActionButton>
+            </BaseModalContentColumn>
           </>
         )
       default:
-        return <VEXClaimModalContent step={step} type='vex' />
+        return <VEXClaimModalContent step={step} />
     }
   }, [
     step,
@@ -213,7 +208,7 @@ export default function ClaimModal({
       backButton={
         step === 'preview' ? { onClick: () => setStep('form') } : undefined
       }
-      headerBackground={step !== 'warning' && step !== 'form'}
+      // headerBackground={step !== 'warning' && step !== 'form'}
     >
       {body}
     </Modal>

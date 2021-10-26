@@ -18,7 +18,6 @@ import {
 
 export default function VEXClaimModalContent({
   step,
-  type,
   title,
   themeColor,
   children,
@@ -71,7 +70,9 @@ export default function VEXClaimModalContent({
       return (
         <>
           <BaseModalContentColumn marginTop={8}>
-            <Title style={{ textTransform: 'uppercase' }}>{title || 'Confirm Transaction'}</Title>
+            <Title style={{ textTransform: 'uppercase' }}>
+              {title || 'Confirm Transaction'}
+            </Title>
           </BaseModalContentColumn>
           <BaseModalContentColumn marginTop="auto">
             <PrimaryText className="text-center">

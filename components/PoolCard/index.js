@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ethers, constants } from 'ethers'
+import { ethers, constants, utils } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 
@@ -7,7 +7,6 @@ import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
 import { Subtitle, BaseIndicator, SecondaryText } from '../../design'
 import colors from '../../design/colors'
-import { formatBigNumber } from '../../utils'
 
 import useTextAnimation from '../../hooks/useTextAnimation'
 
@@ -35,7 +34,6 @@ export default function PoolCard({
 }) {
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
-  console.log(ethers.utils.formatEther(stakingPoolData.unstakedBalance))
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = transactions.find(currentTx =>
@@ -92,13 +90,20 @@ export default function PoolCard({
       return "---"
     }
 
-    return formatBigNumber(
+    console.log(
       stakingPoolData.currentStake
         .mul(BigNumber.from(10).pow(18))
         .div(stakingPoolData.poolSize)
         .mul(stakingPoolData.poolRewardForDuration)
-        .div(BigNumber.from(10).pow(18)),
-      0
+        .div(BigNumber.from(10).pow(18)).toString()
+    )
+
+    return ethers.utils.formatEther(
+      stakingPoolData.currentStake
+        .mul(BigNumber.from(10).pow(18))
+        .div(stakingPoolData.poolSize)
+        .mul(stakingPoolData.poolRewardForDuration)
+        .div(BigNumber.from(10).pow(18))
     )
   }, [account, stakingPoolData])
 
@@ -118,13 +123,11 @@ export default function PoolCard({
             />
             <Subtitle>AMOUNT CLAIMED</Subtitle>
             <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
-              {formatBigNumber(
+              {ethers.utils.formatEther(
                 stakingPoolData.claimHistory.reduce(
                   (acc, curr) => acc.add(curr.amount),
                   BigNumber.from(0)
-                ),
-                18,
-                2
+                )
               )}
             </ClaimableTokenAmount>
           </ClaimableTokenPill>
@@ -257,9 +260,9 @@ export default function PoolCard({
           <CapBar
             loading={false}
             current={parseFloat(
-              ethers.utils.formatUnits(stakingPoolData.currentStake, 18)
+              utils.formatEther(stakingPoolData.currentStake)
             )}
-            cap={parseFloat(ethers.utils.formatUnits(stakingPoolData.poolSize, 18))}
+            cap={parseFloat(utils.formatEther(stakingPoolData.poolSize))}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",

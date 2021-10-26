@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import moment from 'moment'
+import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { FullVaultList } from '../../constants'
@@ -43,7 +44,7 @@ export default function Overview() {
       totalDistributed = totalDistributed.add(stakingPool.totalRewardClaimed)
     }
 
-    return formatBigNumber(totalDistributed, 18)
+    return ethers.utils.formatEther(totalDistributed)
   }, [stakingLoading, loadingText, stakingPools])
 
   const numHolderText = useMemo(() => {
