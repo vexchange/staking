@@ -29,13 +29,13 @@ import {
 
 export default function PoolCard({
   color = '#e79631',
-  active,
   stakingPoolData,
   setModal,
   setIsStakeAction,
 }) {
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
+  console.log(ethers.utils.formatEther(stakingPoolData.unstakedBalance))
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = transactions.find(currentTx =>
@@ -67,12 +67,12 @@ export default function PoolCard({
   }, [ongoingTransaction])
 
   const renderUnstakeBalance = useCallback(() => {
-    if (!active) {
+    if (!account) {
       return '---'
     }
 
-    return formatBigNumber(stakingPoolData.unstakedBalance, 18)
-  }, [active])
+    return ethers.utils.formatEther(stakingPoolData.unstakedBalance)
+  }, [account])
 
   const primaryActionLoadingText = useTextAnimation(
     Boolean(ongoingTransaction),
@@ -88,7 +88,7 @@ export default function PoolCard({
   )
 
   const renderEstimatedRewards = useCallback(() => {
-    if (!active || stakingPoolData.currentStake.isZero()) {
+    if (!account || stakingPoolData.currentStake.isZero()) {
       return "---"
     }
 
@@ -100,9 +100,9 @@ export default function PoolCard({
         .div(BigNumber.from(10).pow(18)),
       0
     )
-  }, [active, stakingPoolData])
+  }, [account, stakingPoolData])
 
-  const rbnPill = useMemo(() => {
+  const vexPill = useMemo(() => {
     if (
       moment(stakingPoolData.periodFinish, 'X').diff(moment()) &&
       stakingPoolData.claimableVex.isZero()
@@ -110,9 +110,14 @@ export default function PoolCard({
       return (
         <ClaimableTokenPillContainer>
           <ClaimableTokenPill color={color}>
-            <BaseIndicator size={8} color={color} className="mr-2" />
-            <Subtitle className="mt-2">AMOUNT CLAIMED</Subtitle>
-            <ClaimableTokenAmount color={color}>
+            <BaseIndicator
+              size={8}
+              color={color}
+              className="mr-2"
+              style={{ marginRight: '5px' }}
+            />
+            <Subtitle>AMOUNT CLAIMED</Subtitle>
+            <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
               {formatBigNumber(
                 stakingPoolData.claimHistory.reduce(
                   (acc, curr) => acc.add(curr.amount),
@@ -130,17 +135,22 @@ export default function PoolCard({
     return (
       <ClaimableTokenPillContainer>
         <ClaimableTokenPill color={color}>
-          <BaseIndicator size={8} color={color} className="mr-2" />
+          <BaseIndicator
+            size={8}
+            color={color}
+            className="mr-2"
+            style={{ marginRight: '5px' }}
+          />
           <Subtitle className="mr-2">EARNED $VEX</Subtitle>
-          <ClaimableTokenAmount color={color}>
-            {active
-              ? formatBigNumber(stakingPoolData.claimableVex, 18, 2)
+            <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
+            {account
+              ? ethers.utils.formatEther(stakingPoolData.claimableVex)
               : '---'}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>
       </ClaimableTokenPillContainer>
     )
-  }, [active, color, stakingPoolData])
+  }, [color, stakingPoolData])
 
   const stakingPoolButtons = useMemo(() => {
     if (!account) {
@@ -199,7 +209,6 @@ export default function PoolCard({
       </PoolCardFooterButton>
     );
   }, [
-    active,
     account,
     color,
     ongoingTransaction,
@@ -241,7 +250,7 @@ export default function PoolCard({
         </div>
 
         {/* Claimable Pill */}
-        {rbnPill}
+        {vexPill}
 
         {/* Capbar */}
         <div className="w-100 mt-4">

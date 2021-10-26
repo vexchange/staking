@@ -29,9 +29,6 @@ export default function ApproveModal({
   const [step, setStep] = useState('info')
   const [txId, setTxId] = useState('');
 
-  // const abi = find(IERC20, { name: 'approve' })
-  // const method = connex.thor.account(amountToApprove?.token?.address).method(abi)
-
   const handleApprove = useCallback(async () => {
     if (!tokenContract) {
       return

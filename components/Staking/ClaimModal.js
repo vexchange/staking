@@ -23,6 +23,7 @@ import {
   LogoContainer,
   WarningText,
 } from './styled'
+import { ethers } from 'ethers'
 
 export default function ClaimModal({
   show,
@@ -60,7 +61,7 @@ export default function ClaimModal({
       addTransaction({
         txhash,
         type: 'rewardClaim',
-        amount: formatBigNumber(stakingPoolData.claimableVex, 18),
+        amount: ethers.utils.formatEther(stakingPoolData.claimableVex),
         stakeAsset: vaultOption,
       })
 
@@ -134,7 +135,7 @@ export default function ClaimModal({
             <InfoColumn marginTop={40}>
               <SecondaryText>Unclaimed $VEX</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.claimableVex, 18)}
+                {ethers.utils.formatEther(stakingPoolData.claimableVex)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>

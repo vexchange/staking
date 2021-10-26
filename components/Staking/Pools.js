@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import useStakingPoolData from '../../hooks/useStakingPoolData'
+import { useStakingPoolData } from '../../context/data'
 import { Title } from '../../design'
 import { useTransactions } from '../../context/transactions'
 
@@ -13,7 +13,7 @@ import ClaimModal from './ClaimModal'
 
 const StakingPool = ({ vaultOption }) => {
   const { transactions } = useTransactions()
-  const { data: stakingPoolData } = useStakingPoolData(vaultOption)
+  const { stakingPoolData } = useStakingPoolData(vaultOption)
   const [isStakeAction, setIsStakeAction] = useState(true)
   const [modal, setModal] = useState(null)
 

@@ -7,16 +7,10 @@ import {
 } from 'react'
 import PropTypes from 'prop-types'
 
-import useFetchStakingPoolData from '../hooks/useFetchStakingPoolData'
+const AppContext = createContext({})
 
-const AppContext = createContext()
-
-export function useAppContext() {
-  return useContext(AppContext)
-}
-
+export const useAppContext = () => useContext(AppContext)
 export function AppStateProvider({ children }) {
-  const stakingPool = useFetchStakingPoolData()
   const [connex, setConnex] = useState(null)
   const [account, setAccount] = useState(null)
   const ref = useRef(connex)
@@ -66,7 +60,6 @@ export function AppStateProvider({ children }) {
         connex,
         account,
         initAccount,
-        stakingPool,
       }}
     >
       {children}

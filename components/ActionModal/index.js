@@ -291,7 +291,7 @@ const ActionModal = ({
               </BaseModalContentColumn>
             )}
           </>
-        );
+        )
       case 'preview':
         return (
           <>
@@ -323,22 +323,23 @@ const ActionModal = ({
             <InfoColumn>
               <SecondaryText>Your Stake</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.currentStake, 18)}
+                {ethers.utils.formatEther(stakingPoolData.currentStake)}
                 <Arrow className="fas fa-arrow-right mx-2" color={color} />
-                {formatBigNumber(
+                {ethers.utils.formatEther(
                   stake
                     ? stakingPoolData.currentStake.add(
-                      BigNumber.from(ethers.utils.parseUnits(input, 18)))
+                      BigNumber.from(ethers.utils.parseUnits(input, 18)),
+                    )
                     : stakingPoolData.currentStake.sub(
-                      BigNumber.from(ethers.utils.parseUnits(input, 18))),
-                  18,
+                      BigNumber.from(ethers.utils.parseUnits(input, 18)),
+                    ),
                 )}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
               <SecondaryText>Pool rewards</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolRewardForDuration, 18)}
+                {ethers.utils.formatEther(stakingPoolData.poolRewardForDuration)}
                 {' '}
                 VEX
               </InfoData>
@@ -355,7 +356,7 @@ const ActionModal = ({
               </ActionButton>
             </BaseModalContentColumn>
           </>
-        );
+        )
       case 'walletAction':
       case 'processing':
         return (

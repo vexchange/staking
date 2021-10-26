@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import Layout from '../components/Layout'
 
 import { AppStateProvider } from '../context/app'
@@ -19,6 +20,12 @@ function App({ Component, pageProps }) {
       </TransactionsProvider>
     </AppStateProvider>
   )
+}
+
+App.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  pageProps: PropTypes.object.isRequired,
 }
 
 export default App
