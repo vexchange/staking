@@ -20,10 +20,10 @@ const useFetchStakingPoolData = () => {
   const balanceOfABI = find(IERC20.abi, { name: 'balanceOf' })
   const getRewardForDurationABI = find(MultiRewards.abi, { name: 'getRewardForDuration' })
   const lastTimeRewardApplicableABI = find(MultiRewards.abi, { name: 'lastTimeRewardApplicable' })
-  // const periodFinishABI = find(MultiRewards.abi, { name: 'periodFinish' })
+  const periodFinishABI = find(MultiRewards.abi, { name: 'rewardData' })
   const accountBalanceOfABI = find(MultiRewards.abi, { name: 'balanceOf' })
   const earnedABI = find(MultiRewards.abi, { name: 'earned' })
-
+  
   // Pool size
   const getBalanceOf = connex?.thor
     .account(REWARD_TOKEN_ADDRESSES.testnet)
@@ -40,10 +40,9 @@ const useFetchStakingPoolData = () => {
     .method(lastTimeRewardApplicableABI)
 
   // Period Finish
-  // const getPeriodFinish = connex
-  // .thor
-  // .account(REWARDS_ADDRESSES.testnet)
-  // .method(periodFinishABI)
+  const getPeriodFinish = connex?.thor
+    .account(REWARDS_ADDRESSES.testnet)
+    .method(periodFinishABI)
 
   //  Current stake
   const getAccountBalanceOf = connex?.thor
@@ -63,6 +62,7 @@ const useFetchStakingPoolData = () => {
     // Last Time Reward Applicable
     const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.testnet)
     // Period Finish
+    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
     // const { decoded: { 0: periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
 
     return {
@@ -70,7 +70,10 @@ const useFetchStakingPoolData = () => {
       poolSize: BigNumber.from(poolSize),
       poolRewardForDuration: BigNumber.from(poolRewardForDuration),
       lastTimeRewardApplicable,
-      periodFinish: moment().add(10, 'days').toString(),
+      periodFinish: moment(periodFinish, 'X')
+        .add(1, 'days')
+        .unix()
+        .toString(),
       claimHistory: [],
       currentStake: BigNumber.from(0),
       claimableVex: BigNumber.from(0),
