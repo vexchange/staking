@@ -6,7 +6,7 @@ import { find } from 'lodash'
 import IERC20 from '../constants/abis/IERC20.json'
 import MultiRewards from '../constants/abis/MultiRewards.json'
 
-import { REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES } from '../constants'
+import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
 import { useAppContext } from '../context/app'
 import defaultStakingPoolData from '../models/staking'
 // import { useTransactions } from '../context/transactions'
@@ -49,6 +49,11 @@ const useFetchStakingPoolData = () => {
     .account(REWARDS_ADDRESSES.testnet)
     .method(accountBalanceOfABI)
 
+  // Unstaked staking token balance
+  const getUnstakedBalanceOf = connex?.thor
+    .account(STAKING_TOKEN_ADDRESSES.testnet)
+    .method(balanceOfABI)
+
   // Claimable vex
   const getEarned = connex?.thor
     .account(REWARDS_ADDRESSES.testnet)
@@ -81,6 +86,7 @@ const useFetchStakingPoolData = () => {
   }, [connex])
 
   const getAccountInfo = useCallback(async () => {
+    console.log(account);
     //  Current stake
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
@@ -88,7 +94,7 @@ const useFetchStakingPoolData = () => {
     const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES.testnet)
 
     // Unstaked balance
-    const { decoded: { 0: unstakedBalance } } = await getBalanceOf.call(account)
+    const { decoded: { 0: unstakedBalance } }  = await getUnstakedBalanceOf.call(account);
 
     return {
       currentStake: BigNumber.from(accountBalanceOf),
