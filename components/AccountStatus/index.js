@@ -95,7 +95,7 @@ function AccountStatus() {
         </WalletButtonText>
       </>
     ) : (
-      <WalletButtonText connected={account}>CONNECT WALLET</WalletButtonText>
+      <WalletButtonText connected={account}>Connect Wallet</WalletButtonText>
     )
 
   const renderMenuItem = (title, onClick, extra) => {
@@ -108,7 +108,7 @@ function AccountStatus() {
   }
 
   const renderCopiedButton = () => {
-    return <WalletCopyIcon className='far fa-clone' state={copyState} />
+    return <WalletCopyIcon className="far fa-clone" state={copyState} />
   }
 
   return (

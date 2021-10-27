@@ -63,7 +63,6 @@ const useFetchStakingPoolData = () => {
     const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.testnet)
     // Period Finish
     const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
-    // const { decoded: { 0: periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
 
     return {
       vault: 'vex-vet',

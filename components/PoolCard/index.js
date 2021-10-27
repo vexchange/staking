@@ -160,7 +160,7 @@ export default function PoolCard({
       return (
         <PoolCardFooterButton
           role="button"
-          color={colors.green}
+          color={colors.orange}
           onClick={() => {
             initAccount()
           }}

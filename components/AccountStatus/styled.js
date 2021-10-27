@@ -31,7 +31,7 @@ export const WalletContainer = styled.div`
 `
 
 export const WalletButton = styled(BaseButton)`
-  background-color: ${props => (props.connected ? colors.background.two : `${colors.green}14`)};
+  background-color: ${props => (props.connected ? colors.background.two : `${colors.orange}14`)};
   align-items: center;
   height: fit-content;
 
