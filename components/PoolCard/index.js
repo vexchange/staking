@@ -164,7 +164,7 @@ export default function PoolCard({
       );
     }
 
-    if (
+    else if (
       !stakingPoolData.claimableVex.isZero() ||
       stakingPoolData.claimHistory.length
     ) {
@@ -189,21 +189,41 @@ export default function PoolCard({
       );
     }
 
-    return (
-      <PoolCardFooterButton
-        role="button"
-        color={color}
-        onClick={() => {
-          setModal('action')
-          setIsStakeAction(false)
-        }}
-        active={ongoingTransaction === 'unstake'}
-      >
-        {ongoingTransaction === 'unstake'
-          ? primaryActionLoadingText
-          : 'Unstake'}
-      </PoolCardFooterButton>
-    );
+    else if (stakingPoolData.unstakedBalance > 0) {
+      return (
+          <PoolCardFooterButton
+              role="button"
+              color={color}
+              onClick={() => {
+                setModal('approve')
+                setIsStakeAction(true)
+              }}
+              active={ongoingTransaction === 'stake'}
+          >
+            {ongoingTransaction === 'stake'
+                ? primaryActionLoadingText
+                : 'Stake'}
+          </PoolCardFooterButton>
+      );
+    }
+
+    else {
+      return (
+        <PoolCardFooterButton
+          role="button"
+          color={color}
+          onClick={() => {
+            setModal('action')
+            setIsStakeAction(false)
+          }}
+          active={ongoingTransaction === 'unstake'}
+        >
+          {ongoingTransaction === 'unstake'
+            ? primaryActionLoadingText
+            : 'Unstake'}
+        </PoolCardFooterButton>
+      );
+    }
   }, [
     account,
     color,

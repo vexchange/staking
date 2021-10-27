@@ -53,7 +53,7 @@ const ApproveModalInfo = ({
       <BaseModalContentColumn>
         <PrimaryText className="text-center font-weight-normal">
           Before you stake, the pool needs your permission to hold your
-          {vaultOption}
+            {" "}{vaultOption}{" "}
           tokens.
         </PrimaryText>
       </BaseModalContentColumn>

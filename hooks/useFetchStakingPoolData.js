@@ -86,7 +86,6 @@ const useFetchStakingPoolData = () => {
   }, [connex])
 
   const getAccountInfo = useCallback(async () => {
-    console.log(account);
     //  Current stake
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
