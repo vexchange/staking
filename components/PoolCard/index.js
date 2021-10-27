@@ -27,13 +27,14 @@ import {
 } from './styled'
 
 export default function PoolCard({
-  color = '#e79631',
   stakingPoolData,
   setModal,
   setIsStakeAction,
 }) {
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
+
+  const color = colors.orange
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = transactions.find(currentTx =>
@@ -225,7 +226,7 @@ export default function PoolCard({
       <div className="d-flex flex-wrap w-100 p-3">
         {/* Card Title */}
         <div className="d-flex align-items-center">
-          <LogoContainer color={color}>
+          <LogoContainer color="white">
             <Logo />
           </LogoContainer>
           <div className="d-flex flex-column">

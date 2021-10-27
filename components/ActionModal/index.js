@@ -59,7 +59,7 @@ const ActionModal = ({
   const [input, setInput] = useState('')
   const [error, setError] = useState()
 
-  const color = '#e79631'
+  const color = colors.orange
 
   const handleClose = useCallback(() => {
     onClose()
@@ -171,7 +171,7 @@ const ActionModal = ({
         return (
           <>
             <BaseModalContentColumn>
-              <LogoContainer color={colors.red}>!</LogoContainer>
+              <LogoContainer color={`${colors.red}29`}>!</LogoContainer>
             </BaseModalContentColumn>
             <BaseModalContentColumn marginTop={16}>
               <AssetTitle str="WARNING">WARNING</AssetTitle>
@@ -201,7 +201,7 @@ const ActionModal = ({
         return (
           <>
             <BaseModalContentColumn>
-              <LogoContainer color={color}>
+              <LogoContainer color="white">
                 <Logo />
               </LogoContainer>
             </BaseModalContentColumn>

@@ -1,6 +1,5 @@
 import { useCallback, useState, useMemo } from 'react'
 import moment from 'moment'
-import { BigNumber } from '@ethersproject/bignumber'
 import { find } from 'lodash'
 
 import { formatBigNumber } from '../../utils'
@@ -11,13 +10,13 @@ import { useTransactions } from '../../context/transactions'
 import { useAppContext } from '../../context/app'
 
 import { BaseModalContentColumn, BaseUnderlineLink, SecondaryText } from '../../design'
+import colors from '../../design/colors'
 
 import { ActionButton } from '../Button'
 import VEXClaimModalContent from '../VEXModalClaimContent'
 import Modal from '../Modal'
 import Logo from '../Logo'
 import { ExternalIcon } from '../Icons'
-import ModalContentExtra from '../ModalContentExtra'
 
 import {
   AssetTitle,
@@ -121,7 +120,7 @@ export default function ClaimModal({
 
 
   const body = useMemo(() => {
-    const color = '#e79631'
+    const color = colors.orange
 
     switch (step) {
       case 'info':

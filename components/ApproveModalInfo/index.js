@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import moment from 'moment'
 
-// import { getVaultColor } from "shared/lib/utils/vault"
+import colors from '../../design/colors'
 
 import {
   BaseModalContentColumn,
@@ -26,8 +26,7 @@ const ApproveModalInfo = ({
   stakingPoolData,
   onApprove,
 }) => {
-  // const color = getVaultColor(vaultOption)
-  const color = '#e79631'
+  const color = colors.orange
 
   const renderStakingFinishDate = useCallback(() => {
     if (stakingPoolData.periodFinish) {

@@ -52,27 +52,25 @@ export const WalletButtonText = styled(Title)`
     font-size: 13px;
   }
 
-  ${(props) => {
-    if (props.connected) return null;
+  ${props => {
+    if (props.connected) return null
 
-    return `color: ${colors.green}`;
+    return `color: ${colors.orange}`
   }}
 `
 
 export const WalletDesktopMenu = styled.div`
-  ${(props) =>
-    props.isMenuOpen
-      ? `
-          position: absolute;
-          right: 40px;
-          top: 64px;
-          width: fit-content;
-          background-color: ${colors.background.two};
-          border-radius: ${theme.border.radius};
-        `
-      : `
-          display: none;
-        `}
+  ${props => (props.isMenuOpen
+    ? `
+      position: absolute;
+      right: 40px;
+      top: 64px;
+      width: fit-content;
+      background-color: ${colors.background.two};
+      border-radius: ${theme.border.radius};
+    ` : `
+      display: none;
+  `)}
 
   @media (max-width: ${sizes.md}px) {
     display: none;

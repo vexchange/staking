@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
 import colors from '../../design/colors'
@@ -16,5 +16,9 @@ const Container = styled.div`
 const Indicator = ({ connected }) => (
   <Container connected={connected} />
 )
+
+Indicator.propTypes = {
+  connected: PropTypes.bool.isRequired,
+}
 
 export default Indicator

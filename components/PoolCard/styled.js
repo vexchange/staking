@@ -28,7 +28,7 @@ export const LogoContainer = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 100px;
-  background: ${props => props.color}29;
+  background: ${props => props.color};
 `
 
 export const PoolTitle = styled(Title)`
