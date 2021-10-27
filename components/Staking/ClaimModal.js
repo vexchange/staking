@@ -216,10 +216,6 @@ export default function ClaimModal({
       show={show}
       onClose={handleClose}
       height={580}
-      backButton={
-        step === 'preview' ? { onClick: () => setStep('form') } : undefined
-      }
-      // headerBackground={step !== 'warning' && step !== 'form'}
     >
       {body}
     </Modal>

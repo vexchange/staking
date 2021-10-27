@@ -120,7 +120,7 @@ export default function ApproveModal({
           </>
         );
     }
-  }, [step, vaultOption, handleApprove, txId, stakingPoolData]);
+  }, [step, vaultOption, handleApprove, txId, stakingPoolData])
 
   const modalHeight = useMemo(() => {
     if (step === 'info') {

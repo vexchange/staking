@@ -71,7 +71,7 @@ export default function PoolCard({
     }
 
     return ethers.utils.formatEther(stakingPoolData.unstakedBalance)
-  }, [account, stakingPoolData]);
+  }, [account, stakingPoolData])
 
   const primaryActionLoadingText = useTextAnimation(
     Boolean(ongoingTransaction),
@@ -90,14 +90,6 @@ export default function PoolCard({
     if (!account || stakingPoolData.currentStake.isZero()) {
       return "---"
     }
-
-    console.log(
-      stakingPoolData.currentStake
-        .mul(BigNumber.from(10).pow(18))
-        .div(stakingPoolData.poolSize)
-        .mul(stakingPoolData.poolRewardForDuration)
-        .div(BigNumber.from(10).pow(18)).toString()
-    )
 
     return ethers.utils.formatEther(
       stakingPoolData.currentStake
@@ -154,7 +146,7 @@ export default function PoolCard({
         </ClaimableTokenPill>
       </ClaimableTokenPillContainer>
     )
-  }, [color, stakingPoolData])
+  }, [account, color, stakingPoolData])
 
   const stakingPoolButtons = useMemo(() => {
     if (!account) {

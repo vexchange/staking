@@ -44,7 +44,6 @@ const StakingPool = ({ vaultOption }) => {
   return (
     <>
       <ApproveModal
-        stake={showStakeModal}
         show={modal === 'approve'}
         onClose={() => setModal(null)}
         vaultOption={vaultOption}
