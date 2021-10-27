@@ -14,14 +14,16 @@ export const STAKING_TOKEN_ADDRESSES = {
   testnet: '0x136f4e8CD2A5dda330EF1B47A102B25122bf066C'
 }
 
+// Multirewards contract address for the staking token address
+// defined above
+export const REWARDS_ADDRESSES = {
+  mainnet: '',
+  testnet: '0xa4668d3d4ffc949df7c0f27e74f19f4ce376f6db',
+}
+
 // This is the rewards token to be given out
 // In our case it is VEX
 export const REWARD_TOKEN_ADDRESSES = {
   mainnet: '',
   testnet: '0x377b467867CE906D14ea2bA610ED7553FE1Cd459',
-}
-
-export const REWARDS_ADDRESSES = {
-  mainnet: '',
-  testnet: '0xa4668d3d4ffc949df7c0f27e74f19f4ce376f6db',
 }
