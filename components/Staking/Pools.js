@@ -53,7 +53,7 @@ const StakingPool = ({ vaultOption }) => {
       />
       <ActionModal
         stake={showStakeModal}
-        show={modal === 'approve'}
+        show={modal === 'action'}
         onClose={() => setModal(null)}
         vaultOption={vaultOption}
         // logo={logo}
