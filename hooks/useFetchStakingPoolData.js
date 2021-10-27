@@ -92,8 +92,8 @@ const useFetchStakingPoolData = () => {
 
     return {
       currentStake: BigNumber.from(accountBalanceOf),
-      claimableVex: BigNumber.from(unstakedBalance),
-      unstakedBalance: BigNumber.from(earned),
+      claimableVex: BigNumber.from(earned),
+      unstakedBalance: BigNumber.from(unstakedBalance),
     }
   }, [account])
 
