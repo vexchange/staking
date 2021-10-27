@@ -5,10 +5,12 @@ export const NETWORK_NAMES = {
   42: 'testnet',
 }
 
-// Just a random ERC20/VIP180 token
-// Get Alex to transfer you some
 export const STAKING_TOKEN_ADDRESSES = {
+  // Fill in the actual V2Pair token address for VEX-VET
   mainnet: '',
+
+  // Just a random ERC20/VIP180 token
+  // Get Alex to transfer you some
   testnet: '0x136f4e8CD2A5dda330EF1B47A102B25122bf066C'
 }
 
