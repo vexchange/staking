@@ -26,7 +26,7 @@ const useFetchStakingPoolData = () => {
   
   // Pool size
   const getBalanceOf = connex?.thor
-    .account(REWARD_TOKEN_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.testnet)
     .method(balanceOfABI)
 
   // Pool Reward For Duration
