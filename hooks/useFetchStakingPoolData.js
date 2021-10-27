@@ -84,11 +84,11 @@ const useFetchStakingPoolData = () => {
     //  Current stake
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
-    // Unstaked balance
-    const { decoded: { 0: unstakedBalance } } = await getBalanceOf.call(account)
-
     // Claimable vex
     const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES.testnet)
+
+    // Unstaked balance
+    const { decoded: { 0: unstakedBalance } } = await getBalanceOf.call(account)
 
     return {
       currentStake: BigNumber.from(accountBalanceOf),

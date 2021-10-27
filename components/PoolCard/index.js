@@ -71,7 +71,7 @@ export default function PoolCard({
     }
 
     return ethers.utils.formatEther(stakingPoolData.unstakedBalance)
-  }, [account])
+  }, [account, stakingPoolData]);
 
   const primaryActionLoadingText = useTextAnimation(
     Boolean(ongoingTransaction),

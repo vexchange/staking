@@ -14,6 +14,7 @@ import colors from '../../design/colors'
 
 import { ActionButton } from '../Button'
 import VEXClaimModalContent from '../VEXModalClaimContent'
+import ModalContentExtra from '../ModalContentExtra'
 import Modal from '../Modal'
 import Logo from '../Logo'
 import { ExternalIcon } from '../Icons'
