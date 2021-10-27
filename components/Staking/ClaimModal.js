@@ -176,16 +176,27 @@ export default function ClaimModal({
                 </>
               </BaseUnderlineLink>
             </BaseModalContentColumn>
-            <BaseModalContentColumn>
-              <ActionButton
-                className="btn py-3 mb-2"
-                onClick={handleClaim}
-                color={color}
-                // disabled={stakingPoolData.claimableVex.isZero()}
-              >
-                {"Unstake & Claim"}
-              </ActionButton>
-            </BaseModalContentColumn>
+            {periodFinish && periodFinish.diff(moment()) > 0 ? (
+              <ModalContentExtra>
+                <WarningText color={color}>
+                  In order to claim your VEX rewards you must remain staked
+                  until the end of the liquidity mining program (
+                  {periodFinish.format("MMM Do, YYYY")}
+                  ).
+                </WarningText>
+              </ModalContentExtra>
+            ) : (
+              <BaseModalContentColumn>
+                <ActionButton
+                  className="btn py-3 mb-2"
+                  onClick={handleClaim}
+                  color={color}
+                  disabled={stakingPoolData.claimableVex.isZero()}
+                >
+                  {"Unstake & Claim"}
+                </ActionButton>
+              </BaseModalContentColumn>
+            )}
           </>
         )
       default:
