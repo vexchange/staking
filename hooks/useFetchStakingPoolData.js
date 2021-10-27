@@ -46,7 +46,7 @@ const useFetchStakingPoolData = () => {
 
   //  Current stake
   const getAccountBalanceOf = connex?.thor
-    .account(REWARD_TOKEN_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.testnet)
     .method(accountBalanceOfABI)
 
   // Claimable vex
