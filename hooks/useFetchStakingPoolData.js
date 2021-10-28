@@ -18,6 +18,7 @@ const useFetchStakingPoolData = () => {
   const [data, setData] = useState(defaultStakingPoolData)
 
   const balanceOfABI = find(IERC20.abi, { name: 'balanceOf' })
+  const allowanceABI = find(IERC20.abi, { name:'allowance' })
   const getRewardForDurationABI = find(MultiRewards.abi, { name: 'getRewardForDuration' })
   const lastTimeRewardApplicableABI = find(MultiRewards.abi, { name: 'lastTimeRewardApplicable' })
   const periodFinishABI = find(MultiRewards.abi, { name: 'rewardData' })
@@ -53,6 +54,11 @@ const useFetchStakingPoolData = () => {
   const getUnstakedBalanceOf = connex?.thor
     .account(STAKING_TOKEN_ADDRESSES.testnet)
     .method(balanceOfABI)
+
+  // Unstaked staking token approval amount
+  const getUnstakedAllowanceAmount = connex?.thor
+      .account(STAKING_TOKEN_ADDRESSES.testnet)
+      .method(allowanceABI)
 
   // Claimable vex
   const getEarned = connex?.thor
@@ -95,10 +101,14 @@ const useFetchStakingPoolData = () => {
     // Unstaked balance
     const { decoded: { 0: unstakedBalance } }  = await getUnstakedBalanceOf.call(account);
 
+    // Unstaked allowance
+    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES.testnet)
+
     return {
       currentStake: BigNumber.from(accountBalanceOf),
       claimableVex: BigNumber.from(earned),
       unstakedBalance: BigNumber.from(unstakedBalance),
+      unstakedAllowance: BigNumber.from(unstakedAllowance)
     }
   }, [account])
 

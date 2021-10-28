@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
-import { STAKING_TOKEN_ADDRESSES } from '../constants'
+import {REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
 
 const AppContext = createContext({})
 
@@ -15,6 +15,7 @@ export function AppStateProvider({ children }) {
   const [connex, setConnex] = useState(null)
   const [account, setAccount] = useState(null)
   const [stakingTokenContract, setStakingTokenContract] = useState(null)
+  const [rewardsContract, setRewardsContract] = useState(null)
   const ref = useRef(connex)
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export function AppStateProvider({ children }) {
         })
         setConnex(_connex)
         setStakingTokenContract(_connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet))
+        setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES.testnet))
       } catch (error) {
         console.warn(`Unable to get connex: ${error}`)
       }
@@ -64,6 +66,7 @@ export function AppStateProvider({ children }) {
         account,
         initAccount,
         stakingTokenContract,
+        rewardsContract
       }}
     >
       {children}

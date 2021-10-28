@@ -7,6 +7,7 @@ const defaultStakingPoolData = {
   claimHistory: [],
   claimableVex: BigNumber.from(0),
   unstakedBalance: BigNumber.from(0),
+  unstakedAllowance: BigNumber.from(0),
   loading: true,
 }
 

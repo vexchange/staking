@@ -37,7 +37,6 @@ export default function PoolCard({
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
   const { tokenAllowance } = useTokenAllowance()
-  console.log(tokenAllowance.toString())
 
   const color = colors.orange
 
@@ -164,6 +163,8 @@ export default function PoolCard({
   }, [account, color, stakingPoolData])
 
   const stakingPoolButtons = useMemo(() => {
+    // console.log(stakingPoolData);
+    console.log(stakingPoolData.unstakedAllowance);
     if (!account) {
       return (
         <PoolCardFooterButton
@@ -203,8 +204,10 @@ export default function PoolCard({
         </PoolCardFooterButton>
       );
     }
-
-    else if (stakingPoolData.unstakedBalance.gt(constants.Zero)) {
+    // Show approve
+    else if (false
+        // stakingPoolData.unstakedBalance.gt(stakingPoolData.unstakedAllowance)
+    ) {
       return (
           <PoolCardFooterButton
               role="button"
@@ -217,6 +220,24 @@ export default function PoolCard({
                   setIsStakeAction(true)
                 }
               }}
+              active={ongoingTransaction === 'approve'}
+          >
+            {ongoingTransaction === 'approve'
+                ? primaryActionLoadingText
+                : 'approve'}
+          </PoolCardFooterButton>
+      );
+    }
+    // Show stake
+    else if (stakingPoolData.unstakedBalance.gt(0)) {
+      return (
+          <PoolCardFooterButton
+              role="button"
+              color={color}
+              onClick={() => {
+                setModal('action')
+                setIsStakeAction(true)
+              }}
               active={ongoingTransaction === 'stake'}
           >
             {ongoingTransaction === 'stake'
@@ -225,7 +246,7 @@ export default function PoolCard({
           </PoolCardFooterButton>
       );
     }
-
+    // Show unstake
     else {
       return (
         <PoolCardFooterButton

@@ -8,12 +8,12 @@ import { formatUnits } from '@ethersproject/units'
 import { BigNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 import { ethers } from 'ethers'
-
+import { find } from 'lodash'
 import { formatBigNumber, getExploreURI } from '../../utils'
 
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
-
+import MultiRewards from '../../constants/abis/MultiRewards.json'
 import colors from '../../design/colors'
 
 import {
@@ -53,9 +53,9 @@ const ActionModal = ({
   stakingReward,
 }) => {
   const { addTransaction } = useTransactions()
-  const { connex } = useAppContext()
+  const { connex, account, rewardsContract } = useAppContext()
   const [txId, setTxId] = useState('')
-  const [step, setStep] = useState('warning')
+  const [step, setStep] = useState('form')
   const [input, setInput] = useState('')
   const [error, setError] = useState()
 
@@ -72,29 +72,42 @@ const ActionModal = ({
   }, [step, onClose])
 
   const handleActionPressed = useCallback(async () => {
-    if (!stakingReward) {
+    if (!rewardsContract) {
       return
     }
     setStep('walletAction')
 
+    const stakeABI = find(MultiRewards.abi, { name: 'stake'})
+    const withdrawABI = find(MultiRewards.abi, { name: 'withdraw'})
+    const method = stake ? rewardsContract.method(stakeABI) : rewardsContract.method(withdrawABI);
+    const clause = method.asClause(ethers.utils.parseUnits(input, 18));
+
     try {
-      const tx = stake
-        ? await stakingReward.stake(ethers.utils.parseUnits(input, 18))
-        : await stakingReward.withdraw(ethers.utils.parseUnits(input, 18))
+      const { txid, signer } = await connex.vendor
+                        .sign('tx', [clause])
+                        .signer(account) // This modifier really necessary?
+                        .gas(2000000) // This is the maximum
+                        .comment('Sign to stake your LP tokens')
+                        .request()
 
       setStep('processing')
 
-      const txhash = tx.hash
-
-      setTxId(txhash)
+      setTxId(txid)
       addTransaction({
-        txhash,
+        txid,
         type: stake ? 'stake' : 'unstake',
         amount: input,
         stakeAsset: vaultOption,
       })
 
-      await connex.waitForTransaction(txhash, 5)
+      const txVisitor = connex.thor.transaction(txhash)
+      const ticker = connex.thor.ticker()
+      let txReceipt = null
+      while (!txReceipt) {
+        await ticker.next()
+        txReceipt = await txVisitor.getReceipt()
+      }
+
       setStep('warning')
       setTxId('')
       setInput('')
@@ -167,36 +180,6 @@ const ActionModal = ({
 
   const body = useMemo(() => {
     switch (step) {
-      case 'warning':
-        return (
-          <>
-            <BaseModalContentColumn>
-              <LogoContainer color={`${colors.red}29`}>!</LogoContainer>
-            </BaseModalContentColumn>
-            <BaseModalContentColumn marginTop={16}>
-              <AssetTitle str="WARNING">WARNING</AssetTitle>
-            </BaseModalContentColumn>
-            <BaseModalContentColumn marginTop={16}>
-              <SecondaryText className="text-center">
-                Your VEX rewards will be forfeited if you unstake your tokens
-                before the end of the program (
-                {moment(stakingPoolData.periodFinish, 'X').format('MMM Do, YYYY')}
-                ).
-              </SecondaryText>
-            </BaseModalContentColumn>
-            <BaseModalContentColumn marginTop="auto">
-              <ActionButton
-                error
-                className="btn py-3 mb-3"
-                color={color}
-                disabled={false}
-                onClick={() => setStep('form')}
-              >
-                Continue
-              </ActionButton>
-            </BaseModalContentColumn>
-          </>
-        )
       case 'form':
         return (
           <>
@@ -417,7 +400,7 @@ const ActionModal = ({
       backButton={
         step === 'preview' ? { onClick: () => setStep('form') } : undefined
       }
-      headerBackground={step !== 'warning' && step !== 'form'}
+      headerBackground={step !== 'form'}
     >
       {body}
     </Modal>
