@@ -189,7 +189,7 @@ export default function PoolCard({
       );
     }
 
-    else if (stakingPoolData.unstakedBalance > 0) {
+    else if (stakingPoolData.unstakedBalance.gt(constants.Zero)) {
       return (
           <PoolCardFooterButton
               role="button"
