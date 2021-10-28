@@ -1,7 +1,7 @@
 import { formatUnits } from '@ethersproject/units'
 import currency from 'currency.js'
 
-export const getExploreURI = () => 'https://explore.vechain.org/'
+export const getExploreURI = () => 'https://explore.vechain.org'
 
 export const getDefaultSignificantDecimalsFromAssetDecimals = decimals => {
   switch (decimals) {

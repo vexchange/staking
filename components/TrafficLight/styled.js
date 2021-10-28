@@ -17,7 +17,7 @@ export const LightBar = styled.div`
   border-radius: 2px;
   ${props => `transition: background ${props.interval}ms ease-in-out, box-shadow ${props.interval}ms ease-in-out;`}
 
-  &:not(:first-child) {
+  &:not(div:first-of-type) {
     margin-top: ${props => props.spacing}px;
   }
 `

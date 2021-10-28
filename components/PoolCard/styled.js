@@ -95,17 +95,17 @@ export const PoolCardFooterButton = styled(Title)`
     opacity: 1;
   }
 
-  // &:not(:first-child) {
-  //   border-left: ${theme.border.width} ${theme.border.style} ${colors.border};
-  // }
+  &:not(:first-child) {
+    border-left: ${theme.border.width} ${theme.border.style} ${colors.border};
+  }
 
   @media (max-width: ${sizes.sm}px) {
     flex: unset;
     width: 100%;
 
-    // &:not(:first-child) {
-    //   border-left: unset;
-    //   border-top: ${theme.border.width} ${theme.border.style} ${colors.border};
-    // }
+    &:not(:first-child) {
+      border-left: unset;
+      border-top: ${theme.border.width} ${theme.border.style} ${colors.border};
+    }
   }
 `

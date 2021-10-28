@@ -1,6 +1,3 @@
-import React, { useCallback } from 'react'
-import moment from 'moment'
-
 import colors from '../../design/colors'
 
 import {
@@ -12,13 +9,11 @@ import {
 
 import Logo from '../Logo'
 import { ActionButton } from '../Button'
-import ModalContentExtra from '../ModalContentExtra'
 
 import {
   LogoContainer,
   ApproveAssetTitle,
   ErrorMessage,
-  WarningText,
 } from './styled'
 
 const ApproveModalInfo = ({
@@ -27,18 +22,6 @@ const ApproveModalInfo = ({
   onApprove,
 }) => {
   const color = colors.orange
-
-  const renderStakingFinishDate = useCallback(() => {
-    if (stakingPoolData.periodFinish) {
-      const finishPeriod = moment(stakingPoolData.periodFinish, 'X')
-
-      if (finishPeriod.diff(moment()) > 0) {
-        return finishPeriod.format('MMM Do, YYYY')
-      }
-    }
-
-    return 'TBA'
-  }, [stakingPoolData])
 
   return (
     <>
@@ -53,7 +36,9 @@ const ApproveModalInfo = ({
       <BaseModalContentColumn>
         <PrimaryText className="text-center font-weight-normal">
           Before you stake, the pool needs your permission to hold your
-            {" "}{vaultOption}{" "}
+          {' '}
+          {vaultOption}
+          {' '}
           tokens.
         </PrimaryText>
       </BaseModalContentColumn>
@@ -71,30 +56,16 @@ const ApproveModalInfo = ({
         <ActionButton
           className="btn py-3 mb-2"
           onClick={onApprove}
-          // color={getVaultColor(vaultOption)}
-          color="blue"
+          color={color}
           disabled={stakingPoolData.unstakedBalance.isZero()}
         >
           Approve
         </ActionButton>
       </BaseModalContentColumn>
-      {stakingPoolData.unstakedBalance.isZero() ? (
+      {stakingPoolData.unstakedBalance.isZero() && (
         <BaseModalContentColumn marginTop={16}>
           <ErrorMessage className="mb-2">WALLET BALANCE: 0</ErrorMessage>
         </BaseModalContentColumn>
-      ) : (
-        <ModalContentExtra>
-            {/*TODO: To remove
-                I think this is not relevant / true anymore.
-               Stakers can claim rewards and exit the pool anytime they wish
-            */}
-          <WarningText color={color}>
-            IMPORTANT: To claim VEX rewards you must remain staked in the pool
-            until the end of the liquidity mining program (
-            {renderStakingFinishDate()}
-            ).
-          </WarningText>
-        </ModalContentExtra>
       )}
     </>
   )
