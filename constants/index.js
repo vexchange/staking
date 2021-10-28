@@ -11,7 +11,7 @@ export const STAKING_TOKEN_ADDRESSES = {
 
   // Just a random ERC20/VIP180 token
   // Get Alex to transfer you some
-  testnet: '0x136f4e8CD2A5dda330EF1B47A102B25122bf066C'
+  testnet: '0x136f4e8CD2A5dda330EF1B47A102B25122bf066C',
 }
 
 // Multirewards contract address for the staking token address
