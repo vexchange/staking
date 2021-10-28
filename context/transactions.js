@@ -5,17 +5,15 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-
-import { useAppContext } from './app'
+import PropTypes from 'prop-types'
 
 import { useGlobalState } from '../store/store'
+import { useAppContext } from './app'
 
-const initialState = {
+export const TransactionsContext = createContext({
   transactions: [],
   transactionsCounter: 0,
-}
-
-export const TransactionsContext = createContext(initialState)
+})
 
 export const useTransactions = () => {
   const [, setTransactions] = useGlobalState('transactions')
@@ -35,31 +33,36 @@ export const TransactionsProvider = ({ children }) => {
   const { connex } = useAppContext()
   const [transactions, setTransactions] = useGlobalState('transactions')
   const [transactionsCounter, setTransactionsCounter] = useState(0)
-
   /**
    * Keep track with first confirmation
    */
   useEffect(() => {
-    transactions.forEach(async transaction => {
-      if (!transaction.status) {
-        const receipt = await connex.vendor.waitForTransaction(
-          transaction.txhash,
-          5,
-        )
-        setTransactionsCounter(counter => counter + 1)
-        setTransactions(_transactions => {
-          _transactions.map(_transaction => {
-            if (_transaction.txhash !== transaction.txhash) {
-              return _transaction
-            }
+    (transactions || []).forEach(async transaction => {
+      if (transaction.txhash) {
+        const tx = connex.thor.transaction(transaction.txhash)
+        const ticker = connex.thor.ticker()
 
-            return {
-              ..._transaction,
-              firstConfirmation: true,
-              status: receipt.status ? 'success' : 'error',
-            }
+        try {
+          await ticker.next()
+          const receipt = await tx.getReceipt()
+
+          setTransactionsCounter(counter => counter + 1)
+          setTransactions(_transactions => {
+            _transactions.map(_transaction => {
+              if (_transaction.txhash !== transaction.txhash) {
+                return _transaction
+              }
+
+              return {
+                ..._transaction,
+                firstConfirmation: true,
+                status: receipt.reverted ? 'error' : 'success',
+              }
+            })
           })
-        })
+        } catch (error) {
+          console.warn(error)
+        }
       }
     }, [])
   }, [transactions, connex, setTransactions])
@@ -74,4 +77,8 @@ export const TransactionsProvider = ({ children }) => {
       {children}
     </TransactionsContext.Provider>
   )
+}
+
+TransactionsProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 }

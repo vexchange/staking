@@ -18,7 +18,12 @@ const StakingPool = ({ vaultOption }) => {
   const [modal, setModal] = useState(null)
 
   const ongoingTransaction = useMemo(() => {
-    const ongoingTx = transactions.find(currentTx => ['stakingApproval', 'stake', 'unstake', 'rewardClaim'].includes(
+    const ongoingTx = (transactions || []).find(currentTx => [
+      'stakingApproval',
+      'stake',
+      'unstake',
+      'rewardClaim',
+    ].includes(
       currentTx.type,
     ) && currentTx.stakeAsset === vaultOption && !currentTx.status)
 
@@ -33,7 +38,9 @@ const StakingPool = ({ vaultOption }) => {
     if (ongoingTransaction === 'stake') {
       /** Always show staking modal when there is ongoing transaction */
       return true
-    } else if (ongoingTransaction === 'unstake') {
+    }
+
+    if (ongoingTransaction === 'unstake') {
       /** Likewise with unstaking transaction */
       return false
     }

@@ -18,7 +18,7 @@ const Indicator = ({ connected }) => (
 )
 
 Indicator.propTypes = {
-  connected: PropTypes.bool.isRequired,
+  connected: PropTypes.string.isRequired,
 }
 
 export default Indicator

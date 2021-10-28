@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { uniqueId } from 'lodash'
 
 import { Container, LightBar } from './styled'
 
@@ -37,7 +38,7 @@ export default function TrafficLight({
     <Container width={lightBarConfig.width}>
       {ProductList.map((product, index) => (
         <LightBar
-          key={index}
+          key={uniqueId('light_')}
           height={lightBarConfig.height}
           spacing={lightBarConfig.spacing}
           product={product}

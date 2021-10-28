@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
-import { STAKING_TOKEN_ADDRESSES } from "../constants"
+import { STAKING_TOKEN_ADDRESSES } from '../constants'
 
 const AppContext = createContext({})
 
@@ -63,7 +63,7 @@ export function AppStateProvider({ children }) {
         connex,
         account,
         initAccount,
-        stakingTokenContract
+        stakingTokenContract,
       }}
     >
       {children}

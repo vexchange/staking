@@ -26,64 +26,66 @@ export default function ApproveModal({
   stakingPoolData,
   vaultOption,
 }) {
-  const { addPendingTransaction } = useTransactions()
+  const { addTransaction } = useTransactions()
   const { connex, account, stakingTokenContract } = useAppContext()
-  const tokenContract = null
 
   const [step, setStep] = useState('info')
+
   const [txId, setTxId] = useState('');
 
   const handleApprove = useCallback(async () => {
-
     if (!stakingTokenContract) {
       return
     }
 
+    const approveABI = find(IERC20.abi, { name: 'approve' })
+    const method = stakingTokenContract.method(approveABI)
+    const amount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    const clause = method.asClause(REWARDS_ADDRESSES.testnet, amount)
+
     setStep('approve')
-    const amount =
-      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
     try {
-      const approveABI = find(IERC20.abi, { name: 'approve' })
-      const method = stakingTokenContract.method(approveABI);
-      const clause = method.asClause(REWARDS_ADDRESSES.testnet, amount);
-      console.log(connex);
-      console.log(account);
-      console.log(clause);
-      const { txid, signer } = await connex.vendor.sign('tx', [clause])
-                                      .signer(account) // This modifier really necessary?
-                                      .gas(2000000) // This is the maximum
-                                      .comment("Sign to approve spending of your LP tokens")
-                                      .request();
-      console.log('hi3');
+      const response = await connex.vendor
+        .sign('tx', [clause])
+        .signer(account) // This modifier really necessary?
+        .gas(2000000) // This is the maximum
+        .comment('Sign to approve spending of your LP tokens')
+        .request()
 
-      setStep('approving');
-      setTxId(txid);
-      addPendingTransaction({
-        txid,
+      const txhash = response.txid
+
+      setStep('approving')
+      setTxId(txhash)
+
+      addTransaction({
+        txhash,
         type: 'stakingApproval',
         amount: amount,
         stakeAsset: vaultOption,
-      });
+      })
 
-      const txVisitor = connex.thor.transaction(txid);
-      let txReceipt = null;
-      const ticker = connex.thor.ticker();
+      const txVisitor = connex.thor.transaction(txhash)
+      const ticker = connex.thor.ticker()
 
-      // Wait for tx to be confirmed and mined
-      while(!txReceipt) {
-        await ticker.next();
-        txReceipt = await txVisitor.getReceipt();
-        console.log("txReceipt:", txReceipt);
-      }
-
+      await ticker.next()
+      await txVisitor.getReceipt()
       setStep('info')
       setTxId('')
       onClose()
     } catch (err) {
       setStep('info')
     }
-  }, [addPendingTransaction, onClose, tokenContract, connex, vaultOption])
+  }, [
+    find,
+    REWARDS_ADDRESSES,
+    IERC20,
+    addTransaction,
+    onClose,
+    stakingTokenContract,
+    connex,
+    vaultOption,
+  ])
 
   const handleClose = useCallback(() => {
     onClose()
@@ -127,7 +129,7 @@ export default function ApproveModal({
             ) : (
               <BaseModalContentColumn marginTop="auto">
                 <BaseUnderlineLink
-                  to={`${getExploreURI()}/transactions/${txId}`}
+                  href={`${getExploreURI()}/transactions/${txId}`}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="d-flex"

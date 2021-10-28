@@ -37,7 +37,7 @@ export default function PoolCard({
   const color = colors.orange
 
   const ongoingTransaction = useMemo(() => {
-    const ongoingTx = transactions.find(currentTx =>
+    const ongoingTx = (transactions ||[]).find(currentTx =>
       ['stakingApproval', 'stake', 'unstake', 'rewardClaim'].includes(
         currentTx.type
       ) && currentTx.stakeAsset === 'vex-vet' && !currentTx.status

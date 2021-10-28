@@ -89,7 +89,7 @@ const ApproveModalInfo = ({
                Stakers can claim rewards and exit the pool anytime they wish
             */}
           <WarningText color={color}>
-            IMPORTANT: To claim RBN rewards you must remain staked in the pool
+            IMPORTANT: To claim VEX rewards you must remain staked in the pool
             until the end of the liquidity mining program (
             {renderStakingFinishDate()}
             ).
