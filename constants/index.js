@@ -18,12 +18,15 @@ export const STAKING_TOKEN_ADDRESSES = {
 // defined above
 export const REWARDS_ADDRESSES = {
   mainnet: '',
-  testnet: '0xa4668d3d4ffc949df7c0f27e74f19f4ce376f6db',
+
+  // This addressed is now correct, configured to work
+  // With the correct staking token and reward token
+  testnet: '0x03ec9c93ed8a0dd68a9a4ac868c06fae3eecad01',
 }
 
 // This is the rewards token to be given out
 // In our case it is VEX
 export const REWARD_TOKEN_ADDRESSES = {
   mainnet: '',
-  testnet: '0x377b467867CE906D14ea2bA610ED7553FE1Cd459',
+  testnet: '0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60',
 }
