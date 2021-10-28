@@ -20,17 +20,13 @@ const useTokenAllowance = () => {
           0: _allowance,
         },
       } = await method.call(account, REWARD_TOKEN_ADDRESSES.testnet)
-      console.log(_allowance)
 
       setAllowance(BigNumber.from(_allowance))
     }
 
-    console.log('hit')
     const updateBlock = async () => {
       const ticker = connex.thor.ticker()
       const { number } = await ticker.next()
-
-      console.log(number, block)
 
       if (number !== block) {
         setBlock(number)
