@@ -9,7 +9,7 @@ import IERC20 from '../constants/abis/IERC20.json'
 const useTokenAllowance = () => {
   const { account, connex } = useAppContext()
   const allowanceABI = find(IERC20.abi, { name: 'allowance' })
-  const [allowance, setAllowance] = useState()
+  const [tokenAllowance, setTokenAllowance] = useState()
   const [block, setBlock] = useState(0)
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const useTokenAllowance = () => {
         },
       } = await method.call(account, REWARD_TOKEN_ADDRESSES.testnet)
 
-      setAllowance(BigNumber.from(_allowance))
+      setTokenAllowance(BigNumber.from(_allowance))
     }
 
     const updateBlock = async () => {
@@ -46,7 +46,7 @@ const useTokenAllowance = () => {
     }
   }, [connex, block, account])
 
-  return allowance
+  return { tokenAllowance }
 }
 
 export default useTokenAllowance

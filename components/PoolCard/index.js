@@ -9,6 +9,7 @@ import { Subtitle, BaseIndicator, SecondaryText } from '../../design'
 import colors from '../../design/colors'
 
 import useTextAnimation from '../../hooks/useTextAnimation'
+import useTokenAllowance from '../../hooks/useTokenAllowance'
 
 import CapBar from '../CapBar'
 import Logo from '../Logo'
@@ -28,11 +29,15 @@ import {
 
 export default function PoolCard({
   stakingPoolData,
-  setModal,
   setIsStakeAction,
+  setShowApprovalModal,
+  setShowClaimModal,
+  setShowActionModal,
 }) {
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
+  const { tokenAllowance } = useTokenAllowance()
+  console.log(tokenAllowance.toString())
 
   const color = colors.orange
 
@@ -85,6 +90,16 @@ export default function PoolCard({
       interval: 250,
     }
   )
+
+  const hasAllowance = useMemo(() => {
+    if (!tokenAllowance || tokenAllowance.isZero()) {
+      return false
+    }
+
+    setShowApprovalModal(false)
+
+    return true
+  }, [tokenAllowance])
 
   const renderEstimatedRewards = useCallback(() => {
     if (!account || stakingPoolData.currentStake.isZero()) {
@@ -172,7 +187,7 @@ export default function PoolCard({
         <PoolCardFooterButton
           role="button"
           color={color}
-          onClick={() => setModal('claim')}
+          onClick={() => setShowClaimModal(true)}
           active={ongoingTransaction === 'rewardClaim'}
         >
           {ongoingTransaction === 'rewardClaim'
@@ -195,8 +210,12 @@ export default function PoolCard({
               role="button"
               color={color}
               onClick={() => {
-                setModal('approve')
-                setIsStakeAction(true)
+                if (!hasAllowance) {
+                  setShowApprovalModal(true)
+                } else {
+                  setShowApprovalModal(true)
+                  setIsStakeAction(true)
+                }
               }}
               active={ongoingTransaction === 'stake'}
           >
@@ -213,7 +232,7 @@ export default function PoolCard({
           role="button"
           color={color}
           onClick={() => {
-            setModal('action')
+            setShowActionModal(true)
             setIsStakeAction(false)
           }}
           active={ongoingTransaction === 'unstake'}
@@ -229,7 +248,9 @@ export default function PoolCard({
     color,
     ongoingTransaction,
     primaryActionLoadingText,
-    setModal,
+    setShowApprovalModal,
+    setShowClaimModal,
+    setShowActionModal,
     stakingPoolData,
   ])
 

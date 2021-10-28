@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useStakingPoolData } from '../../context/data'
 import { Title } from '../../design'
@@ -14,8 +14,11 @@ import ClaimModal from './ClaimModal'
 const StakingPool = ({ vaultOption }) => {
   const { transactions } = useTransactions()
   const { stakingPoolData } = useStakingPoolData(vaultOption)
+
+  const [showApprovalModal, setShowApprovalModal] = useState(false)
   const [isStakeAction, setIsStakeAction] = useState(true)
-  const [modal, setModal] = useState(null)
+  const [showActionModal, setShowActionModal] = useState(false)
+  const [showClaimModal, setShowClaimModal] = useState(false)
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions || []).find(currentTx => [
@@ -51,31 +54,30 @@ const StakingPool = ({ vaultOption }) => {
   return (
     <>
       <ApproveModal
-        show={modal === 'approve'}
-        onClose={() => setModal(null)}
+        show={showApprovalModal}
+        onClose={() => setShowApprovalModal(false)}
         vaultOption={vaultOption}
-        // logo={logo}
         stakingPoolData={stakingPoolData}
       />
       <ActionModal
         stake={showStakeModal}
-        show={modal === 'action'}
-        onClose={() => setModal(null)}
+        show={showActionModal}
+        onClose={() => setShowActionModal(false)}
         vaultOption={vaultOption}
-        // logo={logo}
         stakingPoolData={stakingPoolData}
       />
       <ClaimModal
-        show={modal === 'claim'}
-        onClose={() => setModal(null)}
+        show={showClaimModal}
+        onClose={() => setShowClaimModal(false)}
         vaultOption={vaultOption}
-        // logo={logo}
         stakingPoolData={stakingPoolData}
       />
       <PoolCard
         active
         stakingPoolData={stakingPoolData}
-        setModal={setModal}
+        setShowApprovalModal={setShowApprovalModal}
+        setShowClaimModal={showClaimModal}
+        setShowActionModal={setShowActionModal}
         setIsStakeAction={setIsStakeAction}
       />
     </>
