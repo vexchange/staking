@@ -315,16 +315,6 @@ export default function PoolCard({
             }}
           />
         </div>
-
-        {/* Estimated pool rewards */}
-        <div className="d-flex align-items-center mt-4 w-100">
-          <div className="d-flex align-items-center">
-            <SecondaryText>Your estimated rewards</SecondaryText>
-          </div>
-          <PoolRewardData className="ml-auto" color={color}>
-            {renderEstimatedRewards()} VEX
-          </PoolRewardData>
-        </div>
       </div>
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
