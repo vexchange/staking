@@ -153,7 +153,7 @@ export default function ClaimModal({
     <Modal
       show={show}
       onClose={handleClose}
-      height={580}
+      height={450}
     >
       {body}
     </Modal>
