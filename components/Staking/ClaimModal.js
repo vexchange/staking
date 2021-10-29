@@ -36,14 +36,8 @@ export default function ClaimModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions()
-  const { connex } = useAppContext()
+  const { connex, rewardsContract } = useAppContext()
   const [step, setStep] = useState('info')
-
-  const exitABI = find(MultiRewards.abi, { name: 'exit' })
-  const method = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
-    .method(exitABI)
-  const clause = method?.asClause()
 
   const handleClose = useCallback(() => {
     onClose()
@@ -55,11 +49,15 @@ export default function ClaimModal({
   const handleClaim = useCallback(async () => {
     setStep('claim')
 
+    const getRewardABI = find(MultiRewards.abi, { name: 'getReward' })
+    const method = rewardsContract.method(getRewardABI)
+    const clause = method.asClause()
+
     try {
       const response = await connex.vendor
-        .sign('tx', [{ ...clause }])
-        .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.claimableVex)}`)
-        .request()
+                    .sign('tx', [clause])
+                    .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.claimableVex)}`)
+                    .request()
 
       setStep('claiming')
 
@@ -79,6 +77,7 @@ export default function ClaimModal({
         await ticker.next()
         txReceipt = await txVisitor.getReceipt()
       }
+
       setStep('claimed')
     } catch (err) {
       console.log('error')
@@ -87,7 +86,6 @@ export default function ClaimModal({
   }, [
     addTransaction,
     connex,
-    clause,
     stakingPoolData,
     vaultOption,
   ])
@@ -148,7 +146,7 @@ export default function ClaimModal({
                 color={color}
                 disabled={stakingPoolData.claimableVex.isZero()}
               >
-                {"Unstake & Claim"}
+                {"Claim"}
               </ActionButton>
             </BaseModalContentColumn>
           </>
