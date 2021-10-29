@@ -17,6 +17,7 @@ const useFetchStakingPoolData = () => {
 
   const [data, setData] = useState(defaultStakingPoolData)
 
+  const totalSupplyABI = find(IERC20.abi, { name: 'totalSupply'})
   const balanceOfABI = find(IERC20.abi, { name: 'balanceOf' })
   const allowanceABI = find(IERC20.abi, { name:'allowance' })
   const getRewardForDurationABI = find(MultiRewards.abi, { name: 'getRewardForDuration' })
@@ -27,8 +28,8 @@ const useFetchStakingPoolData = () => {
   
   // Pool size
   const getBalanceOf = connex?.thor
-    .account(REWARD_TOKEN_ADDRESSES.testnet)
-    .method(balanceOfABI)
+    .account(REWARDS_ADDRESSES.testnet)
+    .method(totalSupplyABI)
 
   // Pool Reward For Duration
   const getRewardForDuration = connex?.thor
@@ -67,7 +68,7 @@ const useFetchStakingPoolData = () => {
 
   const getRewardData = useCallback(async () => {
     // Pool size
-    const { decoded: { 0: poolSize } } = await getBalanceOf.call(REWARDS_ADDRESSES.testnet)
+    const { decoded: { 0: poolSize } } = await getBalanceOf.call()
     // Pool Reward For Duration
     const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES.testnet)
     // Last Time Reward Applicable

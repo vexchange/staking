@@ -111,12 +111,6 @@ export default function ClaimModal({
               </InfoData>
             </InfoColumn>
             <InfoColumn>
-              <SecondaryText>Claimed $VEX</SecondaryText>
-              <InfoData>
-                {formatBigNumber(BigNumber.from('22'))}
-              </InfoData>
-            </InfoColumn>
-            <InfoColumn>
               <div className="d-flex align-items-center">
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
