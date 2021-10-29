@@ -101,7 +101,6 @@ const ActionModal = ({
       const response = await connex.vendor
         .sign('tx', [clause])
         .signer(account) // This modifier really necessary?
-        .gas(2000000) // This is the maximum
         .comment('Sign to stake your LP tokens')
         .request()
 

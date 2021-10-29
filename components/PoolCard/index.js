@@ -117,30 +117,6 @@ export default function PoolCard({
   }, [account, stakingPoolData])
 
   const vexPill = useMemo(() => {
-    if (stakingPoolData.claimableVex.isZero()) {
-      return (
-        <ClaimableTokenPillContainer>
-          <ClaimableTokenPill color={color}>
-            <BaseIndicator
-              size={8}
-              color={color}
-              className="mr-2"
-              style={{ marginRight: '5px' }}
-            />
-            <Subtitle>AMOUNT CLAIMED</Subtitle>
-            <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
-              {ethers.utils.formatEther(
-                stakingPoolData.claimHistory.reduce(
-                  (acc, curr) => acc.add(curr.amount),
-                  BigNumber.from(0)
-                )
-              )}
-            </ClaimableTokenAmount>
-          </ClaimableTokenPill>
-        </ClaimableTokenPillContainer>
-      );
-    }
-
     return (
       <ClaimableTokenPillContainer>
         <ClaimableTokenPill color={color}>
@@ -150,7 +126,7 @@ export default function PoolCard({
             className="mr-2"
             style={{ marginRight: '5px' }}
           />
-          <Subtitle className="mr-2">EARNED $VEX</Subtitle>
+          <Subtitle className="mr-2">VEX to claim</Subtitle>
             <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
             {account
               ? formatBigNumber(stakingPoolData.claimableVex)

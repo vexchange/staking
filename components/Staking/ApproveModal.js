@@ -47,7 +47,6 @@ export default function ApproveModal({
       const response = await connex.vendor
         .sign('tx', [clause])
         .signer(account) // This modifier really necessary?
-        .gas(2000000) // This is the maximum
         .comment('Sign to approve spending of your LP tokens')
         .request()
 
