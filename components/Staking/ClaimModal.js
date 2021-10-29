@@ -86,14 +86,12 @@ export default function ClaimModal({
 
   const body = useMemo(() => {
     const color = colors.orange
-
-    console.log('claim modal: ', step)
     switch (step) {
       case 'info':
         return (
           <>
             <BaseModalContentColumn>
-              <LogoContainer color={color}>
+              <LogoContainer color="white">
                 <Logo />
               </LogoContainer>
             </BaseModalContentColumn>

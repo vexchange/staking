@@ -95,10 +95,10 @@ export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   border-radius: 100px;
-  background: ${props => props.color}29;
+  background: ${props => props.color};
 `
 export const AssetTitle = styled(Title)`
   text-transform: none;
@@ -121,12 +121,4 @@ export const InfoColumn = styled(BaseModalContentColumn)`
 
 export const InfoData = styled(Title)`
   text-transform: none;
-`
-
-export const WarningText = styled(PrimaryText)`
-  display: flex;
-  color: ${props => props.color};
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
 `
