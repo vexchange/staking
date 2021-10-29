@@ -95,7 +95,7 @@ export const PoolCardFooterButton = styled(Title)`
     opacity: 1;
   }
 
-  &:not(:first-child) {
+  &:not(div:first-of-type) {
     border-left: ${theme.border.width} ${theme.border.style} ${colors.border};
   }
 
@@ -103,7 +103,7 @@ export const PoolCardFooterButton = styled(Title)`
     flex: unset;
     width: 100%;
 
-    &:not(:first-child) {
+    &:not(div:first-of-type) {
       border-left: unset;
       border-top: ${theme.border.width} ${theme.border.style} ${colors.border};
     }

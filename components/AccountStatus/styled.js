@@ -34,6 +34,7 @@ export const WalletButton = styled(BaseButton)`
   background-color: ${props => (props.connected ? colors.background.two : `${colors.orange}14`)};
   align-items: center;
   height: fit-content;
+  cursor: pointer;
 
   &:hover {
     opacity: ${theme.hover.opacity};

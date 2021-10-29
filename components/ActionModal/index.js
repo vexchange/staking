@@ -83,18 +83,20 @@ const ActionModal = ({
     const clause = method.asClause(ethers.utils.parseUnits(input, 18));
 
     try {
-      const { txid, signer } = await connex.vendor
-                        .sign('tx', [clause])
-                        .signer(account) // This modifier really necessary?
-                        .gas(2000000) // This is the maximum
-                        .comment('Sign to stake your LP tokens')
-                        .request()
+      const response = await connex.vendor
+        .sign('tx', [clause])
+        .signer(account) // This modifier really necessary?
+        .gas(2000000) // This is the maximum
+        .comment('Sign to stake your LP tokens')
+        .request()
+
+      const txhash = response.txid
 
       setStep('processing')
+      setTxId(txhash)
 
-      setTxId(txid)
       addTransaction({
-        txid,
+        txhash,
         type: stake ? 'stake' : 'unstake',
         amount: input,
         stakeAsset: vaultOption,
@@ -363,7 +365,7 @@ const ActionModal = ({
             ) : (
               <BaseModalContentColumn marginTop="auto">
                 <BaseUnderlineLink
-                  to={`${getExploreURI()}/tx/${txId}`}
+                  href={`${getExploreURI()}/tx/${txId}`}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="d-flex"

@@ -13,6 +13,8 @@ const useTokenAllowance = () => {
   const [block, setBlock] = useState(0)
 
   useEffect(() => {
+    let interval
+
     const getAllowance = async () => {
       const method = connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet).method(allowanceABI)
       const {
@@ -35,7 +37,7 @@ const useTokenAllowance = () => {
     }
 
     const initWatcher = async () => {
-      setInterval(async () => {
+      interval = setInterval(async () => {
         pollForUpdates()
       }, 10000)
     }
@@ -44,6 +46,8 @@ const useTokenAllowance = () => {
       getAllowance()
       initWatcher()
     }
+
+    return () => clearInterval(interval)
   }, [connex, block, account])
 
   return { tokenAllowance }

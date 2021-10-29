@@ -37,7 +37,6 @@ export default function PoolCard({
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
   const { tokenAllowance } = useTokenAllowance()
-  console.log(tokenAllowance.toString())
 
   const color = colors.orange
 
@@ -106,6 +105,7 @@ export default function PoolCard({
       return "---"
     }
 
+    console.log(stakingPoolData)
     return ethers.utils.formatEther(
       stakingPoolData.currentStake
         .mul(BigNumber.from(10).pow(18))
@@ -230,7 +230,7 @@ export default function PoolCard({
               role="button"
               color={color}
               onClick={() => {
-                setModal('action')
+                setShowActionModal(true)
                 setIsStakeAction(true)
               }}
               active={ongoingTransaction === 'stake'}

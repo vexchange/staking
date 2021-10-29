@@ -76,7 +76,7 @@ const StakingPool = ({ vaultOption }) => {
         active
         stakingPoolData={stakingPoolData}
         setShowApprovalModal={setShowApprovalModal}
-        setShowClaimModal={showClaimModal}
+        setShowClaimModal={setShowClaimModal}
         setShowActionModal={setShowActionModal}
         setIsStakeAction={setIsStakeAction}
       />

@@ -8,7 +8,7 @@ export const BaseButton = styled.div`
   display: flex;
   border-radius: ${theme.border.radius};
   padding: 12px 16px;
-`
+    `
 
 export const Button = styled.button`
   font-family: VCR, sans-serif;

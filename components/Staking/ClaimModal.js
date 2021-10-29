@@ -1,6 +1,7 @@
 import { useCallback, useState, useMemo } from 'react'
 import moment from 'moment'
 import { find } from 'lodash'
+import { BigNumber } from 'ethers'
 
 import { formatBigNumber } from '../../utils'
 
@@ -147,8 +148,7 @@ export default function ClaimModal({
             <InfoColumn>
               <SecondaryText>Claimed $VEX</SecondaryText>
               <InfoData>
-                {/* {formatBigNumber(BigNumber.from('22'))} */}
-                22
+                {formatBigNumber(BigNumber.from('22'))}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -160,8 +160,7 @@ export default function ClaimModal({
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
               <InfoData>
-                {/* {formatBigNumber(stakingPoolData.poolRewardForDuration, 18)} VEX */}
-                22 VEX
+                {ethers.utils.formatEther(stakingPoolData.poolRewardForDuration)} VEX
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
@@ -177,27 +176,16 @@ export default function ClaimModal({
                 </>
               </BaseUnderlineLink>
             </BaseModalContentColumn>
-            {periodFinish && periodFinish.diff(moment()) > 0 ? (
-              <ModalContentExtra>
-                <WarningText color={color}>
-                  In order to claim your VEX rewards you must remain staked
-                  until the end of the liquidity mining program (
-                  {periodFinish.format("MMM Do, YYYY")}
-                  ).
-                </WarningText>
-              </ModalContentExtra>
-            ) : (
-              <BaseModalContentColumn>
-                <ActionButton
-                  className="btn py-3 mb-2"
-                  onClick={handleClaim}
-                  color={color}
-                  disabled={stakingPoolData.claimableVex.isZero()}
-                >
-                  {"Unstake & Claim"}
-                </ActionButton>
-              </BaseModalContentColumn>
-            )}
+            <BaseModalContentColumn>
+              <ActionButton
+                className="btn py-3 mb-2"
+                onClick={handleClaim}
+                color={color}
+                disabled={stakingPoolData.claimableVex.isZero()}
+              >
+                {"Unstake & Claim"}
+              </ActionButton>
+            </BaseModalContentColumn>
           </>
         )
       default:
