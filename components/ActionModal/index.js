@@ -78,7 +78,7 @@ const ActionModal = ({
 
   const handleClose = useCallback(() => {
     onClose()
-    if (step === 'form' || step === 'preview' || step === 'walletAction') {
+    if (step === 'preview' || step === 'walletAction') {
       setStep('warning')
     }
     if (step !== 'processing') {
@@ -146,11 +146,7 @@ const ActionModal = ({
    * Check if it's withdraw and before period end
    */
    useEffect(() => {
-    if (
-      show &&
-      step === "warning" &&
-      stakingPoolData.periodFinish &&
-      !(!stake)) {
+    if (show && step === "warning" && !(!stake)) {
       setStep("form");
     }
 
@@ -197,7 +193,7 @@ const ActionModal = ({
   }, [stake, error])
 
   const body = useMemo(() => {
-    console.log(step)
+    console.log('this is it: ', step)
     switch (step) {
       case 'form':
         return (
@@ -394,7 +390,7 @@ const ActionModal = ({
           </>
         )
       default:
-        return <div>ken</div>
+        return <div>kennet</div>
     }
   }, [
     color,

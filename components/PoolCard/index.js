@@ -215,7 +215,10 @@ export default function PoolCard({
         <PoolCardFooterButton
           role="button"
           color={color}
-          onClick={() => setShowClaimModal(true)}
+          onClick={() => {
+            setShowClaimModal(true)
+            setIsStakeAction(true)
+          }}
           active={ongoingTransaction === 'rewardClaim'}
         >
           {ongoingTransaction === 'rewardClaim'

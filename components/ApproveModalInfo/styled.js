@@ -29,11 +29,3 @@ export const ApproveAssetTitle = styled(Title)`
 export const ErrorMessage = styled(Title)`
   color: ${colors.red};
 `
-
-export const WarningText = styled(PrimaryText)`
-  display: flex;
-  color: ${props => props.color};
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-`
