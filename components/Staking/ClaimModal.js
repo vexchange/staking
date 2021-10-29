@@ -1,11 +1,7 @@
 import { useCallback, useState, useMemo } from 'react'
-import moment from 'moment'
 import { find } from 'lodash'
-import { BigNumber } from 'ethers'
 
 import { formatBigNumber } from '../../utils'
-
-import { REWARDS_ADDRESSES } from '../../constants/'
 import MultiRewards from '../../constants/abis/MultiRewards.json'
 import { useTransactions } from '../../context/transactions'
 import { useAppContext } from '../../context/app'
@@ -107,7 +103,7 @@ export default function ClaimModal({
             <InfoColumn marginTop={40}>
               <SecondaryText>Unclaimed $VEX</SecondaryText>
               <InfoData>
-                {ethers.utils.formatEther(stakingPoolData.claimableVex)}
+                {formatBigNumber(stakingPoolData.claimableVex)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -115,7 +111,7 @@ export default function ClaimModal({
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
               <InfoData>
-                {ethers.utils.formatEther(stakingPoolData.poolRewardForDuration)} VEX
+                {formatBigNumber(stakingPoolData.poolRewardForDuration)} VEX
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">

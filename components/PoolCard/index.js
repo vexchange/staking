@@ -16,14 +16,15 @@ import CapBar from '../CapBar'
 import Logo from '../Logo'
 
 import {
+  ButtonsContainer,
   ClaimableTokenAmount,
   ClaimableTokenPill,
   ClaimableTokenPillContainer,
   LogoContainer,
-  PoolRewardData,
-  PoolSubtitle,
   PoolCardFooter,
   PoolCardFooterButton,
+  PoolRewardData,
+  PoolSubtitle,
   PoolTitle,
   Wrapper,
 } from './styled'
@@ -176,34 +177,7 @@ export default function PoolCard({
           CONNECT WALLET
         </PoolCardFooterButton>
       );
-    }
-
-    else if (
-      !stakingPoolData.claimableVex.isZero() ||
-      stakingPoolData.claimHistory.length
-    ) {
-      return (
-        <PoolCardFooterButton
-          role="button"
-          color={color}
-          onClick={() => setShowClaimModal(true)}
-          active={ongoingTransaction === 'rewardClaim'}
-        >
-          {ongoingTransaction === 'rewardClaim'
-            ? primaryActionLoadingText
-            : `${
-                (stakingPoolData.periodFinish &&
-                  moment(stakingPoolData.periodFinish, 'X').diff(moment()) >
-                    0) ||
-                stakingPoolData.claimableVex.isZero()
-                  ? "Claim Info"
-                  : "Unstake & Claim"
-              }`}
-        </PoolCardFooterButton>
-      );
-    }
-    // Show approve
-    else if (!hasAllowance) {
+    } else if (!hasAllowance) {
       return (
           <PoolCardFooterButton
               role="button"
@@ -220,27 +194,38 @@ export default function PoolCard({
           </PoolCardFooterButton>
       );
     }
-    // Show stake
-    else if (stakingPoolData.unstakedBalance.gt(0)) {
-      return (
-          <PoolCardFooterButton
-              role="button"
-              color={color}
-              onClick={() => {
-                setShowActionModal(true)
-                setIsStakeAction(true)
-              }}
-              active={ongoingTransaction === 'stake'}
-          >
-            {ongoingTransaction === 'stake'
-                ? primaryActionLoadingText
-                : 'Stake'}
-          </PoolCardFooterButton>
-      );
-    }
-    // Show unstake
-    else {
-      return (
+
+    return (
+      <ButtonsContainer>
+        {/* STAKE */}
+        <PoolCardFooterButton
+            role="button"
+            color={color}
+            onClick={() => {
+              setShowActionModal(true)
+              setIsStakeAction(true)
+            }}
+            active={ongoingTransaction === 'stake'}
+        >
+          {ongoingTransaction === 'stake'
+              ? primaryActionLoadingText
+              : 'Stake'}
+        </PoolCardFooterButton>
+        {/* CLAIM */}
+        <PoolCardFooterButton
+          role="button"
+          color={color}
+          onClick={() => setShowClaimModal(true)}
+          active={ongoingTransaction === 'rewardClaim'}
+        >
+          {ongoingTransaction === 'rewardClaim'
+            ? primaryActionLoadingText
+            : `${stakingPoolData.claimableVex.isZero()
+                  ? "Claim Info"
+                  : "Unstake & Claim"
+              }`}
+        </PoolCardFooterButton>
+        {/* UNSTAKE */}
         <PoolCardFooterButton
           role="button"
           color={color}
@@ -254,8 +239,8 @@ export default function PoolCard({
             ? primaryActionLoadingText
             : 'Unstake'}
         </PoolCardFooterButton>
-      );
-    }
+      </ButtonsContainer>
+    )
   }, [
     account,
     color,

@@ -109,3 +109,8 @@ export const PoolCardFooterButton = styled(Title)`
     }
   }
 `
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  width: 100%;
+`
