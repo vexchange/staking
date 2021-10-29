@@ -67,9 +67,11 @@ export default function ApproveModal({
 
       const txVisitor = connex.thor.transaction(txhash)
       const ticker = connex.thor.ticker()
-
-      await ticker.next()
-      await txVisitor.getReceipt()
+      let txReceipt = null
+      while (!txReceipt) {
+        await ticker.next()
+        txReceipt = await txVisitor.getReceipt()
+      }
       setStep('info')
       setTxId('')
       onClose()
