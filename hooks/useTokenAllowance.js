@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BigNumber } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { find } from 'lodash'
 
 import { useAppContext } from '../context/app'
@@ -9,7 +9,7 @@ import IERC20 from '../constants/abis/IERC20.json'
 const useTokenAllowance = () => {
   const { account, connex } = useAppContext()
   const allowanceABI = find(IERC20.abi, { name: 'allowance' })
-  const [tokenAllowance, setTokenAllowance] = useState()
+  const [tokenAllowance, setTokenAllowance] = useState(constants.Zero)
   const [block, setBlock] = useState(0)
 
   useEffect(() => {
