@@ -29,9 +29,7 @@ export default function ApproveModal({
 }) {
   const { addTransaction } = useTransactions()
   const { connex, account, stakingTokenContract } = useAppContext()
-
   const [step, setStep] = useState('info')
-
   const [txId, setTxId] = useState('');
 
   const handleApprove = useCallback(async () => {
@@ -72,6 +70,7 @@ export default function ApproveModal({
         await ticker.next()
         txReceipt = await txVisitor.getReceipt()
       }
+      console.log('hit')
       setStep('info')
       setTxId('')
       onClose()
@@ -158,6 +157,35 @@ export default function ApproveModal({
       show={show}
       onClose={handleClose}
       height={modalHeight}
+      animationProps={{
+        key: step,
+        transition: {
+          duration: 0.25,
+          type: "keyframes",
+          ease: "easeInOut",
+        },
+        initial:
+          step === "info" || step === "approve"
+            ? {
+                y: -200,
+                opacity: 0,
+              }
+            : {},
+        animate:
+          step === "info" || step === "approve"
+            ? {
+                y: 0,
+                opacity: 1,
+              }
+            : {},
+        exit:
+          step === "info"
+            ? {
+                y: 200,
+                opacity: 0,
+              }
+            : {},
+      }}
       headerBackground={step !== 'info'}
     >
       {body}

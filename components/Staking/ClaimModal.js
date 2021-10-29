@@ -72,9 +72,16 @@ export default function ClaimModal({
         stakeAsset: vaultOption,
       })
 
-      await connex.vendor.waitForTransaction(txhash, 5)
+      const txVisitor = connex.thor.transaction(txhash)
+      const ticker = connex.thor.ticker()
+      let txReceipt = null
+      while (!txReceipt) {
+        await ticker.next()
+        txReceipt = await txVisitor.getReceipt()
+      }
       setStep('claimed')
     } catch (err) {
+      console.log('error')
       setStep('info')
     }
   }, [
@@ -85,50 +92,12 @@ export default function ClaimModal({
     vaultOption,
   ])
 
-  const timeTillNextRewardWeek = useMemo(() => {
-    const startDate = moment
-      .utc('2021-06-18')
-      .set('hour', 10)
-      .set('minute', 30)
-
-    let weekCount
-
-    if (moment().diff(startDate) < 0) {
-      weekCount = 1
-    } else {
-      weekCount = moment().diff(startDate, 'weeks') + 2
-    }
-
-    // Next stake reward date
-    const nextStakeReward = startDate.add(weekCount - 1, 'weeks')
-
-    const endStakeReward = moment
-      .utc('2021-07-16')
-      .set('hour', 10)
-      .set('minute', 30)
-
-    if (endStakeReward.diff(moment()) <= 0) {
-      return 'End of Rewards'
-    }
-
-    // Time till next stake reward date
-    const startTime = moment.duration(
-      nextStakeReward.diff(moment()),
-      'milliseconds'
-    )
-
-    return `${startTime.days()}D ${startTime.hours()}H ${startTime.minutes()}M`
-  }, [])
-
-
   const body = useMemo(() => {
     const color = colors.orange
 
+    console.log('claim modal: ', step)
     switch (step) {
       case 'info':
-        const periodFinish = stakingPoolData.periodFinish
-          ? moment(stakingPoolData.periodFinish, 'X')
-          : undefined;
         return (
           <>
             <BaseModalContentColumn>
@@ -150,10 +119,6 @@ export default function ClaimModal({
               <InfoData>
                 {formatBigNumber(BigNumber.from('22'))}
               </InfoData>
-            </InfoColumn>
-            <InfoColumn>
-              <SecondaryText>Time till next reward</SecondaryText>
-              <InfoData>{timeTillNextRewardWeek}</InfoData>
             </InfoColumn>
             <InfoColumn>
               <div className="d-flex align-items-center">
@@ -196,7 +161,6 @@ export default function ClaimModal({
     vaultOption,
     stakingPoolData,
     handleClaim,
-    timeTillNextRewardWeek,
   ])
 
   return (

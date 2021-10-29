@@ -20,6 +20,7 @@ export default function BasicModal({
   closeButton = true,
   backButton,
   children,
+  animationProps = {},
   headerBackground = false,
   backgroundColor,
   theme,

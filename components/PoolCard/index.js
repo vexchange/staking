@@ -105,7 +105,6 @@ export default function PoolCard({
       return "---"
     }
 
-    console.log(stakingPoolData)
     return ethers.utils.formatEther(
       stakingPoolData.currentStake
         .mul(BigNumber.from(10).pow(18))
@@ -116,10 +115,7 @@ export default function PoolCard({
   }, [account, stakingPoolData])
 
   const vexPill = useMemo(() => {
-    if (
-      moment(stakingPoolData.periodFinish, 'X').diff(moment()) &&
-      stakingPoolData.claimableVex.isZero()
-    ) {
+    if (stakingPoolData.claimableVex.isZero()) {
       return (
         <ClaimableTokenPillContainer>
           <ClaimableTokenPill color={color}>

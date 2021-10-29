@@ -65,6 +65,7 @@ export default function VEXClaimModalContent({
     [themeColor],
   )
 
+  console.log('claim content: ', step);
   switch (step) {
     case 'claim':
       return (
