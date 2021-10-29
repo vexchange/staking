@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from 'react'
 import { find } from 'lodash'
-import { constants } from 'ethers'
+import { BigNumber, constants, utils } from 'ethers'
 
 import IERC20 from '../../constants/abis/IERC20.js'
 import { getExploreURI } from '../../utils'
@@ -20,6 +20,8 @@ import { useTransactions } from '../../context/transactions'
 import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
 import {REWARDS_ADDRESSES} from "../../constants";
+
+const { parseUnits } = utils
 
 export default function ApproveModal({
   show,
@@ -58,7 +60,6 @@ export default function ApproveModal({
       addTransaction({
         txhash,
         type: 'stakingApproval',
-        amount: amount,
         stakeAsset: vaultOption,
       })
 
@@ -69,11 +70,11 @@ export default function ApproveModal({
         await ticker.next()
         txReceipt = await txVisitor.getReceipt()
       }
-      console.log('hit')
       setStep('info')
       setTxId('')
       onClose()
     } catch (err) {
+      console.log(err)
       setStep('info')
     }
   }, [

@@ -192,7 +192,6 @@ const ActionModal = ({
   }, [stake, error])
 
   const body = useMemo(() => {
-    console.log('this is it: ', step)
     switch (step) {
       case 'form':
         return (

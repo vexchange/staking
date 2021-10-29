@@ -29,6 +29,8 @@ import {
   Wrapper,
 } from './styled'
 
+const { parseUnits } = utils
+
 export default function PoolCard({
   stakingPoolData,
   setIsStakeAction,
@@ -102,20 +104,6 @@ export default function PoolCard({
     return true
   }, [tokenAllowance])
 
-  const renderEstimatedRewards = useCallback(() => {
-    if (!account || stakingPoolData.currentStake.isZero()) {
-      return "---"
-    }
-
-    return formatBigNumber(
-      stakingPoolData.currentStake
-        .mul(BigNumber.from(10).pow(18))
-        .div(stakingPoolData.poolSize)
-        .mul(stakingPoolData.poolRewardForDuration)
-        .div(BigNumber.from(10).pow(18))
-    )
-  }, [account, stakingPoolData])
-
   const vexPill = useMemo(() => {
     return (
       <ClaimableTokenPillContainer>
@@ -138,8 +126,6 @@ export default function PoolCard({
   }, [account, color, stakingPoolData])
 
   const stakingPoolButtons = useMemo(() => {
-    // console.log(stakingPoolData);
-    // console.log(stakingPoolData.unstakedAllowance);
     if (!account) {
       return (
         <PoolCardFooterButton
@@ -153,7 +139,7 @@ export default function PoolCard({
           CONNECT WALLET
         </PoolCardFooterButton>
       );
-    } else if (!hasAllowance) {
+    } else if (tokenAllowance.lt(parseUnits('7'))) {
       return (
           <PoolCardFooterButton
               role="button"
