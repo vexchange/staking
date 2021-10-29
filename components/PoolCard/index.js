@@ -222,7 +222,7 @@ export default function PoolCard({
             ? primaryActionLoadingText
             : `${stakingPoolData.claimableVex.isZero()
                   ? "Claim Info"
-                  : "Unstake & Claim"
+                  : "Claim"
               }`}
         </PoolCardFooterButton>
         {/* UNSTAKE */}
