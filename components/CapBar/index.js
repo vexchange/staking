@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from '@emotion/styled'
 
 import { SecondaryText, Title } from '../../design'
 import colors from '../../design/colors'
@@ -37,7 +36,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} VEX`
+            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} VEX-VET`
               }`}
         </Title>
       </div>
@@ -60,7 +59,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCap ? displayCap : `${formatAmount(cap)} VEX`}`}
+            : `${displayCap ? displayCap : `${formatAmount(cap)} VEX-VET`}`}
         </Title>
       </div>
     </div>
