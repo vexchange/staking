@@ -3,8 +3,8 @@ import { BigNumber } from 'ethers'
 import moment from 'moment'
 import { find } from 'lodash'
 
-import IERC20 from '../constants/abis/IERC20.json'
-import MultiRewards from '../constants/abis/MultiRewards.json'
+import IERC20 from '../constants/abis/IERC20.js'
+import MultiRewards from '../constants/abis/MultiRewards.js'
 
 import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
 import { useAppContext } from '../context/app'
@@ -17,14 +17,14 @@ const useFetchStakingPoolData = () => {
 
   const [data, setData] = useState(defaultStakingPoolData)
 
-  const totalSupplyABI = find(IERC20.abi, { name: 'totalSupply'})
-  const balanceOfABI = find(IERC20.abi, { name: 'balanceOf' })
-  const allowanceABI = find(IERC20.abi, { name:'allowance' })
-  const getRewardForDurationABI = find(MultiRewards.abi, { name: 'getRewardForDuration' })
-  const lastTimeRewardApplicableABI = find(MultiRewards.abi, { name: 'lastTimeRewardApplicable' })
-  const periodFinishABI = find(MultiRewards.abi, { name: 'rewardData' })
-  const accountBalanceOfABI = find(MultiRewards.abi, { name: 'balanceOf' })
-  const earnedABI = find(MultiRewards.abi, { name: 'earned' })
+  const totalSupplyABI = find(IERC20, { name: 'totalSupply'})
+  const balanceOfABI = find(IERC20, { name: 'balanceOf' })
+  const allowanceABI = find(IERC20, { name:'allowance' })
+  const getRewardForDurationABI = find(MultiRewards, { name: 'getRewardForDuration' })
+  const lastTimeRewardApplicableABI = find(MultiRewards, { name: 'lastTimeRewardApplicable' })
+  const periodFinishABI = find(MultiRewards, { name: 'rewardData' })
+  const accountBalanceOfABI = find(MultiRewards, { name: 'balanceOf' })
+  const earnedABI = find(MultiRewards, { name: 'earned' })
   
   // Pool size
   const getBalanceOf = connex?.thor

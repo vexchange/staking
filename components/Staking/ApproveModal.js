@@ -2,7 +2,7 @@ import { useCallback, useState, useMemo } from 'react'
 import { find } from 'lodash'
 import { constants } from 'ethers'
 
-import IERC20 from '../../constants/abis/IERC20.json'
+import IERC20 from '../../constants/abis/IERC20.js'
 import { getExploreURI } from '../../utils'
 
 import {
@@ -37,7 +37,7 @@ export default function ApproveModal({
       return
     }
 
-    const approveABI = find(IERC20.abi, { name: 'approve' })
+    const approveABI = find(IERC20, { name: 'approve' })
     const method = stakingTokenContract.method(approveABI)
     const clause = method.asClause(REWARDS_ADDRESSES.testnet, constants.MaxUint256)
 

@@ -2,7 +2,7 @@ import { useCallback, useState, useMemo } from 'react'
 import { find } from 'lodash'
 
 import { formatBigNumber } from '../../utils'
-import MultiRewards from '../../constants/abis/MultiRewards.json'
+import MultiRewards from '../../constants/abis/MultiRewards.js'
 import { useTransactions } from '../../context/transactions'
 import { useAppContext } from '../../context/app'
 
@@ -43,7 +43,7 @@ export default function ClaimModal({
   const handleClaim = useCallback(async () => {
     setStep('claim')
 
-    const getRewardABI = find(MultiRewards.abi, { name: 'getReward' })
+    const getRewardABI = find(MultiRewards, { name: 'getReward' })
     const method = rewardsContract.method(getRewardABI)
     const clause = method.asClause()
 

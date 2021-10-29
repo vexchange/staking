@@ -4,11 +4,11 @@ import { find } from 'lodash'
 
 import { useAppContext } from '../context/app'
 import { REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES } from '../constants'
-import IERC20 from '../constants/abis/IERC20.json'
+import IERC20 from '../constants/abis/IERC20.js'
 
 const useTokenAllowance = () => {
   const { account, connex } = useAppContext()
-  const allowanceABI = find(IERC20.abi, { name: 'allowance' })
+  const allowanceABI = find(IERC20, { name: 'allowance' })
   const [tokenAllowance, setTokenAllowance] = useState(constants.Zero)
   const [block, setBlock] = useState(0)
 

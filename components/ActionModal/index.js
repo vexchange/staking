@@ -6,13 +6,13 @@ import {
 } from 'react'
 import { formatUnits } from '@ethersproject/units'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ethers, utils } from 'ethers'
+import { ethers } from 'ethers'
 import { find } from 'lodash'
 import { formatBigNumber, getExploreURI } from '../../utils'
 
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
-import MultiRewards from '../../constants/abis/MultiRewards.json'
+import MultiRewards from '../../constants/abis/MultiRewards.js'
 import colors from '../../design/colors'
 
 import {
@@ -92,8 +92,8 @@ const ActionModal = ({
     }
     setStep('walletAction')
 
-    const stakeABI = find(MultiRewards.abi, { name: 'stake'})
-    const withdrawABI = find(MultiRewards.abi, { name: 'withdraw'})
+    const stakeABI = find(MultiRewards, { name: 'stake'})
+    const withdrawABI = find(MultiRewards, { name: 'withdraw'})
     const method = stake ? rewardsContract.method(stakeABI) : rewardsContract.method(withdrawABI);
     const clause = method.asClause(ethers.utils.parseUnits(input, 18));
 
