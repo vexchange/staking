@@ -48,7 +48,7 @@ export function AppStateProvider({ children }) {
       purpose: 'identification',
       payload: {
         type: 'text',
-        content: 'Select account to sign tx',
+        content: 'Select account to sign certificate',
       },
     })
     try {
