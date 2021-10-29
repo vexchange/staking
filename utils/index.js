@@ -1,5 +1,7 @@
-import { formatUnits } from '@ethersproject/units'
+import { utils } from 'ethers'
 import currency from 'currency.js'
+
+const { commify, formatEther } = utils
 
 export const getExploreURI = () => 'https://explore.vechain.org'
 
@@ -28,12 +30,9 @@ export const copyTextToClipboard = text => {
   textField.remove()
 }
 
-export const formatBigNumber = (num, decimals, significantDecimals) => {
-  const _significantDecimals = significantDecimals 
-  || getDefaultSignificantDecimalsFromAssetDecimals(decimals)
-  return parseFloat(formatUnits(num, decimals)).toLocaleString(undefined, {
-    maximumFractionDigits: _significantDecimals,
-  })
+export const formatBigNumber = num => {
+  const remainder = num.mod(1e14)
+  return commify(formatEther(num.sub(remainder)))
 }
 
 export const truncateAddress = address => `${address.slice(0, 6)}...${address.slice(address.length - 4)}`

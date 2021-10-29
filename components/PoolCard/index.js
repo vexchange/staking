@@ -3,6 +3,7 @@ import { ethers, constants, utils } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 
+import { formatBigNumber } from '../../utils'
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
 import { Subtitle, BaseIndicator, SecondaryText } from '../../design'
@@ -105,7 +106,7 @@ export default function PoolCard({
       return "---"
     }
 
-    return ethers.utils.formatEther(
+    return formatBigNumber(
       stakingPoolData.currentStake
         .mul(BigNumber.from(10).pow(18))
         .div(stakingPoolData.poolSize)
@@ -151,7 +152,7 @@ export default function PoolCard({
           <Subtitle className="mr-2">EARNED $VEX</Subtitle>
             <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
             {account
-              ? ethers.utils.formatEther(stakingPoolData.claimableVex)
+              ? formatBigNumber(stakingPoolData.claimableVex)
               : '---'}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>

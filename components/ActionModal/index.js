@@ -6,8 +6,7 @@ import {
 } from 'react'
 import { formatUnits } from '@ethersproject/units'
 import { BigNumber } from '@ethersproject/bignumber'
-import moment from 'moment'
-import { ethers } from 'ethers'
+import { ethers, utils } from 'ethers'
 import { find } from 'lodash'
 import { formatBigNumber, getExploreURI } from '../../utils'
 
@@ -60,6 +59,22 @@ const ActionModal = ({
   const [error, setError] = useState()
 
   const color = colors.orange
+
+  const handleInputChange = useCallback(e => {
+    const rawInput = e.target.value
+
+    if (rawInput && parseFloat(rawInput) < 0) {
+      setInput('')
+      return
+    }
+
+    setInput(rawInput)
+  }, [])
+
+  const handleMaxPressed = useCallback(() => (stake
+    ? setInput(formatUnits(stakingPoolData.unstakedBalance, 18))
+    : setInput(formatUnits(stakingPoolData.currentStake, 18))),
+  [stake, stakingPoolData])
 
   const handleClose = useCallback(() => {
     onClose()
@@ -127,21 +142,23 @@ const ActionModal = ({
     stake,
   ])
 
-  const handleInputChange = useCallback(e => {
-    const rawInput = e.target.value
-
-    if (rawInput && parseFloat(rawInput) < 0) {
-      setInput('')
-      return
+  /**
+   * Check if it's withdraw and before period end
+   */
+   useEffect(() => {
+    if (
+      show &&
+      step === "warning" &&
+      stakingPoolData.periodFinish &&
+      !(!stake && moment(stakingPoolData.periodFinish, "X").diff(moment()) > 0)
+    ) {
+      setStep("form");
     }
 
-    setInput(rawInput)
-  }, [])
-
-  const handleMaxPressed = useCallback(() => (stake
-    ? setInput(formatUnits(stakingPoolData.unstakedBalance, 18))
-    : setInput(formatUnits(stakingPoolData.currentStake, 18))),
-  [stake, stakingPoolData])
+    if (show && !stake) {
+      handleMaxPressed();
+    }
+  }, [handleMaxPressed, show, stake, stakingPoolData, step]);
 
   useEffect(() => {
     setError(undefined)
@@ -181,6 +198,7 @@ const ActionModal = ({
   }, [stake, error])
 
   const body = useMemo(() => {
+    console.log(step)
     switch (step) {
       case 'form':
         return (
@@ -218,21 +236,21 @@ const ActionModal = ({
               <InfoColumn>
                 <SecondaryText>Unstaked Balance</SecondaryText>
                 <InfoData error={Boolean(error)}>
-                  {formatBigNumber(stakingPoolData.unstakedBalance, 18)}
+                  {formatBigNumber(stakingPoolData.unstakedBalance)}
                 </InfoData>
               </InfoColumn>
             ) : (
               <InfoColumn>
                 <SecondaryText>Your Current Stake</SecondaryText>
                 <InfoData error={Boolean(error)}>
-                  {formatBigNumber(stakingPoolData.currentStake, 18)}
+                  {formatBigNumber(stakingPoolData.currentStake)}
                 </InfoData>
               </InfoColumn>
             )}
             <InfoColumn>
               <SecondaryText>Pool Size</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolSize, 18)}
+                {formatBigNumber(stakingPoolData.poolSize)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -240,7 +258,7 @@ const ActionModal = ({
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolRewardForDuration, 18)}
+                {formatBigNumber(stakingPoolData.poolRewardForDuration)}
                 {' '}
                 VEX
               </InfoData>
@@ -263,7 +281,7 @@ const ActionModal = ({
                 <CurrentStakeTitle>
                   Your Current Stake:
                   {' '}
-                  {formatBigNumber(stakingPoolData.currentStake, 18)}
+                  {formatBigNumber(stakingPoolData.currentStake)}
                 </CurrentStakeTitle>
               </BaseModalContentColumn>
             ) : (
@@ -271,7 +289,7 @@ const ActionModal = ({
                 <CurrentStakeTitle>
                   Unstaked Balance:
                   {' '}
-                  {formatBigNumber(stakingPoolData.unstakedBalance, 18)}
+                  {formatBigNumber(stakingPoolData.unstakedBalance)}
                 </CurrentStakeTitle>
               </BaseModalContentColumn>
             )}
@@ -308,9 +326,9 @@ const ActionModal = ({
             <InfoColumn>
               <SecondaryText>Your Stake</SecondaryText>
               <InfoData>
-                {ethers.utils.formatEther(stakingPoolData.currentStake)}
+                {formatBigNumber(stakingPoolData.currentStake)}
                 <Arrow className="fas fa-arrow-right mx-2" color={color} />
-                {ethers.utils.formatEther(
+                {formatBigNumber(
                   stake
                     ? stakingPoolData.currentStake.add(
                       BigNumber.from(ethers.utils.parseUnits(input, 18)),
@@ -324,7 +342,7 @@ const ActionModal = ({
             <InfoColumn>
               <SecondaryText>Pool rewards</SecondaryText>
               <InfoData>
-                {ethers.utils.formatEther(stakingPoolData.poolRewardForDuration)}
+                {formatBigNumber(stakingPoolData.poolRewardForDuration)}
                 {' '}
                 VEX
               </InfoData>
