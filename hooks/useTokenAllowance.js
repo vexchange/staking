@@ -19,7 +19,6 @@ const useTokenAllowance = () => {
           0: _allowance,
         },
       } = await method.call(account, REWARDS_ADDRESSES.testnet)
-      console.log(_allowance.toString())
       setTokenAllowance(BigNumber.from(_allowance))
     }
   }

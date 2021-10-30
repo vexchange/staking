@@ -1,14 +1,14 @@
 import { BigNumber } from 'ethers'
 
-const defaultStakingPoolData = {
-  currentStake: BigNumber.from(0),
+export const defaultStakingPoolData = {
   poolSize: BigNumber.from(0),
   poolRewardForDuration: BigNumber.from(0),
-  claimHistory: [],
-  claimableVex: BigNumber.from(0),
-  unstakedBalance: BigNumber.from(0),
-  unstakedAllowance: BigNumber.from(0),
   loading: true,
 }
 
-export default defaultStakingPoolData
+export const defaultUserData = {
+  currentStake: BigNumber.from(0),
+  claimableVex: BigNumber.from(0),
+  unstakedBalance: BigNumber.from(0),
+  unstakedAllowance: BigNumber.from(0),
+}

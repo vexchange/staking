@@ -145,7 +145,7 @@ export default function ApproveModal({
 
   const modalHeight = useMemo(() => {
     if (step === 'info') {
-      return stakingPoolData.unstakedBalance.isZero() ? 476 : 504
+      return stakingPoolData.userData.unstakedBalance.isZero() ? 476 : 504
     }
 
     return 424

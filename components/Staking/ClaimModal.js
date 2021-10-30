@@ -50,7 +50,7 @@ export default function ClaimModal({
     try {
       const response = await connex.vendor
                     .sign('tx', [clause])
-                    .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.claimableVex)}`)
+                    .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.userData.claimableVex)}`)
                     .request()
 
       setStep('claiming')
@@ -60,7 +60,7 @@ export default function ClaimModal({
       addTransaction({
         txhash,
         type: 'rewardClaim',
-        amount: ethers.utils.formatEther(stakingPoolData.claimableVex),
+        amount: ethers.utils.formatEther(stakingPoolData.userData.claimableVex),
         stakeAsset: vaultOption,
       })
 
@@ -100,7 +100,7 @@ export default function ClaimModal({
             <InfoColumn marginTop={40}>
               <SecondaryText>Unclaimed $VEX</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.claimableVex)}
+                {formatBigNumber(stakingPoolData.userData.claimableVex)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -108,7 +108,7 @@ export default function ClaimModal({
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolRewardForDuration)} VEX
+                {formatBigNumber(stakingPoolData.poolData.poolRewardForDuration)} VEX
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
@@ -129,7 +129,7 @@ export default function ClaimModal({
                 className="btn py-3 mb-2"
                 onClick={handleClaim}
                 color={color}
-                disabled={stakingPoolData.claimableVex.isZero()}
+                disabled={stakingPoolData.userData.claimableVex.isZero()}
               >
                 {"Claim"}
               </ActionButton>

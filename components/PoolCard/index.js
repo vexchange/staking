@@ -76,7 +76,7 @@ export default function PoolCard({
       return '---'
     }
 
-    return ethers.utils.formatEther(stakingPoolData.unstakedBalance)
+    return ethers.utils.formatEther(stakingPoolData.userData.unstakedBalance)
   }, [account, stakingPoolData])
 
   const primaryActionLoadingText = useTextAnimation(
@@ -105,7 +105,7 @@ export default function PoolCard({
           <Subtitle className="mr-2">VEX to claim</Subtitle>
             <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
             {account
-              ? formatBigNumber(stakingPoolData.claimableVex)
+              ? formatBigNumber(stakingPoolData.userData.claimableVex)
               : '---'}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>
@@ -127,7 +127,7 @@ export default function PoolCard({
           CONNECT WALLET
         </PoolCardFooterButton>
       );
-    } else if (tokenAllowance.lt(stakingPoolData.unstakedBalance)) {
+    } else if (tokenAllowance.lt(stakingPoolData.userData.unstakedBalance)) {
       return (
           <PoolCardFooterButton
               role="button"
@@ -173,7 +173,7 @@ export default function PoolCard({
         >
           {ongoingTransaction === 'rewardClaim'
             ? primaryActionLoadingText
-            : `${stakingPoolData.claimableVex.isZero()
+            : `${stakingPoolData.userData.claimableVex.isZero()
                   ? "Claim Info"
                   : "Claim"
               }`}
@@ -245,9 +245,9 @@ export default function PoolCard({
           <CapBar
             loading={false}
             current={parseFloat(
-              utils.formatEther(stakingPoolData.currentStake)
+              utils.formatEther(stakingPoolData.userData.currentStake)
             )}
-            cap={parseFloat(utils.formatEther(stakingPoolData.poolSize))}
+            cap={parseFloat(utils.formatEther(stakingPoolData.poolData.poolSize))}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",

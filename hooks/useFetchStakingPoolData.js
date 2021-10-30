@@ -8,14 +8,15 @@ import MultiRewards from '../constants/abis/MultiRewards.js'
 
 import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
 import { useAppContext } from '../context/app'
-import defaultStakingPoolData from '../models/staking'
+import { defaultStakingPoolData, defaultUserData } from '../models/staking'
 // import { useTransactions } from '../context/transactions'
 
 const useFetchStakingPoolData = () => {
-  const { connex, account } = useAppContext()
+  const { connex, account, tick } = useAppContext()
   // const { transactionsCounter } = useTransactions()
 
-  const [data, setData] = useState(defaultStakingPoolData)
+  const [poolData, setPoolData] = useState(defaultStakingPoolData)
+  const [userData, setUserData] = useState(defaultUserData)
 
   const totalSupplyABI = find(IERC20, { name: 'totalSupply'})
   const balanceOfABI = find(IERC20, { name: 'balanceOf' })
@@ -66,7 +67,7 @@ const useFetchStakingPoolData = () => {
     .account(REWARDS_ADDRESSES.testnet)
     .method(earnedABI)
 
-  const getRewardData = useCallback(async () => {
+  const getPoolData = async () => {
     // Pool size
     const { decoded: { 0: poolSize } } = await getBalanceOf.call()
     // Pool Reward For Duration
@@ -85,14 +86,10 @@ const useFetchStakingPoolData = () => {
         .add(1, 'days')
         .unix()
         .toString(),
-      claimHistory: [],
-      currentStake: BigNumber.from(0),
-      claimableVex: BigNumber.from(0),
-      unstakedBalance: BigNumber.from(0),
     }
-  }, [connex])
+  }
 
-  const getAccountInfo = useCallback(async () => {
+  const getUserData = async () => {
     //  Current stake
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
@@ -111,33 +108,33 @@ const useFetchStakingPoolData = () => {
       unstakedBalance: BigNumber.from(unstakedBalance),
       unstakedAllowance: BigNumber.from(unstakedAllowance)
     }
-  }, [account])
+  }
 
   useEffect(() => {
     const getStakingPoolData = async () => {
-      const stakingPoolData = await getRewardData()
-      setData(stakingPoolData)
+      const stakingPoolData = await getPoolData()
+      setPoolData(stakingPoolData)
     }
 
     if (connex) {
       getStakingPoolData()
     }
     
-  }, [connex, getRewardData])
+  }, [connex, tick])
 
   useEffect(() => {
     const getAccountData = async () => {
-      const accountData = await getAccountInfo()
+      const accountData = await getUserData()
 
-      setData({ ...data, ...accountData })
+      setUserData(accountData)
     }
 
     if (account) {
       getAccountData()
     }
-  }, [account, getAccountInfo])
+  }, [account, tick])
 
-  return data
+  return { poolData, userData }
 }
 
 export default useFetchStakingPoolData

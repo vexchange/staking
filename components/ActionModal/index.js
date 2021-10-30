@@ -72,8 +72,8 @@ const ActionModal = ({
   }, [])
 
   const handleMaxPressed = useCallback(() => (stake
-    ? setInput(formatUnits(stakingPoolData.unstakedBalance, 18))
-    : setInput(formatUnits(stakingPoolData.currentStake, 18))),
+    ? setInput(formatUnits(stakingPoolData.userData.unstakedBalance, 18))
+    : setInput(formatUnits(stakingPoolData.userData.currentStake, 18))),
   [stake, stakingPoolData])
 
   const handleClose = useCallback(() => {
@@ -164,14 +164,14 @@ const ActionModal = ({
     /** Check sufficient balance for deposit */
     if (
       stake &&
-      !stakingPoolData.unstakedBalance.gte(
+      !stakingPoolData.userData.unstakedBalance.gte(
         BigNumber.from(ethers.utils.parseUnits(input, 18)),
       )
     ) {
       setError('insufficient_balance')
     } else if (
       !stake &&
-      !stakingPoolData.currentStake.gte(
+      !stakingPoolData.userData.currentStake.gte(
         BigNumber.from(ethers.utils.parseUnits(input, 18)),
       )
     ) {
@@ -228,21 +228,21 @@ const ActionModal = ({
               <InfoColumn>
                 <SecondaryText>Unstaked Balance</SecondaryText>
                 <InfoData error={Boolean(error)}>
-                  {formatBigNumber(stakingPoolData.unstakedBalance)}
+                  {formatBigNumber(stakingPoolData.userData.unstakedBalance)}
                 </InfoData>
               </InfoColumn>
             ) : (
               <InfoColumn>
                 <SecondaryText>Your Current Stake</SecondaryText>
                 <InfoData error={Boolean(error)}>
-                  {formatBigNumber(stakingPoolData.currentStake)}
+                  {formatBigNumber(stakingPoolData.userData.currentStake)}
                 </InfoData>
               </InfoColumn>
             )}
             <InfoColumn>
               <SecondaryText>Pool Size</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolSize)}
+                {formatBigNumber(stakingPoolData.poolData.poolSize)}
               </InfoData>
             </InfoColumn>
             <InfoColumn>
@@ -250,7 +250,7 @@ const ActionModal = ({
                 <SecondaryText>Pool rewards</SecondaryText>
               </div>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolRewardForDuration)}
+                {formatBigNumber(stakingPoolData.poolData.poolRewardForDuration)}
                 {' '}
                 VEX
               </InfoData>
@@ -273,7 +273,7 @@ const ActionModal = ({
                 <CurrentStakeTitle>
                   Your Current Stake:
                   {' '}
-                  {formatBigNumber(stakingPoolData.currentStake)}
+                  {formatBigNumber(stakingPoolData.userData.currentStake)}
                 </CurrentStakeTitle>
               </BaseModalContentColumn>
             ) : (
@@ -281,7 +281,7 @@ const ActionModal = ({
                 <CurrentStakeTitle>
                   Unstaked Balance:
                   {' '}
-                  {formatBigNumber(stakingPoolData.unstakedBalance)}
+                  {formatBigNumber(stakingPoolData.userData.unstakedBalance)}
                 </CurrentStakeTitle>
               </BaseModalContentColumn>
             )}
@@ -318,14 +318,14 @@ const ActionModal = ({
             <InfoColumn>
               <SecondaryText>Your Stake</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.currentStake)}
+                {formatBigNumber(stakingPoolData.userData.currentStake)}
                 <Arrow className="fas fa-arrow-right mx-2" color={color} />
                 {formatBigNumber(
                   stake
-                    ? stakingPoolData.currentStake.add(
+                    ? stakingPoolData.userData.currentStake.add(
                       BigNumber.from(ethers.utils.parseUnits(input, 18)),
                     )
-                    : stakingPoolData.currentStake.sub(
+                    : stakingPoolData.userData.currentStake.sub(
                       BigNumber.from(ethers.utils.parseUnits(input, 18)),
                     ),
                 )}
@@ -334,7 +334,7 @@ const ActionModal = ({
             <InfoColumn>
               <SecondaryText>Pool rewards</SecondaryText>
               <InfoData>
-                {formatBigNumber(stakingPoolData.poolRewardForDuration)}
+                {formatBigNumber(stakingPoolData.poolData.poolRewardForDuration)}
                 {' '}
                 VEX
               </InfoData>

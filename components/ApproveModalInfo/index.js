@@ -57,12 +57,12 @@ const ApproveModalInfo = ({
           className="btn py-3 mb-2"
           onClick={onApprove}
           color={color}
-          disabled={stakingPoolData.unstakedBalance.isZero()}
+          disabled={stakingPoolData.userData.unstakedBalance.isZero()}
         >
           Approve
         </ActionButton>
       </BaseModalContentColumn>
-      {stakingPoolData.unstakedBalance.isZero() && (
+      {stakingPoolData.userData.unstakedBalance.isZero() && (
         <BaseModalContentColumn marginTop={16}>
           <ErrorMessage className="mb-2">WALLET BALANCE: 0</ErrorMessage>
         </BaseModalContentColumn>
