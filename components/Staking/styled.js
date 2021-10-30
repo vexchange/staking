@@ -42,9 +42,13 @@ export const OverviewInfo = styled.div`
 
 export const OverviewTag = styled.div`
   display: flex;
-  background: #ffffff0a;
+  background: #f5a78814;
   padding: 8px;
   border-radius: ${theme.border.radius};
+
+  span {
+    color: #f5a788;
+  }
 `
 
 export const OverviewDescription = styled(SecondaryText)`
