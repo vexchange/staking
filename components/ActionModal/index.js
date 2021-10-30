@@ -52,7 +52,7 @@ const ActionModal = ({
   stakingReward,
 }) => {
   const { addTransaction } = useTransactions()
-  const { connex, account, rewardsContract } = useAppContext()
+  const { connex, account, rewardsContract, ticker } = useAppContext()
   const [txId, setTxId] = useState('')
   const [step, setStep] = useState('form')
   const [input, setInput] = useState('')
@@ -117,7 +117,6 @@ const ActionModal = ({
       })
 
       const txVisitor = connex.thor.transaction(txhash)
-      const ticker = connex.thor.ticker()
       let txReceipt = null
       while (!txReceipt) {
         await ticker.next()

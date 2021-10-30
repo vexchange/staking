@@ -30,7 +30,7 @@ export const useTransactions = () => {
 }
 
 export const TransactionsProvider = ({ children }) => {
-  const { connex } = useAppContext()
+  const { connex, ticker } = useAppContext()
   const [transactions, setTransactions] = useGlobalState('transactions')
   const [transactionsCounter, setTransactionsCounter] = useState(0)
   /**
@@ -40,7 +40,6 @@ export const TransactionsProvider = ({ children }) => {
     (transactions || []).forEach(async transaction => {
       if (transaction.txhash) {
         const tx = connex.thor.transaction(transaction.txhash)
-        const ticker = connex.thor.ticker()
 
         try {
           await ticker.next()

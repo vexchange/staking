@@ -30,7 +30,7 @@ export default function ApproveModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions()
-  const { connex, account, stakingTokenContract } = useAppContext()
+  const { connex, account, stakingTokenContract, ticker } = useAppContext()
   const [step, setStep] = useState('info')
   const [txId, setTxId] = useState('');
 
@@ -64,7 +64,6 @@ export default function ApproveModal({
       })
 
       const txVisitor = connex.thor.transaction(txhash)
-      const ticker = connex.thor.ticker()
       let txReceipt = null
       while (!txReceipt) {
         await ticker.next()

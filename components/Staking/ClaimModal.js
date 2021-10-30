@@ -30,7 +30,7 @@ export default function ClaimModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions()
-  const { connex, rewardsContract } = useAppContext()
+  const { connex, rewardsContract, ticker } = useAppContext()
   const [step, setStep] = useState('info')
 
   const handleClose = useCallback(() => {
@@ -65,7 +65,6 @@ export default function ClaimModal({
       })
 
       const txVisitor = connex.thor.transaction(txhash)
-      const ticker = connex.thor.ticker()
       let txReceipt = null
       while (!txReceipt) {
         await ticker.next()

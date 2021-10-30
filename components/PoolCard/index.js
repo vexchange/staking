@@ -29,8 +29,6 @@ import {
   Wrapper,
 } from './styled'
 
-const { parseUnits } = utils
-
 export default function PoolCard({
   stakingPoolData,
   setIsStakeAction,
@@ -94,16 +92,6 @@ export default function PoolCard({
     }
   )
 
-  const hasAllowance = useMemo(() => {
-    if (!tokenAllowance || tokenAllowance.isZero()) {
-      return false
-    }
-
-    setShowApprovalModal(false)
-
-    return true
-  }, [tokenAllowance])
-
   const vexPill = useMemo(() => {
     return (
       <ClaimableTokenPillContainer>
@@ -139,7 +127,7 @@ export default function PoolCard({
           CONNECT WALLET
         </PoolCardFooterButton>
       );
-    } else if (tokenAllowance.lt(parseUnits('7'))) {
+    } else if (tokenAllowance.lt(stakingPoolData.unstakedBalance)) {
       return (
           <PoolCardFooterButton
               role="button"

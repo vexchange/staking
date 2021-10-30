@@ -14,6 +14,8 @@ export const useAppContext = () => useContext(AppContext)
 export function AppStateProvider({ children }) {
   const [connex, setConnex] = useState(null)
   const [account, setAccount] = useState(null)
+  const [ticker, setTicker] = useState(null)
+  const [tick, setTick] = useState(null)
   const [stakingTokenContract, setStakingTokenContract] = useState(null)
   const [rewardsContract, setRewardsContract] = useState(null)
   const ref = useRef(connex)
@@ -30,9 +32,11 @@ export function AppStateProvider({ children }) {
           node: 'https://testnet.veblocks.net/',
           network: 'test',
         })
+        const _ticker = _connex.thor.ticker()
         setConnex(_connex)
         setStakingTokenContract(_connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet))
         setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES.testnet))
+        setTicker(_ticker)
       } catch (error) {
         console.warn(`Unable to get connex: ${error}`)
       }
@@ -41,6 +45,13 @@ export function AppStateProvider({ children }) {
       initConnex()
     }
   }, [connex])
+
+  useEffect( async () => {
+    if(ticker) {
+      let _tick = await ticker.next()
+      setTick(_tick)
+    }
+  }, [ticker, tick])
 
   const initAccount = async () => {
     const _connex = ref.current
@@ -65,6 +76,8 @@ export function AppStateProvider({ children }) {
         connex,
         account,
         initAccount,
+        ticker,
+        tick,
         stakingTokenContract,
         rewardsContract
       }}
