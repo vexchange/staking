@@ -50,7 +50,7 @@ export default function ClaimModal({
     try {
       const response = await connex.vendor
                     .sign('tx', [clause])
-                    .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.userData.claimableVex)}`)
+                    .comment(`Claim ${ethers.utils.formatEther(stakingPoolData.userData.claimableVex)} VEX`)
                     .request()
 
       setStep('claiming')
@@ -73,7 +73,7 @@ export default function ClaimModal({
 
       setStep('claimed')
     } catch (err) {
-      console.log('error')
+      console.log('error',err)
       setStep('info')
     }
   }, [
