@@ -132,8 +132,6 @@ export default function PoolCard({
     const showClaim = stakingPoolData.userData.claimableVex.gt(0)
     const showUnstake = stakingPoolData.userData.currentStake.gt(0)
 
-    console.log(tokenAllowance)
-
     return (
       <ButtonsContainer>
         {/*Show approve or stake depending on the balance and allowance*/}
