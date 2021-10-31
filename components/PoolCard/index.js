@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ethers, constants, utils } from 'ethers'
-import { BigNumber } from '@ethersproject/bignumber'
 import moment from 'moment'
 
 import { formatBigNumber } from '../../utils'
@@ -127,40 +126,50 @@ export default function PoolCard({
           CONNECT WALLET
         </PoolCardFooterButton>
       );
-    } else if (tokenAllowance.lt(stakingPoolData.userData.unstakedBalance)) {
-      return (
-          <PoolCardFooterButton
-              role="button"
-              color={color}
-              onClick={() => {
-                setShowApprovalModal(true)
-                setIsStakeAction(true)
-              }}
-              active={ongoingTransaction === 'approve'}
-          >
-            {ongoingTransaction === 'approve'
-                ? primaryActionLoadingText
-                : 'approve'}
-          </PoolCardFooterButton>
-      );
     }
+
+    const showApprove = tokenAllowance.lt(stakingPoolData.userData.unstakedBalance)
+    const showClaim = stakingPoolData.userData.claimableVex.gt(0)
+    const showUnstake = stakingPoolData.userData.currentStake.gt(0)
+
+    console.log(tokenAllowance)
 
     return (
       <ButtonsContainer>
-        {/* STAKE */}
-        <PoolCardFooterButton
-            role="button"
-            color={color}
-            onClick={() => {
-              setShowActionModal(true)
-              setIsStakeAction(true)
-            }}
-            active={ongoingTransaction === 'stake'}
-        >
-          {ongoingTransaction === 'stake'
-              ? primaryActionLoadingText
-              : 'Stake'}
-        </PoolCardFooterButton>
+        {/*Show approve or stake depending on the balance and allowance*/}
+        {showApprove
+            ?
+            // APPROVE
+            (<PoolCardFooterButton
+                role="button"
+                color={color}
+                onClick={() => {
+                    setShowApprovalModal(true)
+                    setIsStakeAction(true)
+                }}
+                active={ongoingTransaction === 'approve'}
+            >
+                {ongoingTransaction === 'approve'
+                    ? primaryActionLoadingText
+                    : 'approve'}
+            </PoolCardFooterButton>)
+            :
+            // STAKE
+            (<PoolCardFooterButton
+                role="button"
+                color={color}
+                onClick={() => {
+                    setShowActionModal(true)
+                    setIsStakeAction(true)
+                }}
+                active={ongoingTransaction === 'stake'}
+            >
+                {ongoingTransaction === 'stake'
+                    ? primaryActionLoadingText
+                    : 'Stake'}
+            </PoolCardFooterButton>)
+        }
+
         {/* CLAIM */}
         <PoolCardFooterButton
           role="button"
@@ -170,6 +179,7 @@ export default function PoolCard({
             setIsStakeAction(true)
           }}
           active={ongoingTransaction === 'rewardClaim'}
+          hidden={!showClaim}
         >
           {ongoingTransaction === 'rewardClaim'
             ? primaryActionLoadingText
@@ -178,6 +188,7 @@ export default function PoolCard({
                   : "Claim"
               }`}
         </PoolCardFooterButton>
+
         {/* UNSTAKE */}
         <PoolCardFooterButton
           role="button"
@@ -187,6 +198,7 @@ export default function PoolCard({
             setIsStakeAction(false)
           }}
           active={ongoingTransaction === 'unstake'}
+          hidden={!showUnstake}
         >
           {ongoingTransaction === 'unstake'
             ? primaryActionLoadingText
