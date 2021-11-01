@@ -83,9 +83,8 @@ const useFetchStakingPoolData = () => {
       poolRewardForDuration: BigNumber.from(poolRewardForDuration),
       lastTimeRewardApplicable,
       periodFinish: moment(periodFinish, 'X')
-        .add(1, 'days')
-        .unix()
-        .toString(),
+        // .add(1, 'days')
+        // .unix()
     }
   }
 

@@ -1,9 +1,12 @@
 import { BigNumber } from 'ethers'
+import moment from "moment";
 
 export const defaultStakingPoolData = {
   poolSize: BigNumber.from(0),
   poolRewardForDuration: BigNumber.from(0),
   loading: true,
+  lastTimeRewardApplicable: null,
+  periodFinish: null
 }
 
 export const defaultUserData = {

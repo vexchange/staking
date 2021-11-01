@@ -2,11 +2,10 @@ import { useMemo } from 'react'
 import moment from 'moment'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
-
-import { FullVaultList } from '../../constants'
+import { FullVaultList, REWARD_TOKEN_ADDRESSES } from '../../constants'
 import { Subtitle, Title, PrimaryText } from '../../design'
 import { formatBigNumber } from '../../utils'
-
+import useFetchStakingPoolData from "../../hooks/useFetchStakingPoolData";
 import useTextAnimation from '../../hooks/useTextAnimation'
 import useVEXToken from '../../hooks/useVEXToken'
 import useStakingPool from '../../hooks/useStakingPool'
@@ -27,6 +26,7 @@ import { ExternalIcon } from '../Icons'
 export default function Overview() {
   const { stakingPools, loading: stakingLoading } = useStakingPool('vex-vet')
   const { data: tokenData, loading: tokenLoading } = useVEXToken()
+  const { poolData } = useFetchStakingPoolData()
   const loadingText = useTextAnimation(stakingLoading || tokenLoading)
 
   const totalRewardDistributed = useMemo(() => {
@@ -55,24 +55,26 @@ export default function Overview() {
     return tokenData.numHolders.toLocaleString()
   }, [loadingText, tokenData, tokenLoading])
 
-  const timeTillProgramsEnd = useMemo(() => {
-    const endStakeReward = moment
-      .utc('2021-07-17')
-      .set('hour', 10)
-      .set('minute', 30)
+  const timeTillProgramsEnd = useMemo( () => {
+    if(!poolData.periodFinish) return
 
-    if (endStakeReward.diff(moment()) <= 0) {
+    const periodFinish = moment(poolData.periodFinish)
+    let timeLeftDuration = moment.duration(periodFinish.diff(moment()))
+
+    if (timeLeftDuration <= 0) {
       return 'End of Rewards'
     }
 
-    // Time till next stake reward date
-    const startTime = moment.duration(
-      endStakeReward.diff(moment()),
-      'milliseconds',
-    )
+    const days = Math.floor( timeLeftDuration.asDays() )
+    timeLeftDuration.subtract(moment.duration(days, 'days'))
 
-    return `${startTime.days()}D ${startTime.hours()}H ${startTime.minutes()}M`
-  }, [])
+    const hours = Math.floor( timeLeftDuration.asHours() )
+    timeLeftDuration.subtract(moment.duration(hours, 'hours'))
+
+    const minutes = Math.floor( timeLeftDuration.asMinutes() )
+
+    return `${days}D ${hours}H ${minutes}M`
+  }, [poolData])
 
   return (
     <OverviewContainer>
