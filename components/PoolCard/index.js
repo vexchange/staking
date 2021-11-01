@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ethers, constants, utils } from 'ethers'
-import moment from 'moment'
 
 import { formatBigNumber } from '../../utils'
 import { useAppContext } from '../../context/app'
