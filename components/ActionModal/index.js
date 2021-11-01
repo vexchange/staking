@@ -69,7 +69,7 @@ const ActionModal = ({
     }
 
     setInput(rawInput)
-  }, [stake, input])
+  }, [input])
 
   const handleMaxPressed = useCallback(() => (stake
     ? setInput(formatUnits(stakingPoolData.userData.unstakedBalance, 18))

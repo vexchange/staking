@@ -124,7 +124,7 @@ function AccountStatus() {
             handleCopyAddress,
             renderCopiedButton()
           )}
-          {renderMenuItem('Open in explore', handleOpenExplore)}
+          {renderMenuItem('Open in explorer', handleOpenExplore)}
         </WalletDesktopMenu>
       </WalletContainer>
     </AccountStatusContainer>

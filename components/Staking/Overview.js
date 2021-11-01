@@ -86,10 +86,7 @@ export default function Overview() {
         </OverviewTag>
         <Title className="mt-3 w-100">Liquidity Mining Program</Title>
         <OverviewDescription className="mt-3 w-100">
-          The program aims to grow vault adjusted TVL, expand the voting power
-          to those who missed out on the airdrop and to distribute the
-          governance token to those who have the most skin in the game. The
-          program ends on July 19th, 2021.
+          Some smart things to say. What would that smart thing be?
         </OverviewDescription>
         <UnderlineLink
           href="https://ribbonfinance.medium.com/rgp-2-liquidity-mining-program-cc81f0b7a270"
@@ -98,7 +95,7 @@ export default function Overview() {
         >
           <a className="d-flex mt-4">
             <PrimaryText fontSize={14} className="mr-2">
-              Learn more about our liquidity mining program
+              To change to link to our medium article?
             </PrimaryText>
             <ExternalIcon color="white" />
           </a>
