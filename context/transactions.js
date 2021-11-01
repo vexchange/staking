@@ -65,8 +65,6 @@ export const TransactionsProvider = ({ children }) => {
     }, [])
   }, [transactions, connex, setTransactions])
 
-  useEffect(() => console.log(transactions), [tick])
-
   return (
     <TransactionsContext.Provider
       value={{
