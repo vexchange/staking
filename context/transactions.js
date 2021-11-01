@@ -30,41 +30,42 @@ export const useTransactions = () => {
 }
 
 export const TransactionsProvider = ({ children }) => {
-  const { connex, ticker } = useAppContext()
+  const { connex, ticker, tick } = useAppContext()
   const [transactions, setTransactions] = useGlobalState('transactions')
   const [transactionsCounter, setTransactionsCounter] = useState(0)
   /**
    * Keep track with first confirmation
    */
   useEffect(() => {
-    (transactions || []).forEach(async transaction => {
-      if (transaction.txhash) {
+    (transactions || []).forEach(async (transaction) => {
+      if (!transaction.status) {
         const tx = connex.thor.transaction(transaction.txhash)
 
         try {
           await ticker.next()
           const receipt = await tx.getReceipt()
 
-          setTransactionsCounter(counter => counter + 1)
-          setTransactions(_transactions => {
-            _transactions.map(_transaction => {
-              if (_transaction.txhash !== transaction.txhash) {
-                return _transaction
-              }
-
-              return {
-                ..._transaction,
-                firstConfirmation: true,
-                status: receipt.reverted ? 'error' : 'success',
-              }
-            })
+          const newArray = transactions.map(_transaction => {
+            if (_transaction.txhash !== transaction.txhash) {
+              return _transaction
+            }
+            return {
+              ..._transaction,
+              firstConfirmation: true,
+              status: receipt.reverted ? 'error' : 'success',
+            }
           })
+
+          setTransactionsCounter(counter => counter + 1)
+          setTransactions(newArray)
         } catch (error) {
           console.warn(error)
         }
       }
     }, [])
   }, [transactions, connex, setTransactions])
+
+  useEffect(() => console.log(transactions), [tick])
 
   return (
     <TransactionsContext.Provider

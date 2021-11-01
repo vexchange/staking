@@ -114,7 +114,7 @@ export default function Overview() {
           <Title>{numHolderText}</Title>
         </OverviewKPI>
         <OverviewKPI>
-          <OverviewLabel>Time till programs end</OverviewLabel>
+          <OverviewLabel>Time till program ends</OverviewLabel>
           <Title>{timeTillProgramsEnd}</Title>
         </OverviewKPI>
       </OverviewKPIContainer>
