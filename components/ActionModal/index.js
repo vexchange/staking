@@ -64,9 +64,12 @@ const ActionModal = ({
     const rawInput = e.target.value
 
     if (rawInput && parseFloat(rawInput) < 0) {
+      console.log("it gets in the magic hole!");
       setInput('')
       return
     }
+    console.log(rawInput)
+    console.log(parseFloat(rawInput))
 
     setInput(rawInput)
   }, [])
@@ -74,7 +77,7 @@ const ActionModal = ({
   const handleMaxPressed = useCallback(() => (stake
     ? setInput(formatUnits(stakingPoolData.userData.unstakedBalance, 18))
     : setInput(formatUnits(stakingPoolData.userData.currentStake, 18))),
-  [stake, stakingPoolData])
+  [])
 
   const handleClose = useCallback(() => {
     onClose()
@@ -96,6 +99,9 @@ const ActionModal = ({
     const withdrawABI = find(MultiRewards, { name: 'withdraw'})
     const method = stake ? rewardsContract.method(stakeABI) : rewardsContract.method(withdrawABI);
     const clause = method.asClause(ethers.utils.parseUnits(input, 18));
+
+    console.log(input);
+    return;
 
     try {
       const response = await connex.vendor
@@ -151,7 +157,7 @@ const ActionModal = ({
     if (show && !stake) {
       handleMaxPressed();
     }
-  }, [handleMaxPressed, show, stake, stakingPoolData, step]);
+  }, [handleMaxPressed, show, stake, step]);
 
   useEffect(() => {
     setError(undefined)
@@ -177,7 +183,7 @@ const ActionModal = ({
     ) {
       setError('insufficient_staked')
     }
-  }, [input, stake, stakingPoolData])
+  }, [input, stake])
 
   const renderActionButtonText = useCallback(() => {
     switch (error) {
@@ -393,10 +399,10 @@ const ActionModal = ({
     color,
     stake,
     error,
+    input,
     handleInputChange,
     handleMaxPressed,
     handleActionPressed,
-    input,
     step,
     txId,
     vaultOption,
