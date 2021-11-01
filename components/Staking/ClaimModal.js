@@ -73,7 +73,7 @@ export default function ClaimModal({
 
       setStep('claimed')
     } catch (err) {
-      console.log('error',err)
+      console.error('error',err)
       setStep('info')
     }
   }, [

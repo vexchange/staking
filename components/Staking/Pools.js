@@ -60,8 +60,8 @@ const StakingPool = ({ vaultOption }) => {
         stakingPoolData={stakingPoolData}
       />
       <ActionModal
-        stake={showStakeModal}
         show={showActionModal}
+        stake={isStakeAction}
         onClose={() => setShowActionModal(false)}
         vaultOption={vaultOption}
         stakingPoolData={stakingPoolData}
@@ -73,7 +73,6 @@ const StakingPool = ({ vaultOption }) => {
         stakingPoolData={stakingPoolData}
       />
       <PoolCard
-        active
         stakingPoolData={stakingPoolData}
         setShowApprovalModal={setShowApprovalModal}
         setShowClaimModal={setShowClaimModal}

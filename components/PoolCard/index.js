@@ -143,7 +143,6 @@ export default function PoolCard({
                 color={color}
                 onClick={() => {
                     setShowApprovalModal(true)
-                    setIsStakeAction(true)
                 }}
                 active={ongoingTransaction === 'approve'}
             >
@@ -174,7 +173,6 @@ export default function PoolCard({
           color={color}
           onClick={() => {
             setShowClaimModal(true)
-            setIsStakeAction(true)
           }}
           active={ongoingTransaction === 'rewardClaim'}
           hidden={!showClaim}

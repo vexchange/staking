@@ -64,25 +64,22 @@ const ActionModal = ({
     const rawInput = e.target.value
 
     if (rawInput && parseFloat(rawInput) < 0) {
-      console.log("it gets in the magic hole!");
       setInput('')
       return
     }
-    console.log(rawInput)
-    console.log(parseFloat(rawInput))
 
     setInput(rawInput)
-  }, [])
+  }, [stake, input])
 
   const handleMaxPressed = useCallback(() => (stake
     ? setInput(formatUnits(stakingPoolData.userData.unstakedBalance, 18))
     : setInput(formatUnits(stakingPoolData.userData.currentStake, 18))),
-  [])
+  [stake, stakingPoolData])
 
   const handleClose = useCallback(() => {
     onClose()
     if (step === 'preview' || step === 'walletAction') {
-      setStep('warning')
+      setStep('form')
     }
     if (step !== 'processing') {
       setInput('')
@@ -100,14 +97,11 @@ const ActionModal = ({
     const method = stake ? rewardsContract.method(stakeABI) : rewardsContract.method(withdrawABI);
     const clause = method.asClause(ethers.utils.parseUnits(input, 18));
 
-    console.log(input);
-    return;
-
     try {
       const response = await connex.vendor
         .sign('tx', [clause])
         .signer(account) // This modifier really necessary?
-        .comment('Sign to stake your LP tokens')
+        .comment(stake ? 'Sign to stake your LP tokens' : 'Sign to unstake your LP tokens')
         .request()
 
       const txhash = response.txid
@@ -129,7 +123,7 @@ const ActionModal = ({
         txReceipt = await txVisitor.getReceipt()
       }
 
-      setStep('warning')
+      setStep('form')
       setTxId('')
       setInput('')
       onClose()
@@ -145,19 +139,6 @@ const ActionModal = ({
     vaultOption,
     stake,
   ])
-
-  /**
-   * Check if it's withdraw and before period end
-   */
-   useEffect(() => {
-    if (show && step === "warning" && !(!stake)) {
-      setStep("form");
-    }
-
-    if (show && !stake) {
-      handleMaxPressed();
-    }
-  }, [handleMaxPressed, show, stake, step]);
 
   useEffect(() => {
     setError(undefined)
@@ -328,12 +309,10 @@ const ActionModal = ({
                 <Arrow className="fas fa-arrow-right mx-2" color={color} />
                 {formatBigNumber(
                   stake
-                    ? stakingPoolData.userData.currentStake.add(
-                      BigNumber.from(ethers.utils.parseUnits(input, 18)),
-                    )
-                    : stakingPoolData.userData.currentStake.sub(
-                      BigNumber.from(ethers.utils.parseUnits(input, 18)),
-                    ),
+                    ? (stakingPoolData.userData.currentStake.add(
+                      BigNumber.from(ethers.utils.parseUnits(input, 18))))
+                    : (stakingPoolData.userData.currentStake.sub(
+                      BigNumber.from(ethers.utils.parseUnits(input, 18))))
                 )}
               </InfoData>
             </InfoColumn>

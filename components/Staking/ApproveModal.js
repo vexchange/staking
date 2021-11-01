@@ -73,7 +73,7 @@ export default function ApproveModal({
       setTxId('')
       onClose()
     } catch (err) {
-      console.log(err)
+      console.error(err)
       setStep('info')
     }
   }, [
