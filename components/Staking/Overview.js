@@ -107,8 +107,8 @@ export default function Overview() {
           <Title>{totalRewardDistributed}</Title>
         </OverviewKPI>
         <OverviewKPI>
-          <OverviewLabel>No. of $VEX Holders</OverviewLabel>
-          <Title>{numHolderText}</Title>
+          <OverviewLabel>Estimated APR</OverviewLabel>
+          <Title>{numHolderText} %</Title>
         </OverviewKPI>
         <OverviewKPI>
           <OverviewLabel>Time till program ends</OverviewLabel>
