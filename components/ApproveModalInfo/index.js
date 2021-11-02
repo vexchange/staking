@@ -44,7 +44,7 @@ const ApproveModalInfo = ({
       </BaseModalContentColumn>
       <BaseModalContentColumn marginTop={16}>
         <BaseUnderlineLink
-          href="https://ribbon.finance/faq"
+          href="https://www.reddit.com/r/UniSwap/comments/hxb74e/comment/fz5h35u/?utm_source=share&utm_medium=web2x&context=3"
           target="_blank"
           rel="noreferrer noopener"
           className="d-flex"

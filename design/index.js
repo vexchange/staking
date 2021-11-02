@@ -191,3 +191,11 @@ export const BaseInputContainer = styled.div`
     ${props => (props.error ? colors.red : 'transparent')};
   transition: border 0.25s;
 `
+
+export const TooltipContainer = styled.div`
+  text-align: left;
+
+  .title {
+    font-family: VCR,sans-serif;
+  }
+`

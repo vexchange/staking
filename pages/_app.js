@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-tippy/dist/tippy.css'
+
 import Layout from '../components/Layout'
 
 import { AppStateProvider } from '../context/app'
 import { DataContextProvider } from '../context/data'
 import { TransactionsProvider } from '../context/transactions'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/globals.css'
 
 function App({ Component, pageProps }) {

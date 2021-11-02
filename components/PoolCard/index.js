@@ -1,10 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ethers, constants, utils } from 'ethers'
+import { Tooltip } from 'react-tippy'
 
 import { formatBigNumber } from '../../utils'
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
-import { Subtitle, BaseIndicator, SecondaryText } from '../../design'
+import { Subtitle, BaseIndicator, SecondaryText, TooltipContainer } from '../../design'
 import colors from '../../design/colors'
 
 import useTextAnimation from '../../hooks/useTextAnimation'
@@ -12,6 +13,7 @@ import useTokenAllowance from '../../hooks/useTokenAllowance'
 
 import CapBar from '../CapBar'
 import Logo from '../Logo'
+import HelpInfo from '../HelpInfo'
 
 import {
   ButtonsContainer,
@@ -223,18 +225,18 @@ export default function PoolCard({
           <div className="d-flex flex-column">
             <div className="d-flex align-items-center">
               <PoolTitle>vex-vet</PoolTitle>
-              {/* <TooltipExplanation
-                title={vaultOption}
-                explanation={
-                  productCopies[vaultOption].liquidityMining.explanation
-                }
-                renderContent={({ ref, ...triggerHandler }) => (
-                  <HelpInfo containerRef={ref} {...triggerHandler}>
-                    i
-                  </HelpInfo>
+              <Tooltip
+                position="bottom"
+                trigger="mouseenter"
+                html={(
+                  <TooltipContainer>
+                    <p className="title"><b>vex-vet</b></p>
+                    <p>vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;)</p>
+                  </TooltipContainer>
                 )}
-                learnMoreURL="https://gov.ribbon.finance/t/rgp-2-ribbon-liquidity-mining-program/90"
-              /> */}
+              >
+                <HelpInfo>i</HelpInfo>
+              </Tooltip>
             </div>
             <PoolSubtitle>
               Your Unstaked Balance:
