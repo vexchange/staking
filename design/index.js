@@ -1,14 +1,11 @@
-import Link from 'next/link'
 import styled from '@emotion/styled'
 import { Modal as BootstrapModal } from 'react-bootstrap'
 
 import colors from './colors'
 import theme from './theme'
 
-export const BaseLink = styled(Link)`
-  &:hover {
-    text-decoration: none;
-  }
+export const BaseLink = styled.a`
+  text-decoration: none;
 `
 
 export const BaseInput = styled.input`

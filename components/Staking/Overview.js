@@ -93,12 +93,12 @@ export default function Overview() {
           target="_blank"
           rel="noreferrer noopener"
         >
-          <a className="d-flex mt-4">
+          <div className="d-flex mt-4">
             <PrimaryText fontSize={14} className="mr-2">
               To change to link to our medium article?
             </PrimaryText>
             <ExternalIcon color="white" />
-          </a>
+          </div>
         </UnderlineLink>
       </OverviewInfo>
       <OverviewKPIContainer>

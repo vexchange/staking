@@ -357,7 +357,7 @@ const ActionModal = ({
                   Confirm this transaction in your wallet
                 </PrimaryText>
               </BaseModalContentColumn>
-            ) : (
+            ) : txId ? (
               <BaseModalContentColumn marginTop="auto">
                 <BaseUnderlineLink
                   href={`${getExploreURI()}/tx/${txId}`}
@@ -368,7 +368,7 @@ const ActionModal = ({
                   <PrimaryText className="mb-2">View on Explore</PrimaryText>
                 </BaseUnderlineLink>
               </BaseModalContentColumn>
-            )}
+            ) : null}
           </>
         )
       default:

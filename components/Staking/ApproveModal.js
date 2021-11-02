@@ -126,7 +126,7 @@ export default function ApproveModal({
                   Confirm this transaction in your wallet
                 </PrimaryText>
               </BaseModalContentColumn>
-            ) : (
+            ) : txId ? (
               <BaseModalContentColumn marginTop="auto">
                 <BaseUnderlineLink
                   href={`${getExploreURI()}/transactions/${txId}`}
@@ -137,7 +137,7 @@ export default function ApproveModal({
                   <PrimaryText className="mb-2">View on Explorer</PrimaryText>
                 </BaseUnderlineLink>
               </BaseModalContentColumn>
-            )}
+            ) : null}
           </>
         );
     }
