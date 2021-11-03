@@ -86,7 +86,7 @@ export default function Overview() {
         </OverviewTag>
         <Title className="mt-3 w-100">Liquidity Mining Program</Title>
         <OverviewDescription className="mt-3 w-100">
-          Some smart things to say. What would that smart thing be?
+          The program aims to incentivize VEX liquidity, expand the voting power to those who miss out on the airdrop and to distribute the governance token to those who have the most skin in the game.
         </OverviewDescription>
         <UnderlineLink
           href="https://ribbonfinance.medium.com/rgp-2-liquidity-mining-program-cc81f0b7a270"
