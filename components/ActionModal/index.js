@@ -62,10 +62,11 @@ const ActionModal = ({
 
   const handleInputChange = useCallback(e => {
     const rawInput = e.target.value
-    // 18 decimals for big number and
-    // 1 for the decimal point and
-    // 1 for the zero before the decimal point
-    if (rawInput.length > 20) {
+
+    // Check if input exceed 18 decimal places
+    const beforeAfterDecimalPoint = rawInput.split(".")
+    if (beforeAfterDecimalPoint[1] &&
+        beforeAfterDecimalPoint[1].length > 18) {
       return
     }
 
