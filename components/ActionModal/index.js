@@ -62,6 +62,13 @@ const ActionModal = ({
 
   const handleInputChange = useCallback(e => {
     const rawInput = e.target.value
+    // 18 decimals for big number and
+    // 1 for the decimal point and
+    // 1 for the zero before the decimal point
+    if (rawInput.length > 20) {
+      setInput('')
+      return
+    }
 
     if (rawInput && parseFloat(rawInput) < 0) {
       setInput('')
@@ -201,7 +208,9 @@ const ActionModal = ({
                   <BaseInput
                     type="number"
                     className="form-control"
+                    maxLength="5"
                     placeholder="0"
+                    min="0"
                     value={input}
                     onChange={handleInputChange}
                   />
