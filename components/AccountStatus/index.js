@@ -33,6 +33,7 @@ function AccountStatus() {
     if (isMenuOpen) onCloseMenu()
   })
 
+
   useEffect(() => {
     let timer
 
@@ -87,47 +88,47 @@ function AccountStatus() {
   }, [account])
 
   const renderButtonContent = () =>
-    account ? (
-      <>
-        <Indicator connected={account} />
-        <WalletButtonText connected={account}>
-          {truncateAddress(account)} <ButtonArrow isOpen={isMenuOpen} />
-        </WalletButtonText>
-      </>
-    ) : (
-      <WalletButtonText connected={account}>Connect Wallet</WalletButtonText>
-    )
+      account ? (
+          <>
+            <Indicator connected={account}/>
+            <WalletButtonText connected={account}>
+              {truncateAddress(account)} <ButtonArrow isOpen={isMenuOpen}/>
+            </WalletButtonText>
+          </>
+      ) : (
+          <WalletButtonText connected={account}>Connect Wallet</WalletButtonText>
+      )
 
   const renderMenuItem = (title, onClick, extra) => {
     return (
-      <MenuItem onClick={onClick} role='button'>
-        <MenuItemText>{title}</MenuItemText>
-        {extra}
-      </MenuItem>
+        <MenuItem onClick={onClick} role='button'>
+          <MenuItemText>{title}</MenuItemText>
+          {extra}
+        </MenuItem>
     )
   }
 
   const renderCopiedButton = () => {
-    return <WalletCopyIcon className="far fa-clone" state={copyState} />
+    return <WalletCopyIcon className="far fa-clone" state={copyState}/>
   }
 
   return (
-    <AccountStatusContainer>
-      <WalletContainer ref={desktopMenuRef}>
-        <WalletButton onClick={handleButtonClick}>
-          {renderButtonContent()}
-        </WalletButton>
-        <WalletDesktopMenu isMenuOpen={isMenuOpen}>
-          {renderMenuItem('CHANGE WALLET', handleChangeWallet)}
-          {renderMenuItem(
-            copyState === 'hidden' ? 'Copy Address' : 'Address Copied',
-            handleCopyAddress,
-            renderCopiedButton()
-          )}
-          {renderMenuItem('Open in explorer', handleOpenExplore)}
-        </WalletDesktopMenu>
-      </WalletContainer>
-    </AccountStatusContainer>
+      <AccountStatusContainer>
+        <WalletContainer ref={desktopMenuRef}>
+          <WalletButton onClick={handleButtonClick}>
+            {renderButtonContent()}
+          </WalletButton>
+          <WalletDesktopMenu isMenuOpen={isMenuOpen}>
+            {renderMenuItem('CHANGE WALLET', handleChangeWallet)}
+            {renderMenuItem(
+                copyState === 'hidden' ? 'Copy Address' : 'Address Copied',
+                handleCopyAddress,
+                renderCopiedButton()
+            )}
+            {renderMenuItem('Open in explorer', handleOpenExplore)}
+          </WalletDesktopMenu>
+        </WalletContainer>
+      </AccountStatusContainer>
   )
 }
 

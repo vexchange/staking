@@ -5,9 +5,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { FullVaultList, REWARD_TOKEN_ADDRESSES } from '../../constants'
 import { Subtitle, Title, PrimaryText } from '../../design'
 import { formatBigNumber } from '../../utils'
+import useAPR from '../../hooks/useAPR'
 import useFetchStakingPoolData from "../../hooks/useFetchStakingPoolData";
 import useTextAnimation from '../../hooks/useTextAnimation'
-import useVEXToken from '../../hooks/useVEXToken'
 import useStakingPool from '../../hooks/useStakingPool'
 
 import {
@@ -25,9 +25,10 @@ import { ExternalIcon } from '../Icons'
 
 export default function Overview() {
   const { stakingPools, loading: stakingLoading } = useStakingPool('vex-vet')
-  const { data: tokenData, loading: tokenLoading } = useVEXToken()
+  const { apr } = useAPR()
   const { poolData } = useFetchStakingPoolData()
-  const loadingText = useTextAnimation(stakingLoading || tokenLoading)
+  const loadingText = useTextAnimation(stakingLoading)
+
 
   const totalRewardDistributed = useMemo(() => {
     if (stakingLoading) {
@@ -47,13 +48,12 @@ export default function Overview() {
     return ethers.utils.formatEther(totalDistributed)
   }, [stakingLoading, loadingText, stakingPools])
 
-  const numHolderText = useMemo(() => {
-    if (tokenLoading || !tokenData) {
+  const percentageAPR = useMemo(() => {
+    if (!apr) {
       return loadingText
     }
-
-    return tokenData.numHolders.toLocaleString()
-  }, [loadingText, tokenData, tokenLoading])
+    return apr
+  }, [apr])
 
   const timeTillProgramsEnd = useMemo( () => {
     if(!poolData.periodFinish) return
@@ -108,7 +108,7 @@ export default function Overview() {
         </OverviewKPI>
         <OverviewKPI>
           <OverviewLabel>Estimated APR</OverviewLabel>
-          <Title>{numHolderText} %</Title>
+          <Title>{percentageAPR} %</Title>
         </OverviewKPI>
         <OverviewKPI>
           <OverviewLabel>Time till program ends</OverviewLabel>

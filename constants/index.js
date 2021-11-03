@@ -1,10 +1,19 @@
 export const FullVaultList = ['vex-vet']
 
+export const WVET_ADDRESS = {
+  mainnet: '0xd8ccdd85abdbf68dfec95f06c973e87b1b5a9997',
+  testnet: '0x93e5fa8011612fab061ef58cbab9262d2e76407b'
+}
+
 export const NETWORK_NAMES = {
   1: 'mainnet',
   42: 'testnet',
 }
 
+export const CHAIN_ID = {
+  mainnet : 1,
+  testnet : 42
+}
 export const STAKING_TOKEN_ADDRESSES = {
   // Fill in the actual V2Pair token address for VEX-VET
   mainnet: '',

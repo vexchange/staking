@@ -73,6 +73,7 @@ const useFetchStakingPoolData = () => {
     // Pool Reward For Duration
     const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES.testnet)
     // Last Time Reward Applicable
+    // Is this value even used?
     const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.testnet)
     // Period Finish
     const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
