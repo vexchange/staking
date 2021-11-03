@@ -62,7 +62,11 @@ const ActionModal = ({
 
   const handleInputChange = useCallback(e => {
     const rawInput = e.target.value
-
+    if (rawInput.includes('+') ||
+        rawInput.includes('-') ||
+        rawInput.includes('e')) {
+      return
+    }
     // Check if input exceed 18 decimal places
     const beforeAfterDecimalPoint = rawInput.split(".")
     if (beforeAfterDecimalPoint[1] &&
@@ -208,7 +212,6 @@ const ActionModal = ({
                   <BaseInput
                     type="number"
                     className="form-control"
-                    maxLength="5"
                     placeholder="0"
                     min="0"
                     value={input}
