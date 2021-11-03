@@ -66,7 +66,6 @@ const ActionModal = ({
     // 1 for the decimal point and
     // 1 for the zero before the decimal point
     if (rawInput.length > 20) {
-      setInput('')
       return
     }
 
@@ -303,8 +302,8 @@ const ActionModal = ({
               </BaseInputLabel>
             </BaseModalContentColumn>
             <BaseModalContentColumn marginTop={4}>
-              <Title fontSize={40} lineHeight={52}>
-                {parseFloat(parseFloat(input).toFixed(4))}
+              <Title fontSize={input.length > 10 ? 24 : 40} lineHeight={100}>
+                {input}
               </Title>
             </BaseModalContentColumn>
             <InfoColumn>
