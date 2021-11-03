@@ -226,7 +226,7 @@ export default function PoolCard({
             <div className="d-flex align-items-center">
               <PoolTitle>vex-vet</PoolTitle>
               <Tooltip
-                position="bottom"
+                position="top"
                 trigger="mouseenter"
                 html={(
                   <TooltipContainer>

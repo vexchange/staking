@@ -5,6 +5,7 @@ import { useAppContext } from '../../context/app'
 import useOutsideAlerter from '../../hooks/useOutsideAlerter' 
 import { truncateAddress, copyTextToClipboard } from '../../utils'
 
+import MenuButton from '../MenuButton'
 import ButtonArrow from '../ButtonArrow'
 import Indicator from '../Indicator'
 
@@ -12,14 +13,16 @@ import {
   AccountStatusContainer,
   MenuItem,
   MenuItemText,
+  MenuCloseItem,
   WalletButton,
   WalletButtonText,
   WalletContainer,
   WalletCopyIcon,
   WalletDesktopMenu,
+  WalletMobileOverlayMenu,
 } from './styled'
 
-function AccountStatus() {
+function AccountStatus({ variant }) {
   const {
     account,
     initAccount,
@@ -30,7 +33,7 @@ function AccountStatus() {
   // Track clicked area outside of desktop menu
   const desktopMenuRef = useRef(null)
   useOutsideAlerter(desktopMenuRef, () => {
-    if (isMenuOpen) onCloseMenu()
+    if (variant === 'desktop' && isMenuOpen) onCloseMenu()
   })
 
 
@@ -113,9 +116,9 @@ function AccountStatus() {
   }
 
   return (
-      <AccountStatusContainer>
-        <WalletContainer ref={desktopMenuRef}>
-          <WalletButton onClick={handleButtonClick}>
+      <AccountStatusContainer variant={variant}>
+        <WalletContainer variant={variant} ref={desktopMenuRef}>
+          <WalletButton variant={variant} onClick={handleButtonClick}>
             {renderButtonContent()}
           </WalletButton>
           <WalletDesktopMenu isMenuOpen={isMenuOpen}>
@@ -128,6 +131,27 @@ function AccountStatus() {
             {renderMenuItem('Open in explorer', handleOpenExplore)}
           </WalletDesktopMenu>
         </WalletContainer>
+
+      {/* Mobile Menu */}
+      <WalletMobileOverlayMenu
+        className="flex-column align-items-center justify-content-center"
+        isMenuOpen={isMenuOpen}
+        onClick={onCloseMenu}
+        variant={variant}
+        mountRoot="div#__next"
+        overflowOnOpen={false}
+      >
+        {renderMenuItem(
+          copyState === "hidden" ? "COPY ADDRESS" : "ADDRESS COPIED",
+          handleCopyAddress,
+          renderCopiedButton()
+        )}
+        {renderMenuItem("OPEN IN EXPLORER", handleOpenExplore)}
+        <MenuCloseItem role="button" onClick={onCloseMenu}>
+          <MenuButton isOpen={true} onToggle={onCloseMenu} />
+        </MenuCloseItem>
+      </WalletMobileOverlayMenu>
+
       </AccountStatusContainer>
   )
 }
