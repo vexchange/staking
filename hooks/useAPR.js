@@ -60,35 +60,39 @@ const useAPR = () => {
             node: 'https://mainnet.veblocks.net/',
         })
 
-        const res = await fetch(API_ENDPOINT)
-        const data = await res.json()
-        const usdPerVet = parseFloat(data[0].price)
-        setUsdPerVet(usdPerVet)
+        try {
+            const res = await fetch(API_ENDPOINT, { mode: 'cors' })
+            const data = await res.json()
+            const usdPerVet = parseFloat(data[0].price)
+            setUsdPerVet(usdPerVet)
 
-        const result = await getMidPrice(_connex,
-            // Base token
-            WVET_ADDRESS.mainnet,
-            // Using the VTHO mainnet token address
-            // as a placeholder for now
-            // TODO: replace with mainnet VEX token
-            "0x0000000000000000000000000000456E65726779"
-        );
+            const result = await getMidPrice(_connex,
+                // Base token
+                WVET_ADDRESS.mainnet,
+                // Using the VTHO mainnet token address
+                // as a placeholder for now
+                // TODO: replace with mainnet VEX token
+                "0x0000000000000000000000000000456E65726779"
+            );
 
-        const vexPerVet = result.base2quote;
-        const usdPerVex = usdPerVet / vexPerVet
-        setVexPerVet(vexPerVet);
-        setUsdPerVex(usdPerVex);
+            const vexPerVet = result.base2quote;
+            const usdPerVex = usdPerVet / vexPerVet
+            setVexPerVet(vexPerVet);
+            setUsdPerVex(usdPerVex);
 
-        const pair = result.pair;
+            const pair = result.pair;
 
-        const vexAmountInPair = pair.tokenAmounts[0].toSignificant(10)
-        const vetAmountInPair = pair.tokenAmounts[1].toSignificant(10)
+            const vexAmountInPair = pair.tokenAmounts[0].toSignificant(10)
+            const vetAmountInPair = pair.tokenAmounts[1].toSignificant(10)
 
-        // The following two amounts should be roughly equivalent
-        const vexValueInUSD = parseFloat(vexAmountInPair) * usdPerVex;
-        const vetValueInUSD = parseFloat(vetAmountInPair) * usdPerVet;
-        const lpTotalValueInUsd = vexValueInUSD + vetValueInUSD;
-        setTvl(lpTotalValueInUsd)
+            // The following two amounts should be roughly equivalent
+            const vexValueInUSD = parseFloat(vexAmountInPair) * usdPerVex;
+            const vetValueInUSD = parseFloat(vetAmountInPair) * usdPerVet;
+            const lpTotalValueInUsd = vexValueInUSD + vetValueInUSD;
+            setTvl(lpTotalValueInUsd)
+        } catch (error) {
+            console.error("Error fetching", error)
+        }
     }
 
     useEffect(calculateIndividualTokenPrices, [connex])
