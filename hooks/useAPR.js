@@ -6,9 +6,9 @@ import { find } from "lodash";
 import { ethers } from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
+import CoinGecko from 'coingecko-api';
 
 const useAPR = () => {
-    const API_ENDPOINT = "https://api.nomics.com/v1/currencies/ticker?key=c0d543cde170fa5cd3c090442bd3fd2dd9611feb&ids=VET&interval=1h"
     const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
     const [usdPerVet, setUsdPerVet] = useState(0)
     const [vexPerVet, setVexPerVet] = useState(0)
@@ -59,36 +59,44 @@ const useAPR = () => {
         const _connex = new Connex({
             node: 'https://mainnet.veblocks.net/',
         })
+        const cgClient = new CoinGecko();
 
-        const res = await fetch(API_ENDPOINT)
-        const data = await res.json()
-        const usdPerVet = parseFloat(data[0].price)
-        setUsdPerVet(usdPerVet)
+        try {
+            const res = await cgClient.simple.price({
+                ids: ['vechain'],
+                vs_currencies: ['usd']
+            })
+            const data = res.data.vechain.usd
+            const usdPerVet = parseFloat(data)
+            setUsdPerVet(usdPerVet)
 
-        const result = await getMidPrice(_connex,
-            // Base token
-            WVET_ADDRESS.mainnet,
-            // Using the VTHO mainnet token address
-            // as a placeholder for now
-            // TODO: replace with mainnet VEX token
-            "0x0000000000000000000000000000456E65726779"
-        );
+            const result = await getMidPrice(_connex,
+                // Base token
+                WVET_ADDRESS.mainnet,
+                // Using the VTHO mainnet token address
+                // as a placeholder for now
+                // TODO: replace with mainnet VEX token
+                "0x0000000000000000000000000000456E65726779"
+            );
 
-        const vexPerVet = result.base2quote;
-        const usdPerVex = usdPerVet / vexPerVet
-        setVexPerVet(vexPerVet);
-        setUsdPerVex(usdPerVex);
+            const vexPerVet = result.base2quote;
+            const usdPerVex = usdPerVet / vexPerVet
+            setVexPerVet(vexPerVet);
+            setUsdPerVex(usdPerVex);
 
-        const pair = result.pair;
+            const pair = result.pair;
 
-        const vexAmountInPair = pair.tokenAmounts[0].toSignificant(10)
-        const vetAmountInPair = pair.tokenAmounts[1].toSignificant(10)
+            const vexAmountInPair = pair.tokenAmounts[0].toSignificant(10)
+            const vetAmountInPair = pair.tokenAmounts[1].toSignificant(10)
 
-        // The following two amounts should be roughly equivalent
-        const vexValueInUSD = parseFloat(vexAmountInPair) * usdPerVex;
-        const vetValueInUSD = parseFloat(vetAmountInPair) * usdPerVet;
-        const lpTotalValueInUsd = vexValueInUSD + vetValueInUSD;
-        setTvl(lpTotalValueInUsd)
+            // The following two amounts should be roughly equivalent
+            const vexValueInUSD = parseFloat(vexAmountInPair) * usdPerVex;
+            const vetValueInUSD = parseFloat(vetAmountInPair) * usdPerVet;
+            const lpTotalValueInUsd = vexValueInUSD + vetValueInUSD;
+            setTvl(lpTotalValueInUsd)
+        } catch (error) {
+            console.error("Error fetching", error)
+        }
     }
 
     useEffect(calculateIndividualTokenPrices, [connex])
