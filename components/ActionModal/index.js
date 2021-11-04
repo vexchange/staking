@@ -377,7 +377,7 @@ const ActionModal = ({
                   rel="noreferrer noopener"
                   className="d-flex"
                 >
-                  <PrimaryText className="mb-2">View on Explore</PrimaryText>
+                  <PrimaryText className="mb-2">View on Explorer</PrimaryText>
                 </BaseUnderlineLink>
               </BaseModalContentColumn>
             ) : null}
