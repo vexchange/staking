@@ -6,9 +6,9 @@ import { find } from "lodash";
 import { ethers } from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
+import CoinGecko from 'coingecko-api';
 
 const useAPR = () => {
-    const API_ENDPOINT = "https://api.nomics.com/v1/currencies/ticker?key=c0d543cde170fa5cd3c090442bd3fd2dd9611feb&ids=VET&interval=1h"
     const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
     const [usdPerVet, setUsdPerVet] = useState(0)
     const [vexPerVet, setVexPerVet] = useState(0)
@@ -59,11 +59,15 @@ const useAPR = () => {
         const _connex = new Connex({
             node: 'https://mainnet.veblocks.net/',
         })
+        const cgClient = new CoinGecko();
 
         try {
-            const res = await fetch(API_ENDPOINT, { mode: 'no-cors' })
-            const data = await res.json()
-            const usdPerVet = parseFloat(data[0].price)
+            const res = await cgClient.simple.price({
+                ids: ['vechain'],
+                vs_currencies: ['usd']
+            })
+            const data = res.data.vechain.usd
+            const usdPerVet = parseFloat(data)
             setUsdPerVet(usdPerVet)
 
             const result = await getMidPrice(_connex,
