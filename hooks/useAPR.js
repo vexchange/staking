@@ -61,7 +61,7 @@ const useAPR = () => {
         })
 
         try {
-            const res = await fetch(API_ENDPOINT, { mode: 'cors' })
+            const res = await fetch(API_ENDPOINT, { mode: 'no-cors' })
             const data = await res.json()
             const usdPerVet = parseFloat(data[0].price)
             setUsdPerVet(usdPerVet)
