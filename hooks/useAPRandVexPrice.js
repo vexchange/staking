@@ -1,29 +1,29 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
 import { Fetcher, Token, Route } from "vexchange-sdk";
-import { REWARD_TOKEN_ADDRESSES, WVET_ADDRESS} from "../constants";
+import {REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, WVET_ADDRESS} from "../constants";
 import { find } from "lodash";
-import { ethers } from "ethers";
+import {BigNumber, ethers} from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
 import CoinGecko from 'coingecko-api';
+import IERC20 from "../constants/abis/IERC20";
+import useFetchStakingPoolData from "./useFetchStakingPoolData";
 
-const useAPR = () => {
+const useAPRandVexPrice = () => {
     const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
     const [usdPerVet, setUsdPerVet] = useState(0)
     const [vexPerVet, setVexPerVet] = useState(0)
     const [usdPerVex, setUsdPerVex] = useState(0)
-    /** Note: this is the TVL of the LP on Vexchange
-     * Not the TVL on the staking site itself
-     * As we cannot guarantee that every single LP token
-     * Is staked onto our Multirewards contract
-     * If we want to refactor in the future
-     * We need to take into account the number of LP tokens
-     * In existence and the number of LP tokens staked
+    const [pair, setPair] = useState(null)
+
+    /**
+     * This is a percentage in BigNumber representation
+     * i.e. 20% will be represented as 20_000_000_000_000_000_000
      */
-    const [tvl, setTvl] = useState(0)
     const [apr, setApr] = useState(0)
     const { connex, rewardsContract } = useAppContext()
+    const { poolData } = useFetchStakingPoolData()
 
     const getMidPrice = async(
         connex,
@@ -85,15 +85,7 @@ const useAPR = () => {
             setUsdPerVex(usdPerVex);
 
             const pair = result.pair;
-
-            const vexAmountInPair = pair.tokenAmounts[0].toSignificant(10)
-            const vetAmountInPair = pair.tokenAmounts[1].toSignificant(10)
-
-            // The following two amounts should be roughly equivalent
-            const vexValueInUSD = parseFloat(vexAmountInPair) * usdPerVex;
-            const vetValueInUSD = parseFloat(vetAmountInPair) * usdPerVet;
-            const lpTotalValueInUsd = vexValueInUSD + vetValueInUSD;
-            setTvl(lpTotalValueInUsd)
+            setPair(pair)
         } catch (error) {
             console.error("Error fetching", error)
         }
@@ -102,18 +94,37 @@ const useAPR = () => {
     useEffect(calculateIndividualTokenPrices, [connex])
 
     const calculateApr = async () => {
-        if (!rewardsContract || !tvl || !usdPerVex) return;
+        if (!rewardsContract || !pair || !poolData || !connex) return;
 
-        const rewardDataABI = find(MultiRewards, { name: 'rewardData'});
+        const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
         let method = rewardsContract.method(rewardDataABI);
         let res = await method.call(REWARD_TOKEN_ADDRESSES.testnet);
         const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
-        try {
-            const apr = rewardRate.mul(NUM_SECONDS_IN_A_YEAR)
-                .div(parseUnits('1', 'ether')).toNumber() * usdPerVex / tvl * 100
 
-            // Display to 1 decimal point
-            setApr(apr.toFixed(1))
+        try {
+            const totalSupplyABI = find(IERC20, { name: 'totalSupply' })
+            method = connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet).method(totalSupplyABI)
+            res = await method.call()
+
+            const totalLPTokenSupply = BigNumber.from(res.decoded[0])
+            const poolSize = poolData.poolSize;
+            console.assert(poolSize.lte(totalLPTokenSupply),
+                "Staking Pool Size greater than total LP token supply. Something's wrong")
+
+            // This is calculated in the amount of vex tokens instead of usd
+            const vexTvl = pair.tokenAmounts[0].toFixed(18)
+            // Multiply by two to get the pool TVL as this is a 50-50 pool
+            const tvlInVex = parseUnits(vexTvl, 18).mul(2)
+
+            const apr = rewardRate.mul(NUM_SECONDS_IN_A_YEAR)
+                                  .mul(parseUnits('1','ether')) // More units for precision
+                                  .mul(100) // Convert into percentage
+                                  // The following two lines take into account
+                                  // that not all LP tokens are staked on the staking site
+                                  .mul(poolSize)
+                                  .div(totalLPTokenSupply)
+                                  .div(tvlInVex)
+            setApr(apr)
         }
         catch (error) {
             console.error("Error in calculateApr", error)
@@ -121,9 +132,9 @@ const useAPR = () => {
         }
     }
 
-    useEffect(calculateApr, [usdPerVex, tvl, rewardsContract])
+    useEffect(calculateApr, [connex, rewardsContract, pair, poolData])
 
-    return { apr }
+    return { usdPerVex, apr }
 }
 
-export default useAPR
+export default useAPRandVexPrice

@@ -1,14 +1,12 @@
 import { useMemo } from 'react'
 import moment from 'moment'
-import { ethers } from 'ethers'
-import { BigNumber } from '@ethersproject/bignumber'
-import { FullVaultList, REWARD_TOKEN_ADDRESSES } from '../../constants'
 import { Subtitle, Title, PrimaryText } from '../../design'
-import { formatBigNumber } from '../../utils'
-import useAPR from '../../hooks/useAPR'
+import useAPRandVexPrice from '../../hooks/useAPRandVexPrice'
 import useFetchStakingPoolData from "../../hooks/useFetchStakingPoolData";
 import useTextAnimation from '../../hooks/useTextAnimation'
 import useStakingPool from '../../hooks/useStakingPool'
+import { formatBigNumber } from "../../utils";
+import { ExternalIcon } from '../Icons'
 
 import {
   OverviewContainer,
@@ -21,38 +19,31 @@ import {
   UnderlineLink,
 } from './styled'
 
-import { ExternalIcon } from '../Icons'
 
 export default function Overview() {
   const { stakingPools, loading: stakingLoading } = useStakingPool('vex-vet')
-  const { apr } = useAPR()
+  const { usdPerVex, apr } = useAPRandVexPrice()
   const { poolData } = useFetchStakingPoolData()
   const loadingText = useTextAnimation(stakingLoading)
 
 
-  const totalRewardDistributed = useMemo(() => {
-    if (stakingLoading) {
+  const vexPrice = useMemo(() => {
+    if (stakingLoading || !usdPerVex) {
       return loadingText
     }
 
-    let totalDistributed = BigNumber.from(0)
-
-    for (let i = 0; i < FullVaultList.length; i++) {
-      const stakingPool = stakingPools[FullVaultList[i]]
-      if (!stakingPool) {
-        continue
-      }
-      totalDistributed = totalDistributed.add(stakingPool.totalRewardClaimed)
-    }
-
-    return ethers.utils.formatEther(totalDistributed)
-  }, [stakingLoading, loadingText, stakingPools])
+    return ('$' + usdPerVex.toPrecision(4))
+  }, [stakingLoading, loadingText, usdPerVex])
 
   const percentageAPR = useMemo(() => {
     if (!apr) {
       return loadingText
     }
-    return apr
+
+    // return apr
+    if (apr._isBigNumber) return formatBigNumber(apr)
+    else return apr
+
   }, [apr])
 
   const timeTillProgramsEnd = useMemo( () => {
@@ -103,8 +94,8 @@ export default function Overview() {
       </OverviewInfo>
       <OverviewKPIContainer>
         <OverviewKPI>
-          <OverviewLabel>$VEX Distributed</OverviewLabel>
-          <Title>{totalRewardDistributed}</Title>
+          <OverviewLabel>VEX Price</OverviewLabel>
+          <Title>{vexPrice}</Title>
         </OverviewKPI>
         <OverviewKPI>
           <OverviewLabel>Estimated APR</OverviewLabel>
