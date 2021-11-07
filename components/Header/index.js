@@ -42,7 +42,7 @@ function Header() {
         </NavItem>
       ) : (
         <SecondaryMobileNavItem>
-          <Title fontSize={18} color={`${colors.primaryText}7A`}>
+          <Title fontSize={18} color={`${colors.primaryText}7A`} style={{ textTransform: 'uppercase' }}>
             {title}
           </Title>
         </SecondaryMobileNavItem>
@@ -61,10 +61,13 @@ function Header() {
 
       <HeaderAbsoluteContainer>
         <LinksContainer>
+          
           {renderLinkItem(
-            'STAKING',
-            '/',
-            router.asPath === '',
+            'Add Liquidity',
+            'https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6',
+            null,
+            true,
+            true
           )}
         </LinksContainer>
       </HeaderAbsoluteContainer>
