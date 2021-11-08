@@ -226,12 +226,23 @@ export default function PoolCard({
             <div className="d-flex align-items-center">
               <PoolTitle>vex-vet</PoolTitle>
               <Tooltip
+                interactive
                 position="top"
                 trigger="mouseenter"
                 html={(
                   <TooltipContainer>
                     <p className="title"><b>vex-vet</b></p>
                     <p>vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;)</p>
+                    <p>
+                      you can add your liquidity
+                      {' '}
+                      <a
+                        className="link"
+                        target="_blank"
+                        href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6">
+                          here
+                      </a>
+                    </p>
                   </TooltipContainer>
                 )}
               >
@@ -274,7 +285,24 @@ export default function PoolCard({
             }}
           />
         </div>
+
+        <div className="d-flex align-items-center mt-4 w-100">
+          <div>
+            <SecondaryText size="12px">Need liquidity tokens?</SecondaryText>
+            {' '}
+            <SecondaryText size="12px">
+              <a
+                className="link"
+                target="_blank"
+                href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6">
+                  Get VEX-VET LP tokens
+              </a>
+            </SecondaryText>
+          </div>
+        </div>
       </div>
+
+
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
   )

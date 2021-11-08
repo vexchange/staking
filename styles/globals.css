@@ -23,6 +23,10 @@ a {
   text-decoration: none;
 }
 
+a.link {
+  color: #f5a788;
+}
+
 * {
   box-sizing: border-box;
 }

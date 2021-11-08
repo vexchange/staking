@@ -59,7 +59,7 @@ function Header() {
         <Logo />
       </LogoContainer>
 
-      <HeaderAbsoluteContainer>
+      {/* <HeaderAbsoluteContainer>
         <LinksContainer>
           
           {renderLinkItem(
@@ -70,7 +70,7 @@ function Header() {
             true
           )}
         </LinksContainer>
-      </HeaderAbsoluteContainer>
+      </HeaderAbsoluteContainer> */}
 
       <AccountStatus variant="desktop" />
 
