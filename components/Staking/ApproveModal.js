@@ -41,7 +41,7 @@ export default function ApproveModal({
 
     const approveABI = find(IERC20, { name: 'approve' })
     const method = stakingTokenContract.method(approveABI)
-    const clause = method.asClause(REWARDS_ADDRESSES.testnet, constants.MaxUint256)
+    const clause = method.asClause(REWARDS_ADDRESSES.mainnet, constants.MaxUint256)
 
     setStep('approve')
 

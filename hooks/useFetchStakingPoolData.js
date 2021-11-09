@@ -29,54 +29,54 @@ const useFetchStakingPoolData = () => {
   
   // Pool size
   const getBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(totalSupplyABI)
 
   // Pool Reward For Duration
   const getRewardForDuration = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(getRewardForDurationABI)
 
   // Last Time Reward Applicable
   const getLastTimeRewardApplicable = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(lastTimeRewardApplicableABI)
 
   // Period Finish
   const getPeriodFinish = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(periodFinishABI)
 
   //  Current stake
   const getAccountBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(accountBalanceOfABI)
 
   // Unstaked staking token balance
   const getUnstakedBalanceOf = connex?.thor
-    .account(STAKING_TOKEN_ADDRESSES.testnet)
+    .account(STAKING_TOKEN_ADDRESSES.mainnet)
     .method(balanceOfABI)
 
   // Unstaked staking token approval amount
   const getUnstakedAllowanceAmount = connex?.thor
-      .account(STAKING_TOKEN_ADDRESSES.testnet)
+      .account(STAKING_TOKEN_ADDRESSES.mainnet)
       .method(allowanceABI)
 
   // Claimable vex
   const getEarned = connex?.thor
-    .account(REWARDS_ADDRESSES.testnet)
+    .account(REWARDS_ADDRESSES.mainnet)
     .method(earnedABI)
 
   const getPoolData = async () => {
     // Pool size
     const { decoded: { 0: poolSize } } = await getBalanceOf.call()
     // Pool Reward For Duration
-    const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES.testnet)
+    const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES.mainnet)
     // Last Time Reward Applicable
     // Is this value even used?
-    const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.testnet)
+    const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.mainnet)
     // Period Finish
-    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.testnet)
+    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.mainnet)
 
     return {
       vault: 'vex-vet',
@@ -92,13 +92,13 @@ const useFetchStakingPoolData = () => {
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
     // Claimable vex
-    const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES.testnet)
+    const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES.mainnet)
 
     // Unstaked balance
     const { decoded: { 0: unstakedBalance } }  = await getUnstakedBalanceOf.call(account);
 
     // Unstaked allowance
-    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES.testnet)
+    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES.mainnet)
 
     return {
       currentStake: BigNumber.from(accountBalanceOf),
