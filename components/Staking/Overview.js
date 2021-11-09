@@ -80,13 +80,13 @@ export default function Overview() {
           The program aims to incentivize VEX liquidity, expand the voting power to those who miss out on the airdrop and to distribute the governance token to those who have the most skin in the game.
         </OverviewDescription>
         <UnderlineLink
-          href="https://ribbonfinance.medium.com/rgp-2-liquidity-mining-program-cc81f0b7a270"
+          href="https://medium.com/@vexchange/vex-launch-information-9e14b9da4b64"
           target="_blank"
           rel="noreferrer noopener"
         >
           <div className="d-flex mt-4">
             <PrimaryText fontSize={14} className="mr-2">
-              To change to link to our medium article?
+              Read more about the VEX token
             </PrimaryText>
             <ExternalIcon color="white" />
           </div>

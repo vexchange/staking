@@ -113,7 +113,7 @@ export default function ClaimModal({
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
               <BaseUnderlineLink
-                href="https://ribbonfinance.medium.com/rbn-airdrop-distribution-70b6cb0b870c"
+                href="https://medium.com/@vexchange/vex-launch-information-9e14b9da4b64"
                 target="_blank"
                 rel="noreferrer noopener"
                 className="d-flex align-items-center"
