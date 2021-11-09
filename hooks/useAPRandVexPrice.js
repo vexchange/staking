@@ -36,7 +36,6 @@ const useAPRandVexPrice = () => {
         if (chainId == undefined) {
             chainId = ChainId.MAINNET
         }
-
         let base = new Token(chainId, baseToken, baseDecimal);
         let quote = new Token(chainId, quoteToken, quoteDecimal);
         let pair = await Fetcher.fetchPairData(quote, base, connex);
@@ -53,12 +52,6 @@ const useAPRandVexPrice = () => {
     const calculateIndividualTokenPrices = async () => {
         if (!connex) return;
 
-        // Debug Code
-        // To remove for mainnet
-        const { Connex } = await import('@vechain/connex')
-        const _connex = new Connex({
-            node: 'https://mainnet.veblocks.net/',
-        })
         const cgClient = new CoinGecko();
 
         try {
@@ -70,13 +63,9 @@ const useAPRandVexPrice = () => {
             const usdPerVet = parseFloat(data)
             setUsdPerVet(usdPerVet)
 
-            const result = await getMidPrice(_connex,
-                // Base token
+            const result = await getMidPrice(connex,
                 WVET_ADDRESS.mainnet,
-                // Using the VTHO mainnet token address
-                // as a placeholder for now
-                // TODO: replace with mainnet VEX token
-                "0x0000000000000000000000000000456E65726779"
+                REWARD_TOKEN_ADDRESSES.mainnet
             );
 
             const vexPerVet = result.base2quote;
@@ -98,12 +87,12 @@ const useAPRandVexPrice = () => {
 
         const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
         let method = rewardsContract.method(rewardDataABI);
-        let res = await method.call(REWARD_TOKEN_ADDRESSES.testnet);
+        let res = await method.call(REWARD_TOKEN_ADDRESSES.mainnet);
         const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
 
         try {
             const totalSupplyABI = find(IERC20, { name: 'totalSupply' })
-            method = connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet).method(totalSupplyABI)
+            method = connex.thor.account(STAKING_TOKEN_ADDRESSES.mainnet).method(totalSupplyABI)
             res = await method.call()
 
             const totalLPTokenSupply = BigNumber.from(res.decoded[0])
