@@ -18,7 +18,7 @@ const useTokenAllowance = () => {
         decoded: {
           0: _allowance,
         },
-      } = await method.call(account, REWARDS_ADDRESSES.testnet)
+      } = await method.call(account, REWARDS_ADDRESSES.mainnet)
       setTokenAllowance(BigNumber.from(_allowance))
     }
   }

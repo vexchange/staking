@@ -29,13 +29,12 @@ export function AppStateProvider({ children }) {
       try {
         const { Connex } = await import('@vechain/connex')
         const _connex = new Connex({
-          node: 'https://testnet.veblocks.net/',
-          network: 'test',
+          node: 'https://mainnet.veblocks.net/',
         })
         const _ticker = _connex.thor.ticker()
         setConnex(_connex)
-        setStakingTokenContract(_connex.thor.account(STAKING_TOKEN_ADDRESSES.testnet))
-        setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES.testnet))
+        setStakingTokenContract(_connex.thor.account(STAKING_TOKEN_ADDRESSES.mainnet))
+        setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES.mainnet))
         setTicker(_ticker)
       } catch (error) {
         console.warn(`Unable to get connex: ${error}`)
