@@ -102,7 +102,7 @@ export default function Overview() {
           <Title>{percentageAPR} %</Title>
         </OverviewKPI>
         <OverviewKPI>
-          <OverviewLabel>Time till program ends</OverviewLabel>
+          <OverviewLabel>Time till rewards adjust</OverviewLabel>
           <Title>{timeTillProgramsEnd}</Title>
         </OverviewKPI>
       </OverviewKPIContainer>
