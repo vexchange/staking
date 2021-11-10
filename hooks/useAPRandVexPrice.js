@@ -96,8 +96,9 @@ const useAPRandVexPrice = () => {
             res = await method.call()
 
             const totalLPTokenSupply = BigNumber.from(res.decoded[0])
-            const poolSize = poolData.poolSize;
-            console.assert(poolSize.lte(totalLPTokenSupply),
+            const numberOfLPTokensStaked = poolData.poolSize;
+
+            console.assert(numberOfLPTokensStaked.lte(totalLPTokenSupply),
                 "Staking Pool Size greater than total LP token supply. Something's wrong")
 
             // This is calculated in the amount of vex tokens instead of usd
@@ -110,8 +111,9 @@ const useAPRandVexPrice = () => {
                                   .mul(100) // Convert into percentage
                                   // The following two lines take into account
                                   // that not all LP tokens are staked on the staking site
-                                  .mul(poolSize)
-                                  .div(totalLPTokenSupply)
+                                  .mul(totalLPTokenSupply)
+                                  .div(numberOfLPTokensStaked)
+                                  // We divide all the rewards by the total VEX TVL
                                   .div(tvlInVex)
             setApr(apr)
         }
