@@ -26,7 +26,7 @@ const DesktopFooter = () => {
         {renderLinkItem('BLOG', 'https://medium.com/vexchange')}
       </LeftContainer>
       <LinksContainer>
-        {renderLinkItem('TELEGRAM', 'https://t.me/vexchange')}
+        {renderLinkItem('DISCORD', 'https://discord.gg/bzvUNqTENp')}
         {renderLinkItem('TWITTER', 'https://twitter.com/VexchangeIO')}
         {renderLinkItem('GITHUB', 'https://github.com/vexchange')}
       </LinksContainer>
