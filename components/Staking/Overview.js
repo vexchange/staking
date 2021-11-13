@@ -1,13 +1,11 @@
 import { useMemo } from 'react'
-import moment from 'moment'
 import { Subtitle, Title, PrimaryText } from '../../design'
 import useAPRandVexPrice from '../../hooks/useAPRandVexPrice'
-import useFetchStakingPoolData from "../../hooks/useFetchStakingPoolData";
 import useTextAnimation from '../../hooks/useTextAnimation'
 import useStakingPool from '../../hooks/useStakingPool'
-import { formatBigNumber } from "../../utils";
+import { formatBigNumber, formatAmount } from "../../utils";
 import { ExternalIcon } from '../Icons'
-
+import { formatEther } from "ethers/lib/utils";
 import {
   OverviewContainer,
   OverviewDescription,
@@ -20,12 +18,11 @@ import {
 } from './styled'
 
 
-export default function Overview() {
-  const { stakingPools, loading: stakingLoading } = useStakingPool('vex-vet')
-  const { usdPerVex, apr } = useAPRandVexPrice()
-  const { poolData } = useFetchStakingPoolData()
-  const loadingText = useTextAnimation(stakingLoading)
 
+export default function Overview() {
+  const { loading: stakingLoading } = useStakingPool('vex-vet')
+  const { usdPerVex, apr, tvlInUsd } = useAPRandVexPrice()
+  const loadingText = useTextAnimation(stakingLoading)
 
   const vexPrice = useMemo(() => {
     if (stakingLoading || !usdPerVex) {
@@ -46,26 +43,14 @@ export default function Overview() {
 
   }, [apr])
 
-  const timeTillProgramsEnd = useMemo( () => {
-    if(!poolData.periodFinish) return
-
-    const periodFinish = moment(poolData.periodFinish)
-    let timeLeftDuration = moment.duration(periodFinish.diff(moment()))
-
-    if (timeLeftDuration <= 0) {
-      return 'End of Rewards'
+  const usdValueStaked = useMemo( () => {
+    if (!tvlInUsd) {
+      return loadingText;
     }
 
-    const days = Math.floor( timeLeftDuration.asDays() )
-    timeLeftDuration.subtract(moment.duration(days, 'days'))
-
-    const hours = Math.floor( timeLeftDuration.asHours() )
-    timeLeftDuration.subtract(moment.duration(hours, 'hours'))
-
-    const minutes = Math.floor( timeLeftDuration.asMinutes() )
-
-    return `${days}D ${hours}H ${minutes}M`
-  }, [poolData])
+    if (tvlInUsd._isBigNumber) return '$' + formatAmount(formatEther(tvlInUsd))
+    else return tvlInUsd
+  }, [tvlInUsd])
 
   return (
     <OverviewContainer>
@@ -102,8 +87,8 @@ export default function Overview() {
           <Title>{percentageAPR} %</Title>
         </OverviewKPI>
         <OverviewKPI>
-          <OverviewLabel>Time till rewards adjust</OverviewLabel>
-          <Title>{timeTillProgramsEnd}</Title>
+          <OverviewLabel>USD Value Staked</OverviewLabel>
+          <Title>{usdValueStaked}</Title>
         </OverviewKPI>
       </OverviewKPIContainer>
     </OverviewContainer>

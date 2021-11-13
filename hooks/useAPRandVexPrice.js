@@ -1,9 +1,9 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
 import { Fetcher, Token, Route } from "vexchange-sdk";
-import {REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, WVET_ADDRESS} from "../constants";
+import { REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, WVET_ADDRESS } from "../constants";
 import { find } from "lodash";
-import {BigNumber, ethers} from "ethers";
+import { BigNumber, ethers } from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
 import CoinGecko from 'coingecko-api';
@@ -15,6 +15,7 @@ const useAPRandVexPrice = () => {
     const [usdPerVet, setUsdPerVet] = useState(0)
     const [vexPerVet, setVexPerVet] = useState(0)
     const [usdPerVex, setUsdPerVex] = useState(0)
+    const [tvlInUsd, setTvlInUsd] = useState(0)
     const [pair, setPair] = useState(null)
 
     /**
@@ -83,7 +84,8 @@ const useAPRandVexPrice = () => {
     useEffect(calculateIndividualTokenPrices, [connex])
 
     const calculateApr = async () => {
-        if (!rewardsContract || !pair || !poolData || !connex) return;
+        if (!rewardsContract || !pair || poolData.poolSize.eq('0') ||
+            !connex || !usdPerVex) return;
 
         const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
         let method = rewardsContract.method(rewardDataABI);
@@ -116,16 +118,24 @@ const useAPRandVexPrice = () => {
                                   // We divide all the rewards by the total VEX TVL
                                   .div(tvlInVex)
             setApr(apr)
+
+            const tvlInUsd = tvlInVex.mul(parseUnits(usdPerVex.toString()))
+                                .mul(numberOfLPTokensStaked)
+                                .div(totalLPTokenSupply)
+                                .div(parseUnits('1', 'ether'))
+
+            setTvlInUsd(tvlInUsd)
         }
         catch (error) {
             console.error("Error in calculateApr", error)
             setApr('TBD')
+            setTvlInUsd('TBD')
         }
     }
 
-    useEffect(calculateApr, [connex, rewardsContract, pair, poolData])
+    useEffect(calculateApr, [connex, rewardsContract, pair, poolData, usdPerVex])
 
-    return { usdPerVex, apr }
+    return { usdPerVex, apr, tvlInUsd }
 }
 
 export default useAPRandVexPrice
