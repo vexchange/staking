@@ -17,6 +17,20 @@ export const getDefaultSignificantDecimalsFromAssetDecimals = decimals => {
   }
 }
 
+export const userAccount = {
+  get: (account) => {
+    const savedAccount = localStorage.getItem('wallet')
+    return savedAccount ?? account
+  },
+  set: (account) => {
+    localStorage.setItem('wallet', account)
+  },
+  remove: () => {
+    localStorage.removeItem('wallet')
+    window.location.href = '/'
+  }
+}
+
 export const copyTextToClipboard = text => {
   const textField = document.createElement('textarea')
   textField.innerText = text

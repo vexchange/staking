@@ -94,7 +94,7 @@ export default function PoolCard({
 
   const vexPill = useMemo(() => {
     return (
-      <ClaimableTokenPillContainer>
+      <ClaimableTokenPillContainer onClick={ () => { setShowClaimModal(true) } }>
         <ClaimableTokenPill color={color}>
           <BaseIndicator
             size={8}
