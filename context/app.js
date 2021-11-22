@@ -6,7 +6,8 @@ import {
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
-import {REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
+import { REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES } from '../constants'
+import { userAccount } from '../utils'
 
 const AppContext = createContext({})
 
@@ -36,10 +37,15 @@ export function AppStateProvider({ children }) {
         setStakingTokenContract(_connex.thor.account(STAKING_TOKEN_ADDRESSES.mainnet))
         setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES.mainnet))
         setTicker(_ticker)
+        const account = userAccount.get()
+        if (account) {
+          setAccount(account)
+        }
       } catch (error) {
         console.warn(`Unable to get connex: ${error}`)
       }
     }
+
     if (!connex) {
       initConnex()
     }
@@ -64,6 +70,7 @@ export function AppStateProvider({ children }) {
     try {
       const { annex } = await sign.request()
       setAccount(annex.signer)
+      userAccount.set(annex.signer)
     } catch (error) {
       console.warn(`Unable to get account: ${error}`)
     }

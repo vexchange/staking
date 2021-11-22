@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 
 import { useAppContext } from '../../context/app'
 
-import useOutsideAlerter from '../../hooks/useOutsideAlerter' 
-import { truncateAddress, copyTextToClipboard } from '../../utils'
+import useOutsideAlerter from '../../hooks/useOutsideAlerter'
+import { truncateAddress, copyTextToClipboard, userAccount } from '../../utils'
 
 import MenuButton from '../MenuButton'
 import ButtonArrow from '../ButtonArrow'
@@ -123,6 +123,7 @@ function AccountStatus({ variant }) {
           </WalletButton>
           <WalletDesktopMenu isMenuOpen={isMenuOpen}>
             {renderMenuItem('CHANGE WALLET', handleChangeWallet)}
+            {renderMenuItem('DISCONNECT WALLET', () => { userAccount.remove() })}
             {renderMenuItem(
                 copyState === 'hidden' ? 'Copy Address' : 'Address Copied',
                 handleCopyAddress,
