@@ -3,10 +3,10 @@ import Image from 'next/image'
 export default function Logo() {
   return (
     <Image
-      src="/vex-ticker.png"
-      alt="Picture of the author"
+      src="/logo.svg"
+      alt="Vexchange"
       width={40}
-      height={40}
+      height={37}
     />
   )
 }
