@@ -32,6 +32,9 @@ export const HeaderContainer = styled.div`
   position: sticky;
   top: 0;
   border-bottom: 1px solid ${colors.border};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   @media (max-width: ${sizes.lg}px) {
     padding: 16px 24px;
@@ -72,8 +75,7 @@ export const HeaderContainer = styled.div`
 
 export const LogoContainer = styled.div`
   padding-left: 40px;
-  margin-right: auto;
-  z-index: 1000;
+  display: flex;
 
   @media (max-width: ${sizes.md}px) {
     padding-left: 0;
