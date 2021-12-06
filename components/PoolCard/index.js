@@ -47,13 +47,11 @@ export default function PoolCard({
   const { account, initAccount } = useAppContext();
   const { tokenAllowance } = useTokenAllowance();
 
-  const { loading: stakingLoading } = useStakingPool("vex-vet");
   const { tvlInUsd } = useAPRandVexPrice();
-  const loadingText = useTextAnimation(stakingLoading);
 
   const [usdValueStaked, usdValuePoolSize] = useMemo(() => {
     if (!tvlInUsd || !stakingPoolData) {
-      return loadingText;
+      return [null, null];
     }
     return [
       formatBigNumber(
@@ -301,7 +299,7 @@ export default function PoolCard({
         {/* Capbar */}
         <div className="w-100 mt-4">
           <CapBar
-            loading={false}
+            loading={!(usdValueStaked && usdValuePoolSize)}
             current={usdValueStaked}
             cap={usdValuePoolSize}
             copies={{
