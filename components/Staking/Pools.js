@@ -10,6 +10,7 @@ import { StakingPoolsContainer } from './styled'
 import ApproveModal from './ApproveModal'
 import ActionModal from '../ActionModal'
 import ClaimModal from './ClaimModal'
+import { STAKING_POOLS } from '../../constants/pools'
 
 const StakingPool = ({ vaultOption }) => {
   const { transactions } = useTransactions()
@@ -96,7 +97,11 @@ export default function Pools() {
       >
         Staking Pools
       </Title>
-      <StakingPool vaultOption="vex-vet" />
+      {
+        STAKING_POOLS.map((stakingPool) => {
+          return <StakingPool key={stakingPool.poolName} vaultOption={stakingPool.poolName} />
+        })
+      }
     </StakingPoolsContainer>
   )
 }
