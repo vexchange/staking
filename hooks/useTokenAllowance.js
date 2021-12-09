@@ -3,7 +3,7 @@ import { BigNumber, constants } from 'ethers'
 import { find } from 'lodash'
 
 import { useAppContext } from '../context/app'
-import { REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES } from '../constants'
+import { REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE } from '../constants'
 import IERC20 from '../constants/abis/IERC20.js'
 
 const useTokenAllowance = () => {
@@ -18,7 +18,7 @@ const useTokenAllowance = () => {
         decoded: {
           0: _allowance,
         },
-      } = await method.call(account, REWARDS_ADDRESSES.mainnet)
+      } = await method.call(account, REWARDS_ADDRESSES[VECHAIN_NODE])
       setTokenAllowance(BigNumber.from(_allowance))
     }
   }

@@ -1,15 +1,14 @@
+import { useState } from "react";
+import useScreenSize from "../../hooks/useScreenSize";
 
-import { useState } from 'react'
-import useScreenSize from '../../hooks/useScreenSize'
+import DesktopFooter from "../DesktopFooter";
+import AccountStatus from "../AccountStatus";
 
-import DesktopFooter from '../DesktopFooter'
-import AccountStatus from '../AccountStatus'
-
-import { FooterContainer, MobileFooterOffsetContainer } from './styled'
+import { FooterContainer, MobileFooterOffsetContainer } from "./styled";
 
 function Footer() {
-  const { height: screenHeight } = useScreenSize()
-  const [showVaultPosition, setShowVaultPosition] = useState(false)
+  const { height: screenHeight } = useScreenSize();
+  const [showVaultPosition, setShowVaultPosition] = useState(false);
 
   return (
     <>
@@ -21,15 +20,11 @@ function Footer() {
         <DesktopFooter />
 
         {/** Mobile */}
-        <AccountStatus
-          variant="mobile"
-          vault="vex-vet"
-          showVaultPositionHook={setShowVaultPosition}
-        />
+        <AccountStatus variant="mobile" />
       </FooterContainer>
       <MobileFooterOffsetContainer showVaultPosition={showVaultPosition} />
     </>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

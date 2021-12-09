@@ -61,7 +61,7 @@ export default function ClaimModal({
         txhash,
         type: 'rewardClaim',
         amount: ethers.utils.formatEther(stakingPoolData.userData.claimableVex),
-        stakeAsset: vaultOption,
+        stakeAsset: vaultOption.stakeAsset,
       })
 
       const txVisitor = connex.thor.transaction(txhash)

@@ -1,5 +1,4 @@
 import { BigNumber } from 'ethers'
-import moment from "moment";
 
 export const defaultStakingPoolData = {
   poolSize: BigNumber.from(0),

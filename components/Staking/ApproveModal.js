@@ -19,9 +19,7 @@ import { useTransactions } from '../../context/transactions'
 
 import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
-import {REWARDS_ADDRESSES} from "../../constants";
-
-const { parseUnits } = utils
+import {REWARDS_ADDRESSES, VECHAIN_NODE} from "../../constants";
 
 export default function ApproveModal({
   show,
@@ -41,7 +39,7 @@ export default function ApproveModal({
 
     const approveABI = find(IERC20, { name: 'approve' })
     const method = stakingTokenContract.method(approveABI)
-    const clause = method.asClause(REWARDS_ADDRESSES.mainnet, constants.MaxUint256)
+    const clause = method.asClause(REWARDS_ADDRESSES[VECHAIN_NODE], constants.MaxUint256)
 
     setStep('approve')
 
@@ -60,7 +58,7 @@ export default function ApproveModal({
       addTransaction({
         txhash,
         type: 'stakingApproval',
-        stakeAsset: vaultOption,
+        stakeAsset: vaultOption.stakeAsset,
       })
 
       const txVisitor = connex.thor.transaction(txhash)

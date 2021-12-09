@@ -124,7 +124,7 @@ const ActionModal = ({
         txhash,
         type: stake ? 'stake' : 'unstake',
         amount: input,
-        stakeAsset: vaultOption,
+        stakeAsset: vaultOption.stakeAsset,
       })
 
       const txVisitor = connex.thor.transaction(txhash)

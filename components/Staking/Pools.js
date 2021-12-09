@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useStakingPoolData } from '../../context/data'
 import { Title } from '../../design'
@@ -10,7 +10,7 @@ import { StakingPoolsContainer } from './styled'
 import ApproveModal from './ApproveModal'
 import ActionModal from '../ActionModal'
 import ClaimModal from './ClaimModal'
-import { STAKING_POOLS } from '../../constants/pools'
+import { STAKING_POOLS } from '../../constants'
 
 const StakingPool = ({ vaultOption }) => {
   const { transactions } = useTransactions()
@@ -29,7 +29,7 @@ const StakingPool = ({ vaultOption }) => {
       'rewardClaim',
     ].includes(
       currentTx.type,
-    ) && currentTx.stakeAsset === vaultOption && !currentTx.status)
+    ) && currentTx.stakeAsset === vaultOption.stakeAsset && !currentTx.status)
 
     if (!ongoingTx) {
       return undefined
@@ -37,20 +37,6 @@ const StakingPool = ({ vaultOption }) => {
 
     return ongoingTx.type
   }, [transactions, vaultOption])
-
-  const showStakeModal = useMemo(() => {
-    if (ongoingTransaction === 'stake') {
-      /** Always show staking modal when there is ongoing transaction */
-      return true
-    }
-
-    if (ongoingTransaction === 'unstake') {
-      /** Likewise with unstaking transaction */
-      return false
-    }
-
-    return isStakeAction
-  }, [isStakeAction, ongoingTransaction])
 
   return (
     <>
@@ -75,6 +61,7 @@ const StakingPool = ({ vaultOption }) => {
       />
       <PoolCard
         stakingPoolData={stakingPoolData}
+        vaultOption={vaultOption}
         setShowApprovalModal={setShowApprovalModal}
         setShowClaimModal={setShowClaimModal}
         setShowActionModal={setShowActionModal}
@@ -99,7 +86,7 @@ export default function Pools() {
       </Title>
       {
         STAKING_POOLS.map((stakingPool) => {
-          return <StakingPool key={stakingPool.poolName} vaultOption={stakingPool.poolName} />
+          return <StakingPool key={stakingPool.stakeAsset} vaultOption={stakingPool} />
         })
       }
     </StakingPoolsContainer>

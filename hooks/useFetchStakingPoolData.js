@@ -6,7 +6,7 @@ import { find } from 'lodash'
 import IERC20 from '../constants/abis/IERC20.js'
 import MultiRewards from '../constants/abis/MultiRewards.js'
 
-import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES} from '../constants'
+import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE} from '../constants'
 import { useAppContext } from '../context/app'
 import { defaultStakingPoolData, defaultUserData } from '../models/staking'
 // import { useTransactions } from '../context/transactions'
@@ -26,57 +26,57 @@ const useFetchStakingPoolData = () => {
   const periodFinishABI = find(MultiRewards, { name: 'rewardData' })
   const accountBalanceOfABI = find(MultiRewards, { name: 'balanceOf' })
   const earnedABI = find(MultiRewards, { name: 'earned' })
-  
+
   // Pool size
   const getBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(totalSupplyABI)
 
   // Pool Reward For Duration
   const getRewardForDuration = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(getRewardForDurationABI)
 
   // Last Time Reward Applicable
   const getLastTimeRewardApplicable = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(lastTimeRewardApplicableABI)
 
   // Period Finish
   const getPeriodFinish = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(periodFinishABI)
 
   //  Current stake
   const getAccountBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(accountBalanceOfABI)
 
   // Unstaked staking token balance
   const getUnstakedBalanceOf = connex?.thor
-    .account(STAKING_TOKEN_ADDRESSES.mainnet)
+    .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
     .method(balanceOfABI)
 
   // Unstaked staking token approval amount
   const getUnstakedAllowanceAmount = connex?.thor
-      .account(STAKING_TOKEN_ADDRESSES.mainnet)
+      .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
       .method(allowanceABI)
 
   // Claimable vex
   const getEarned = connex?.thor
-    .account(REWARDS_ADDRESSES.mainnet)
+    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
     .method(earnedABI)
 
   const getPoolData = async () => {
     // Pool size
     const { decoded: { 0: poolSize } } = await getBalanceOf.call()
     // Pool Reward For Duration
-    const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES.mainnet)
+    const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
     // Last Time Reward Applicable
     // Is this value even used?
-    const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES.mainnet)
+    const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
     // Period Finish
-    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES.mainnet)
+    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
 
     return {
       vault: 'vex-vet',
@@ -92,13 +92,13 @@ const useFetchStakingPoolData = () => {
     const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
 
     // Claimable vex
-    const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES.mainnet)
+    const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
 
     // Unstaked balance
     const { decoded: { 0: unstakedBalance } }  = await getUnstakedBalanceOf.call(account);
 
     // Unstaked allowance
-    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES.mainnet)
+    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES[VECHAIN_NODE])
 
     return {
       currentStake: BigNumber.from(accountBalanceOf),
@@ -117,7 +117,7 @@ const useFetchStakingPoolData = () => {
     if (connex) {
       getStakingPoolData()
     }
-    
+
   }, [connex, tick])
 
   useEffect(() => {

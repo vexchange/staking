@@ -16,7 +16,7 @@ const CapBar = ({
   labelConfig = { fontSize: 16 },
   statsConfig = { fontSize: 16 },
   barConfig = { height: 16, extraClassNames: 'my-3', radius: 4 },
-  asset,
+  vaultOption,
 }) => {
   let percent = cap > 0 ? current / cap : 0;
   if (percent < 0) {
@@ -36,7 +36,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} VEX-VET`
+            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} ${vaultOption.stakeAsset}`
               }`}
         </Title>
       </div>
@@ -59,7 +59,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCap ? displayCap : `${formatAmount(cap)} VEX-VET`}`}
+            : `${displayCap ? displayCap : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}`}
         </Title>
       </div>
     </div>
