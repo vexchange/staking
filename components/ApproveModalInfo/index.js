@@ -31,13 +31,13 @@ const ApproveModalInfo = ({
         </LogoContainer>
       </BaseModalContentColumn>
       <BaseModalContentColumn marginTop={8}>
-        <ApproveAssetTitle str={vaultOption}>{vaultOption}</ApproveAssetTitle>
+        <ApproveAssetTitle str={vaultOption.stakeAsset}>{vaultOption.stakeAsset}</ApproveAssetTitle>
       </BaseModalContentColumn>
       <BaseModalContentColumn>
         <PrimaryText className="text-center font-weight-normal">
           Before you stake, the pool needs your permission to hold your
           {' '}
-          {vaultOption}
+          {vaultOption.stakeAsset}
           {' '}
           tokens.
         </PrimaryText>

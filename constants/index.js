@@ -42,16 +42,17 @@ export const REWARD_TOKEN_ADDRESSES = {
  */
 export const STAKING_POOLS = [
   {
-    stakeAsset: "vex-vet",
+    stakeAsset: "VEX-VET",
+    stakeAssetLogo: "/imgs/tokens/vex.svg",
     stakeAssetUrlPart: "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
-    rewardToken: "vex",
+    rewardToken: "VTHO",
     stakingTokenAddress: {
       mainnet: "0x39cd888a1583498AD30E716625AE1a00ff51286D",
       testnet: "0x136f4e8CD2A5dda330EF1B47A102B25122bf066C",
     },
     rewardsAddress: {
       mainnet: "0x538f8890a383c44e59df4c7263d96ca8048da2c7",
-      testnet: "0x03ec9c93ed8a0dd68a9a4ac868c06fae3eecad01",
+      testnet: "0xdb006087ba94769d4694141eb8c9737296b16414",
     },
     rewardTokenAddress: {
       mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",

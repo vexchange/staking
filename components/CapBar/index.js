@@ -12,7 +12,6 @@ const CapBar = ({
   current,
   cap,
   copies = { current: 'Total Deposits', cap: 'Limit' },
-  displayData: { current: displayCurrent, cap: displayCap } = {},
   labelConfig = { fontSize: 16 },
   statsConfig = { fontSize: 16 },
   barConfig = { height: 16, extraClassNames: 'my-3', radius: 4 },
@@ -36,8 +35,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} ${vaultOption.stakeAsset}`
-              }`}
+            : `${formatAmount(current)} ${vaultOption.stakeAsset}`}
         </Title>
       </div>
 
@@ -59,7 +57,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCap ? displayCap : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}`}
+            : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}
         </Title>
       </div>
     </div>

@@ -147,7 +147,7 @@ const ActionModal = ({
     connex,
     stakingReward,
     onClose,
-    vaultOption,
+    vaultOption.stakeAsset,
     stake,
   ])
 
@@ -199,13 +199,13 @@ const ActionModal = ({
               </LogoContainer>
             </BaseModalContentColumn>
             <BaseModalContentColumn marginTop={8}>
-              <AssetTitle str={vaultOption}>{vaultOption}</AssetTitle>
+              <AssetTitle str={vaultOption.stakeAsset}>{vaultOption.stakeAsset}</AssetTitle>
             </BaseModalContentColumn>
             <BaseModalContentColumn>
               <div className="d-flex w-100 flex-wrap">
                 <BaseInputLabel>
                   AMOUNT (
-                  {vaultOption}
+                  {vaultOption.stakeAsset}
                   )
                 </BaseInputLabel>
                 <BaseInputContainer className="position-relative">
@@ -301,7 +301,7 @@ const ActionModal = ({
                 AMOUNT
                 {' '}
                 (
-                {vaultOption}
+                {vaultOption.stakeAsset}
                 )
               </BaseInputLabel>
             </BaseModalContentColumn>
@@ -312,7 +312,7 @@ const ActionModal = ({
             </BaseModalContentColumn>
             <InfoColumn>
               <SecondaryText>Pool</SecondaryText>
-              <InfoData>{vaultOption}</InfoData>
+              <InfoData>{vaultOption.stakeAsset}</InfoData>
             </InfoColumn>
             <InfoColumn>
               <SecondaryText>Your Stake</SecondaryText>
@@ -396,7 +396,7 @@ const ActionModal = ({
     handleActionPressed,
     step,
     txId,
-    vaultOption,
+    vaultOption.stakeAsset,
     stakingPoolData,
     renderActionButtonText,
   ])

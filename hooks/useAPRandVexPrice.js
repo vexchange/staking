@@ -1,7 +1,7 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
 import { Fetcher, Token, Route } from "vexchange-sdk";
-import { REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, WVET_ADDRESS } from "../constants";
+import { CHAIN_ID, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE, WVET_ADDRESS } from "../constants";
 import { find } from "lodash";
 import { BigNumber, ethers } from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
@@ -32,17 +32,14 @@ const useAPRandVexPrice = () => {
         quoteToken,
         baseDecimal = 18,
         quoteDecimal = 18,
-        chainId = 1,
+        chainId = CHAIN_ID.mainnet,
     ) => {
-        if (chainId == undefined) {
-            chainId = ChainId.MAINNET
-        }
         let base = new Token(chainId, baseToken, baseDecimal);
         let quote = new Token(chainId, quoteToken, quoteDecimal);
         let pair = await Fetcher.fetchPairData(quote, base, connex);
-        let route = await new Route([pair], base);
-        let base2quote = await route.midPrice.toSignificant(6);
-        let quote2base = await route.midPrice.invert().toSignificant(6);
+        let route = new Route([pair], base);
+        let base2quote = route.midPrice.toSignificant(6);
+        let quote2base = route.midPrice.invert().toSignificant(6);
         return {
             base2quote: parseFloat(base2quote),
             quote2base: parseFloat(quote2base),
@@ -64,9 +61,10 @@ const useAPRandVexPrice = () => {
             const usdPerVet = parseFloat(data)
             setUsdPerVet(usdPerVet)
 
-            const result = await getMidPrice(connex,
-                WVET_ADDRESS.mainnet,
-                REWARD_TOKEN_ADDRESSES.mainnet
+            const result = await getMidPrice(
+                connex,
+                WVET_ADDRESS[VECHAIN_NODE],
+                REWARD_TOKEN_ADDRESSES[VECHAIN_NODE]
             );
 
             const vexPerVet = result.base2quote;
@@ -89,12 +87,12 @@ const useAPRandVexPrice = () => {
 
         const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
         let method = rewardsContract.method(rewardDataABI);
-        let res = await method.call(REWARD_TOKEN_ADDRESSES.mainnet);
+        let res = await method.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE]);
         const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
 
         try {
             const totalSupplyABI = find(IERC20, { name: 'totalSupply' })
-            method = connex.thor.account(STAKING_TOKEN_ADDRESSES.mainnet).method(totalSupplyABI)
+            method = connex.thor.account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE]).method(totalSupplyABI)
             res = await method.call()
 
             const totalLPTokenSupply = BigNumber.from(res.decoded[0])

@@ -82,7 +82,7 @@ export default function ApproveModal({
     onClose,
     stakingTokenContract,
     connex,
-    vaultOption,
+    vaultOption.stakeAsset,
   ])
 
   const handleClose = useCallback(() => {

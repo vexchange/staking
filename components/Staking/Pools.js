@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 
 import { useStakingPoolData } from '../../context/data'
 import { Title } from '../../design'
-import { useTransactions } from '../../context/transactions'
 
 import PoolCard from '../PoolCard'
 
@@ -13,30 +12,12 @@ import ClaimModal from './ClaimModal'
 import { STAKING_POOLS } from '../../constants'
 
 const StakingPool = ({ vaultOption }) => {
-  const { transactions } = useTransactions()
   const { stakingPoolData } = useStakingPoolData(vaultOption)
 
   const [showApprovalModal, setShowApprovalModal] = useState(false)
   const [isStakeAction, setIsStakeAction] = useState(true)
   const [showActionModal, setShowActionModal] = useState(false)
   const [showClaimModal, setShowClaimModal] = useState(false)
-
-  const ongoingTransaction = useMemo(() => {
-    const ongoingTx = (transactions || []).find(currentTx => [
-      'stakingApproval',
-      'stake',
-      'unstake',
-      'rewardClaim',
-    ].includes(
-      currentTx.type,
-    ) && currentTx.stakeAsset === vaultOption.stakeAsset && !currentTx.status)
-
-    if (!ongoingTx) {
-      return undefined
-    }
-
-    return ongoingTx.type
-  }, [transactions, vaultOption])
 
   return (
     <>
