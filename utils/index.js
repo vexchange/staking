@@ -19,14 +19,14 @@ export const getDefaultSignificantDecimalsFromAssetDecimals = decimals => {
 
 export const userAccount = {
   get: (account) => {
-    const savedAccount = localStorage.getItem('wallet')
+    const savedAccount = localStorage.getItem('staking-wallet')
     return savedAccount ?? account
   },
   set: (account) => {
-    localStorage.setItem('wallet', account)
+    localStorage.setItem('staking-wallet', account)
   },
   remove: () => {
-    localStorage.removeItem('wallet')
+    localStorage.removeItem('staking-wallet')
     window.location.href = '/'
   }
 }
@@ -59,4 +59,12 @@ export const formatAmount = n => {
   if (n >= 1e12) return `${parseFloat((n / 1e12).toFixed(2))}T`
 
   return ''
+}
+
+export const getInfoByPoolId = (info, stakingPoolData, poolId) => {
+  if (!stakingPoolData || !stakingPoolData[info]) return false
+
+  return stakingPoolData[info].filter((obj) => {
+    return obj.id === poolId
+  })
 }

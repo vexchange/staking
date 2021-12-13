@@ -28,18 +28,14 @@ export default function ApproveModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions()
-  const { connex, account, stakingTokenContract, ticker } = useAppContext()
+  const { connex, account, connexStakingPools, ticker } = useAppContext()
   const [step, setStep] = useState('info')
   const [txId, setTxId] = useState('');
 
   const handleApprove = useCallback(async () => {
-    if (!stakingTokenContract) {
-      return
-    }
-
     const approveABI = find(IERC20, { name: 'approve' })
-    const method = stakingTokenContract.method(approveABI)
-    const clause = method.asClause(REWARDS_ADDRESSES[VECHAIN_NODE], constants.MaxUint256)
+    const method = connexStakingPools[vaultOption.id].stakingTokenContract.method(approveABI)
+    const clause = method.asClause(vaultOption.rewardsAddress[VECHAIN_NODE], constants.MaxUint256)
 
     setStep('approve')
 
@@ -76,11 +72,9 @@ export default function ApproveModal({
     }
   }, [
     find,
-    REWARDS_ADDRESSES,
     IERC20,
     addTransaction,
     onClose,
-    stakingTokenContract,
     connex,
     vaultOption.stakeAsset,
   ])
@@ -143,7 +137,7 @@ export default function ApproveModal({
 
   const modalHeight = useMemo(() => {
     if (step === 'info') {
-      return stakingPoolData.userData.unstakedBalance.isZero() ? 476 : 504
+      return stakingPoolData.userData && stakingPoolData.userData.unstakedBalance.isZero() ? 476 : 504
     }
 
     return 424

@@ -1,10 +1,6 @@
 import { createContext, useRef, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {
-  REWARDS_ADDRESSES,
-  STAKING_TOKEN_ADDRESSES,
-  VECHAIN_NODE,
-} from "../constants";
+import { STAKING_POOLS, VECHAIN_NODE } from "../constants";
 import { userAccount } from "../utils";
 
 const AppContext = createContext({});
@@ -15,8 +11,7 @@ export function AppStateProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [ticker, setTicker] = useState(null);
   const [tick, setTick] = useState(null);
-  const [stakingTokenContract, setStakingTokenContract] = useState(null);
-  const [rewardsContract, setRewardsContract] = useState(null);
+  const [connexStakingPools, setConnexStakingPools] = useState(null);
   const ref = useRef(connex);
 
   useEffect(() => {
@@ -33,15 +28,23 @@ export function AppStateProvider({ children }) {
         });
         const _ticker = _connex.thor.ticker();
         setConnex(_connex);
-        setStakingTokenContract(
-          _connex.thor.account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
-        );
-        setRewardsContract(_connex.thor.account(REWARDS_ADDRESSES[VECHAIN_NODE]));
         setTicker(_ticker);
         const account = userAccount.get();
         if (account) {
           setAccount(account);
         }
+        const connexStakingPools = {};
+        STAKING_POOLS.map((stakingPool) => {
+          connexStakingPools[stakingPool.id] = {
+            stakingTokenContract: _connex.thor.account(
+              stakingPool.stakingTokenAddress[VECHAIN_NODE]
+            ),
+            rewardsContract: _connex.thor.account(
+              stakingPool.rewardsAddress[VECHAIN_NODE]
+            ),
+          };
+        });
+        setConnexStakingPools(connexStakingPools);
       } catch (error) {
         console.warn(`Unable to get connex: ${error}`);
       }
@@ -85,8 +88,7 @@ export function AppStateProvider({ children }) {
         initAccount,
         ticker,
         tick,
-        stakingTokenContract,
-        rewardsContract,
+        connexStakingPools,
       }}
     >
       {children}

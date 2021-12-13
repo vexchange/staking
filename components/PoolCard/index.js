@@ -17,7 +17,7 @@ import useTextAnimation from "../../hooks/useTextAnimation";
 import useTokenAllowance from "../../hooks/useTokenAllowance";
 
 import CapBar from "../CapBar";
-import Image from 'next/image'
+import Image from "next/image";
 import HelpInfo from "../HelpInfo";
 
 import {
@@ -44,7 +44,7 @@ export default function PoolCard({
 }) {
   const { transactions } = useTransactions();
   const { account, initAccount } = useAppContext();
-  const { tokenAllowance } = useTokenAllowance();
+  const { tokenAllowance } = useTokenAllowance(vaultOption);
 
   const color = colors.orange;
 
@@ -115,10 +115,12 @@ export default function PoolCard({
             className="mr-2"
             style={{ marginRight: "5px" }}
           />
-          <Subtitle className="mr-2">{ vaultOption.rewardToken } to claim</Subtitle>
+          <Subtitle className="mr-2">
+            {vaultOption.rewardToken} to claim
+          </Subtitle>
           <ClaimableTokenAmount color={color} style={{ marginLeft: "8px" }}>
             {account
-              ? formatBigNumber(stakingPoolData.userData.claimableVex)
+              ? formatBigNumber(stakingPoolData.userData.claimableRewardToken)
               : "---"}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>
@@ -145,7 +147,7 @@ export default function PoolCard({
     const showApprove = tokenAllowance.lt(
       stakingPoolData.userData.unstakedBalance
     );
-    const showClaim = stakingPoolData.userData.claimableVex.gt(0);
+    const showClaim = stakingPoolData.userData.claimableRewardToken.gt(0);
     const showUnstake = stakingPoolData.userData.currentStake.gt(0);
 
     return (
@@ -195,7 +197,7 @@ export default function PoolCard({
           {ongoingTransaction === "rewardClaim"
             ? primaryActionLoadingText
             : `${
-                stakingPoolData.userData.claimableVex.isZero()
+                stakingPoolData.userData.claimableRewardToken.isZero()
                   ? "Claim Info"
                   : "Claim"
               }`}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import moment from 'moment'
 import { find } from 'lodash'
@@ -6,15 +6,12 @@ import { find } from 'lodash'
 import IERC20 from '../constants/abis/IERC20.js'
 import MultiRewards from '../constants/abis/MultiRewards.js'
 
-import {REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE} from '../constants'
+import { REWARDS_ADDRESSES, REWARD_TOKEN_ADDRESSES, STAKING_POOLS, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE } from '../constants'
 import { useAppContext } from '../context/app'
 import { defaultStakingPoolData, defaultUserData } from '../models/staking'
-// import { useTransactions } from '../context/transactions'
 
 const useFetchStakingPoolData = () => {
   const { connex, account, tick } = useAppContext()
-  // const { transactionsCounter } = useTransactions()
-
   const [poolData, setPoolData] = useState(defaultStakingPoolData)
   const [userData, setUserData] = useState(defaultUserData)
 
@@ -27,85 +24,95 @@ const useFetchStakingPoolData = () => {
   const accountBalanceOfABI = find(MultiRewards, { name: 'balanceOf' })
   const earnedABI = find(MultiRewards, { name: 'earned' })
 
-  // Pool size
-  const getBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(totalSupplyABI)
+  let stakingPoolsFunctions = []
+  STAKING_POOLS.map(async (stakingPool) => {
+    stakingPoolsFunctions[stakingPool.id] = {
+      // Pool size
+      getBalanceOf: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(totalSupplyABI),
 
-  // Pool Reward For Duration
-  const getRewardForDuration = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(getRewardForDurationABI)
+      // Pool Reward For Duration
+      getRewardForDuration: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(getRewardForDurationABI),
 
-  // Last Time Reward Applicable
-  const getLastTimeRewardApplicable = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(lastTimeRewardApplicableABI)
+      // Last Time Reward Applicable
+      getLastTimeRewardApplicable: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(lastTimeRewardApplicableABI),
 
-  // Period Finish
-  const getPeriodFinish = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(periodFinishABI)
+      // Period Finish
+      getPeriodFinish: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(periodFinishABI),
 
-  //  Current stake
-  const getAccountBalanceOf = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(accountBalanceOfABI)
+      //  Current stake
+      getAccountBalanceOf: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(accountBalanceOfABI),
 
-  // Unstaked staking token balance
-  const getUnstakedBalanceOf = connex?.thor
-    .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
-    .method(balanceOfABI)
+      // Unstaked staking token balance
+      getUnstakedBalanceOf: connex?.thor
+        .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
+        .method(balanceOfABI),
 
-  // Unstaked staking token approval amount
-  const getUnstakedAllowanceAmount = connex?.thor
-      .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
-      .method(allowanceABI)
+      // Unstaked staking token approval amount
+      getUnstakedAllowanceAmount: connex?.thor
+          .account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE])
+          .method(allowanceABI),
 
-  // Claimable vex
-  const getEarned = connex?.thor
-    .account(REWARDS_ADDRESSES[VECHAIN_NODE])
-    .method(earnedABI)
+      // Claimable vex
+      getEarned: connex?.thor
+        .account(REWARDS_ADDRESSES[VECHAIN_NODE])
+        .method(earnedABI)
+    }
+  })
 
   const getPoolData = async () => {
-    // Pool size
-    const { decoded: { 0: poolSize } } = await getBalanceOf.call()
-    // Pool Reward For Duration
-    const { decoded: { 0: poolRewardForDuration } } = await getRewardForDuration.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
-    // Last Time Reward Applicable
-    // Is this value even used?
-    const { decoded: { 0: lastTimeRewardApplicable } } = await getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
-    // Period Finish
-    const { decoded: { periodFinish } } = await getPeriodFinish.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
+    return await Promise.all(STAKING_POOLS.map(async (stakingPool) => {
+      // Pool size
+      const { decoded: { 0: poolSize } } = await stakingPoolsFunctions[stakingPool.id].getBalanceOf.call()
+      // Pool Reward For Duration
+      const { decoded: { 0: poolRewardForDuration } } = await stakingPoolsFunctions[stakingPool.id].getRewardForDuration.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
+      // Last Time Reward Applicable
+      // Is this value even used?
+      const { decoded: { 0: lastTimeRewardApplicable } } = await stakingPoolsFunctions[stakingPool.id].getLastTimeRewardApplicable.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
+      // Period Finish
+      const { decoded: { periodFinish } } = await stakingPoolsFunctions[stakingPool.id].getPeriodFinish.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
 
-    return {
-      vault: 'vex-vet',
-      poolSize: BigNumber.from(poolSize),
-      poolRewardForDuration: BigNumber.from(poolRewardForDuration),
-      lastTimeRewardApplicable,
-      periodFinish: moment(periodFinish, 'X')
-    }
+      return {
+        poolId: stakingPool.id,
+        vault: stakingPool.stakeAsset,
+        poolSize: BigNumber.from(poolSize),
+        poolRewardForDuration: BigNumber.from(poolRewardForDuration),
+        lastTimeRewardApplicable,
+        periodFinish: moment(periodFinish, 'X')
+      }
+    }))
   }
 
   const getUserData = async () => {
-    //  Current stake
-    const { decoded: { 0: accountBalanceOf } } = await getAccountBalanceOf.call(account)
+    return await Promise.all(STAKING_POOLS.map(async (stakingPool) => {
+      //  Current stake
+      const { decoded: { 0: accountBalanceOf } } = await stakingPoolsFunctions[stakingPool.id].getAccountBalanceOf.call(account)
 
-    // Claimable vex
-    const { decoded: { 0: earned } } = await getEarned.call(account, REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
+      // Claimable vex
+      const { decoded: { 0: earned } } = await stakingPoolsFunctions[stakingPool.id].getEarned.call(account, REWARD_TOKEN_ADDRESSES[VECHAIN_NODE])
 
-    // Unstaked balance
-    const { decoded: { 0: unstakedBalance } }  = await getUnstakedBalanceOf.call(account);
+      // Unstaked balance
+      const { decoded: { 0: unstakedBalance } }  = await stakingPoolsFunctions[stakingPool.id].getUnstakedBalanceOf.call(account);
 
-    // Unstaked allowance
-    const { decoded: { 0: unstakedAllowance } } = await getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES[VECHAIN_NODE])
+      // Unstaked allowance
+      const { decoded: { 0: unstakedAllowance } } = await stakingPoolsFunctions[stakingPool.id].getUnstakedAllowanceAmount.call(account, REWARDS_ADDRESSES[VECHAIN_NODE])
 
-    return {
-      currentStake: BigNumber.from(accountBalanceOf),
-      claimableVex: BigNumber.from(earned),
-      unstakedBalance: BigNumber.from(unstakedBalance),
-      unstakedAllowance: BigNumber.from(unstakedAllowance)
-    }
+      return {
+        currentStake: BigNumber.from(accountBalanceOf),
+        claimableRewardToken: BigNumber.from(earned),
+        unstakedBalance: BigNumber.from(unstakedBalance),
+        unstakedAllowance: BigNumber.from(unstakedAllowance)
+      }
+    }))
   }
 
   useEffect(() => {
@@ -117,13 +124,11 @@ const useFetchStakingPoolData = () => {
     if (connex) {
       getStakingPoolData()
     }
-
   }, [connex, tick])
 
   useEffect(() => {
     const getAccountData = async () => {
       const accountData = await getUserData()
-
       setUserData(accountData)
     }
 
