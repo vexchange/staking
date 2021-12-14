@@ -59,7 +59,7 @@ const useFetchStakingPoolsData = () => {
           .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
           .method(allowanceABI),
 
-      // Claimable vex
+      // Claimable token
       getEarned: connex?.thor
         .account(stakingPool.rewardsAddress[VECHAIN_NODE])
         .method(earnedABI)
@@ -94,7 +94,7 @@ const useFetchStakingPoolsData = () => {
       //  Current stake
       const { decoded: { 0: accountBalanceOf } } = await stakingPoolsFunctions[stakingPool.id].getAccountBalanceOf.call(account)
 
-      // Claimable vex
+      // Claimable token
       const { decoded: { 0: earned } } = await stakingPoolsFunctions[stakingPool.id].getEarned.call(account, stakingPool.rewardTokenAddress[VECHAIN_NODE])
 
       // Unstaked balance

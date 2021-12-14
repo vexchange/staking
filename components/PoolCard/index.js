@@ -96,7 +96,7 @@ export default function PoolCard({
     }
   );
 
-  const vexPill = useMemo(() => {
+  const claimPill = useMemo(() => {
     return (
       <ClaimableTokenPillContainer
         onClick={() => {
@@ -262,7 +262,7 @@ export default function PoolCard({
         </div>
 
         {/* Claimable Pill */}
-        {vexPill}
+        {claimPill}
 
         <div className="w-100 mt-4">
           <CapBar
