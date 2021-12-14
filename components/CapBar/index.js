@@ -1,21 +1,19 @@
-import React from 'react'
-
-import { SecondaryText, Title } from '../../design'
-import colors from '../../design/colors'
-// import { getAssetDisplay } from '../../utils/asset'
-import { formatAmount } from '../../utils'
-
-import { BackgroundBar, ForegroundBar } from './styled'
+import React from "react";
+import { SecondaryText, Title } from "../../design";
+import colors from "../../design/colors";
+import { formatAmount } from "../../utils";
+import { BackgroundBar, ForegroundBar } from "./styled";
 
 const CapBar = ({
-  loading,
   current,
   cap,
-  copies = { current: 'Total Deposits', cap: 'Limit' },
+  copies = { current: "Total Deposits", cap: "Limit" },
   labelConfig = { fontSize: 16 },
   statsConfig = { fontSize: 16 },
-  barConfig = { height: 16, extraClassNames: 'my-3', radius: 4 },
+  barConfig = { height: 16, extraClassNames: "my-3", radius: 4 },
   vaultOption,
+  stakingPoolData,
+  account,
 }) => {
   let percent = cap > 0 ? current / cap : 0;
   if (percent < 0) {
@@ -25,19 +23,21 @@ const CapBar = ({
   }
   percent *= 100;
   current = current > cap ? cap : current;
-
+  
   return (
-    <div className='w-100'>
-      <div className='d-flex flex-row justify-content-between'>
-        <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
-          {copies.current}
-        </SecondaryText>
-        <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-          {loading
-            ? 'Loading...'
-            : `${formatAmount(current)} ${vaultOption.stakeAsset}`}
-        </Title>
-      </div>
+    <div className="w-100">
+      {account ? (
+        <div className="d-flex flex-row justify-content-between">
+          <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
+            {copies.current}
+          </SecondaryText>
+          <Title fontSize={statsConfig.fontSize} lineHeight={20}>
+            {stakingPoolData.userData.loading
+              ? "Loading..."
+              : `${formatAmount(current)} ${vaultOption.stakeAsset}`}
+          </Title>
+        </div>
+      ) : null}
 
       <div
         className={`d-flex flex-row position-relative ${barConfig.extraClassNames}`}
@@ -50,18 +50,18 @@ const CapBar = ({
         />
       </div>
 
-      <div className='d-flex flex-row justify-content-between'>
+      <div className="d-flex flex-row justify-content-between">
         <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
           {copies.cap}
         </SecondaryText>
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-          {loading
-            ? 'Loading...'
+          {stakingPoolData.poolData.loading
+            ? "Loading..."
             : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}
         </Title>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CapBar
+export default CapBar;

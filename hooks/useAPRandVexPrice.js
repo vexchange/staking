@@ -8,7 +8,7 @@ import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
 import CoinGecko from 'coingecko-api';
 import IERC20 from "../constants/abis/IERC20";
-import useFetchStakingPoolData from "./useFetchStakingPoolData";
+import useFetchStakingPoolsData from "./useFetchStakingPoolsData";
 
 const useAPRandVexPrice = () => {
     const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
@@ -24,7 +24,7 @@ const useAPRandVexPrice = () => {
      */
     const [apr, setApr] = useState(0)
     const { connex, rewardsContract } = useAppContext()
-    const { poolData } = useFetchStakingPoolData()
+    const { poolsData } = useFetchStakingPoolsData()
 
     const getMidPrice = async(
         connex,
@@ -82,7 +82,7 @@ const useAPRandVexPrice = () => {
     useEffect(calculateIndividualTokenPrices, [connex])
 
     const calculateApr = async () => {
-        if (!rewardsContract || !pair || poolData.poolSize.eq('0') ||
+        if (!rewardsContract || !pair || poolsData.poolSize.eq('0') ||
             !connex || !usdPerVex) return;
 
         const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
@@ -96,7 +96,7 @@ const useAPRandVexPrice = () => {
             res = await method.call()
 
             const totalLPTokenSupply = BigNumber.from(res.decoded[0])
-            const numberOfLPTokensStaked = poolData.poolSize;
+            const numberOfLPTokensStaked = poolsData.poolSize;
 
             console.assert(numberOfLPTokensStaked.lte(totalLPTokenSupply),
                 "Staking Pool Size greater than total LP token supply. Something's wrong")
@@ -131,7 +131,7 @@ const useAPRandVexPrice = () => {
         }
     }
 
-    useEffect(calculateApr, [connex, rewardsContract, pair, poolData, usdPerVex])
+    useEffect(calculateApr, [connex, rewardsContract, pair, poolsData, usdPerVex])
 
     return { usdPerVex, apr, tvlInUsd }
 }

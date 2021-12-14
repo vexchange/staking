@@ -1,5 +1,6 @@
 import { utils } from 'ethers'
 import currency from 'currency.js'
+import { VECHAIN_NODE } from '../constants'
 
 const { commify, formatEther } = utils
 
@@ -19,14 +20,14 @@ export const getDefaultSignificantDecimalsFromAssetDecimals = decimals => {
 
 export const userAccount = {
   get: (account) => {
-    const savedAccount = localStorage.getItem('staking-wallet')
+    const savedAccount = localStorage.getItem(`staking-wallet-${VECHAIN_NODE}`)
     return savedAccount ?? account
   },
   set: (account) => {
-    localStorage.setItem('staking-wallet', account)
+    localStorage.setItem(`staking-wallet-${VECHAIN_NODE}`, account)
   },
   remove: () => {
-    localStorage.removeItem('staking-wallet')
+    localStorage.removeItem(`staking-wallet-${VECHAIN_NODE}`)
     window.location.href = '/'
   }
 }
@@ -59,12 +60,4 @@ export const formatAmount = n => {
   if (n >= 1e12) return `${parseFloat((n / 1e12).toFixed(2))}T`
 
   return ''
-}
-
-export const getInfoByPoolId = (info, stakingPoolData, poolId) => {
-  if (!stakingPoolData || !stakingPoolData[info]) return false
-
-  return stakingPoolData[info].filter((obj) => {
-    return obj.id === poolId
-  })
 }

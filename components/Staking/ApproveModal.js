@@ -1,10 +1,8 @@
 import { useCallback, useState, useMemo } from 'react'
 import { find } from 'lodash'
-import { BigNumber, constants, utils } from 'ethers'
-
+import { constants } from 'ethers'
 import IERC20 from '../../constants/abis/IERC20.js'
 import { getExploreURI } from '../../utils'
-
 import {
   BaseModalContentColumn,
   BaseUnderlineLink,
@@ -13,13 +11,11 @@ import {
   Title,
 } from '../../design'
 import TrafficLight from "../TrafficLight";
-
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
-
 import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
-import {REWARDS_ADDRESSES, VECHAIN_NODE} from "../../constants";
+import {VECHAIN_NODE} from "../../constants";
 
 export default function ApproveModal({
   show,

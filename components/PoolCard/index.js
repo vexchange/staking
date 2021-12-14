@@ -28,7 +28,6 @@ import {
   LogoContainer,
   PoolCardFooter,
   PoolCardFooterButton,
-  PoolRewardData,
   PoolSubtitle,
   PoolTitle,
   Wrapper,
@@ -288,7 +287,6 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            loading={false}
             current={parseFloat(
               utils.formatEther(stakingPoolData.userData.currentStake)
             )}
@@ -311,6 +309,8 @@ export default function PoolCard({
               radius: 2,
             }}
             vaultOption={vaultOption}
+            stakingPoolData={stakingPoolData}
+            account={account}
           />
         </div>
 

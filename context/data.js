@@ -1,28 +1,25 @@
 import React, { useContext, createContext } from 'react'
-
 import defaultStakingPoolData from '../models/staking'
-
-import useFetchStakingPoolData from '../hooks/useFetchStakingPoolData'
+import useFetchStakingPoolsData from '../hooks/useFetchStakingPoolsData'
 
 export const DataContext = createContext({
-  stakingPool: defaultStakingPoolData,
+  stakingPools: defaultStakingPoolData,
 })
 
-export const useStakingPoolData = () => {
-  const { stakingPool } = useContext(DataContext)
+export const useStakingPoolsData = () => {
+  const { stakingPools } = useContext(DataContext)
 
-  return { stakingPoolData: stakingPool }
+  return { stakingPoolsData: stakingPools }
 }
 
 export const DataContextProvider = ({
   children,
 }) => {
-  const stakingPool = useFetchStakingPoolData()
-
+  const stakingPools = useFetchStakingPoolsData()
   return (
     <DataContext.Provider
       value={{
-        stakingPool,
+        stakingPools,
       }}
     >
       {children}

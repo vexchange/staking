@@ -29,7 +29,7 @@ export default function ClaimModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions();
-  const { connex, rewardsContract, ticker } = useAppContext();
+  const { connex, connexStakingPools, ticker } = useAppContext();
   const [step, setStep] = useState("info");
 
   const handleClose = useCallback(() => {
@@ -43,7 +43,7 @@ export default function ClaimModal({
     setStep("claim");
 
     const getRewardABI = find(MultiRewards, { name: "getReward" });
-    const method = rewardsContract.method(getRewardABI);
+    const method = connexStakingPools[vaultOption.id].rewardsContract.method(getRewardABI);
     const clause = method.asClause();
 
     try {

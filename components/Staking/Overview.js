@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { Subtitle, Title, PrimaryText } from '../../design'
 import useAPRandVexPrice from '../../hooks/useAPRandVexPrice'
 import useTextAnimation from '../../hooks/useTextAnimation'
-import useStakingPool from '../../hooks/useStakingPool'
 import { formatBigNumber, formatAmount } from "../../utils";
 import { ExternalIcon } from '../Icons'
 import { formatEther } from "ethers/lib/utils";
@@ -16,26 +15,23 @@ import {
   OverviewTag,
   UnderlineLink,
 } from './styled'
-
-
+import { VECHAIN_NODE } from '../../constants';
 
 export default function Overview() {
-  const { loading: stakingLoading } = useStakingPool('vex-vet')
-  const { usdPerVex, apr, tvlInUsd } = useAPRandVexPrice()
-  const loadingText = useTextAnimation(stakingLoading)
-
+  const { usdPerVex, apr, tvlInUsd } = VECHAIN_NODE === 'mainnet'
+    ? useAPRandVexPrice()
+    : { usdPerVex: 1, apr: 1, tvlInUsd: 1 }
+  const loadingText = useTextAnimation(true)
   const vexPrice = useMemo(() => {
-    if (stakingLoading || !usdPerVex) {
+    if (!usdPerVex) {
       return loadingText
     }
 
     return ('$' + usdPerVex.toPrecision(4))
-  }, [stakingLoading, loadingText, usdPerVex])
+  }, [loadingText, usdPerVex])
 
   const percentageAPR = useMemo(() => {
-    if (!apr) {
-      return loadingText
-    }
+    if (!apr) return loadingText
 
     // return apr
     if (apr._isBigNumber) return formatBigNumber(apr)
@@ -77,7 +73,7 @@ export default function Overview() {
           </div>
         </UnderlineLink>
       </OverviewInfo>
-      <OverviewKPIContainer>
+      {/* <OverviewKPIContainer>
         <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
           <Title>{vexPrice}</Title>
@@ -90,7 +86,7 @@ export default function Overview() {
           <OverviewLabel>USD Value Staked</OverviewLabel>
           <Title>{usdValueStaked}</Title>
         </OverviewKPI>
-      </OverviewKPIContainer>
+      </OverviewKPIContainer> */}
     </OverviewContainer>
   )
 }
