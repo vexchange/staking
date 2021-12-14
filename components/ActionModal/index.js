@@ -263,7 +263,7 @@ const ActionModal = ({
                 {formatBigNumber(
                   stakingPoolData.poolData.poolRewardForDuration
                 )}{" "}
-                VEX
+                {vaultOption.rewardToken}
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
@@ -336,7 +336,7 @@ const ActionModal = ({
                 {formatBigNumber(
                   stakingPoolData.poolData.poolRewardForDuration
                 )}{" "}
-                VEX
+                {vaultOption.rewardToken}
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">

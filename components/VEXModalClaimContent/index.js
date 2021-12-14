@@ -18,6 +18,7 @@ import {
 
 export default function VEXClaimModalContent({
   step,
+  vaultOption,
   title,
   themeColor,
   children,
@@ -92,7 +93,7 @@ export default function VEXClaimModalContent({
             {children || <Pole type="animate" />}
           </FloatingContainer>
           <FloatingContainer>
-            <ClaimingText>Claiming $VEX</ClaimingText>
+            <ClaimingText>Claiming {vaultOption.rewardToken}</ClaimingText>
           </FloatingContainer>
           <BaseModalContentColumn marginTop="auto">
             <ColorChangingWaves />
@@ -103,7 +104,7 @@ export default function VEXClaimModalContent({
       return (
         <>
           <BaseModalContentColumn marginTop={8}>
-            <Title style={{ textTransform: 'uppercase' }}>{title || '$Vex Claimed'}</Title>
+            <Title style={{ textTransform: 'uppercase' }}>{title || `$${vaultOption.rewardToken} CLAIMED`}</Title>
           </BaseModalContentColumn>
           <BaseModalContentColumn marginTop="auto">
             <PrimaryText className="text-center">

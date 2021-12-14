@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
 import { find } from "lodash";
-
+import Image from "next/image";
 import { formatBigNumber } from "../../utils";
 import MultiRewards from "../../constants/abis/MultiRewards.js";
 import { useTransactions } from "../../context/transactions";
@@ -43,7 +43,8 @@ export default function ClaimModal({
     setStep("claim");
 
     const getRewardABI = find(MultiRewards, { name: "getReward" });
-    const method = connexStakingPools[vaultOption.id].rewardsContract.method(getRewardABI);
+    const method =
+      connexStakingPools[vaultOption.id].rewardsContract.method(getRewardABI);
     const clause = method.asClause();
 
     try {
@@ -52,7 +53,7 @@ export default function ClaimModal({
         .comment(
           `Claim ${ethers.utils.formatEther(
             stakingPoolData.userData.claimableRewardToken
-          )} VEX`
+          )} ${vaultOption.rewardToken}`
         )
         .request();
 
@@ -90,15 +91,22 @@ export default function ClaimModal({
         return (
           <>
             <BaseModalContentColumn>
-              <LogoContainer color="white">
-                <Logo />
+              <LogoContainer>
+                <Image
+                  src={vaultOption.stakeAssetLogo}
+                  alt={vaultOption.stakeAsset}
+                  width={40}
+                  height={37}
+                />
               </LogoContainer>
             </BaseModalContentColumn>
             <BaseModalContentColumn marginTop={8}>
-              <AssetTitle str="vex-vet">vex-vet</AssetTitle>
+              <AssetTitle str={vaultOption.stakeAsset}>
+                {vaultOption.stakeAsset}
+              </AssetTitle>
             </BaseModalContentColumn>
             <InfoColumn marginTop={40}>
-              <SecondaryText>Unclaimed $VEX</SecondaryText>
+              <SecondaryText>Unclaimed {vaultOption.rewardToken}</SecondaryText>
               <InfoData>
                 {formatBigNumber(stakingPoolData.userData.claimableRewardToken)}
               </InfoData>
@@ -111,7 +119,7 @@ export default function ClaimModal({
                 {formatBigNumber(
                   stakingPoolData.poolData.poolRewardForDuration
                 )}{" "}
-                VEX
+                {vaultOption.rewardToken}
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
@@ -140,7 +148,7 @@ export default function ClaimModal({
           </>
         );
       default:
-        return <VEXClaimModalContent step={step} />;
+        return <VEXClaimModalContent vaultOption={vaultOption} step={step} />;
     }
   }, [step, vaultOption, stakingPoolData, handleClaim]);
 
