@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
-import { ethers, constants, utils } from "ethers";
+import { useCallback, useMemo } from "react";
+import { ethers, utils } from "ethers";
 import { Tooltip } from "react-tippy";
-
 import { formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
 import { useTransactions } from "../../context/transactions";
@@ -12,14 +11,11 @@ import {
   TooltipContainer,
 } from "../../design";
 import colors from "../../design/colors";
-
 import useTextAnimation from "../../hooks/useTextAnimation";
 import useTokenAllowance from "../../hooks/useTokenAllowance";
-
 import CapBar from "../CapBar";
 import Image from "next/image";
 import HelpInfo from "../HelpInfo";
-
 import {
   ButtonsContainer,
   ClaimableTokenAmount,
@@ -252,24 +248,7 @@ export default function PoolCard({
                 trigger="mouseenter"
                 html={
                   <TooltipContainer>
-                    <p className="title">
-                      <b>vex-vet</b>
-                    </p>
-                    <p>
-                      vex-vet is a token that represents VEX deposits in the
-                      vex-vet liquidity pool. Stake your vex-vet tokens in the
-                      vex-vet staking pool to earn vex rewards ;)
-                    </p>
-                    <p>
-                      you can add your liquidity{" "}
-                      <a
-                        className="link"
-                        target="_blank"
-                        href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6"
-                      >
-                        here
-                      </a>
-                    </p>
+                    <div dangerouslySetInnerHTML={{ __html: vaultOption.description }}></div>
                   </TooltipContainer>
                 }
               >

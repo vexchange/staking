@@ -28,6 +28,7 @@ export const CHAIN_ID = {
 export const STAKING_POOLS = [
   {
     id: 1,
+    description: '<p class="title"> <b>vex-vet</b> </p> <p> vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;) </p> <p> you can add your liquidity <a class="link" target="_blank" href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6" > here </a> </p>',
     stakeAsset: "VEX-VET",
     stakeAssetLogo: "/imgs/tokens/vex.svg",
     stakeAssetUrlPart:
@@ -48,6 +49,7 @@ export const STAKING_POOLS = [
   },
   {
     id: 2,
+    description: '-',
     stakeAsset: "VTHO",
     stakeAssetLogo: "/imgs/tokens/vex.svg",
     stakeAssetUrlPart:
