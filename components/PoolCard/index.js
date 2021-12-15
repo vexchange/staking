@@ -1,26 +1,20 @@
-import { useCallback, useMemo, useState } from "react";
-import { ethers, constants, utils } from "ethers";
-import { Tooltip } from "react-tippy";
+import { useCallback, useMemo, useState } from 'react'
+import { ethers, constants, utils } from 'ethers'
+import { Tooltip } from 'react-tippy'
 
-import { formatBigNumber, formatAmount } from "../../utils";
-import { useAppContext } from "../../context/app";
-import { useTransactions } from "../../context/transactions";
-import {
-  Subtitle,
-  BaseIndicator,
-  SecondaryText,
-  TooltipContainer,
-} from "../../design";
-import colors from "../../design/colors";
+import { formatBigNumber } from '../../utils'
+import { useAppContext } from '../../context/app'
+import { useTransactions } from '../../context/transactions'
+import { Subtitle, BaseIndicator, SecondaryText, TooltipContainer } from '../../design'
+import colors from '../../design/colors'
 
-import useTextAnimation from "../../hooks/useTextAnimation";
-import useTokenAllowance from "../../hooks/useTokenAllowance";
 import useAPRandVexPrice from "../../hooks/useAPRandVexPrice";
-import useStakingPool from "../../hooks/useStakingPool";
+import useTextAnimation from '../../hooks/useTextAnimation'
+import useTokenAllowance from '../../hooks/useTokenAllowance'
 
-import CapBar from "../CapBar";
-import Logo from "../Logo";
-import HelpInfo from "../HelpInfo";
+import CapBar from '../CapBar'
+import Logo from '../Logo'
+import HelpInfo from '../HelpInfo'
 
 import {
   ButtonsContainer,
@@ -34,7 +28,7 @@ import {
   PoolSubtitle,
   PoolTitle,
   Wrapper,
-} from "./styled";
+} from './styled'
 
 export default function PoolCard({
   stakingPoolData,
@@ -43,11 +37,12 @@ export default function PoolCard({
   setShowClaimModal,
   setShowActionModal,
 }) {
-  const { transactions } = useTransactions();
-  const { account, initAccount } = useAppContext();
-  const { tokenAllowance } = useTokenAllowance();
+  const { transactions } = useTransactions()
+  const { account, initAccount } = useAppContext()
+  const { tokenAllowance } = useTokenAllowance()
+  const { tvlInUsd } = useAPRandVexPrice()
 
-  const { tvlInUsd } = useAPRandVexPrice();
+  const color = colors.orange
 
   const [usdValueStaked, usdValuePoolSize] = useMemo(() => {
     if (!tvlInUsd || !stakingPoolData) {
@@ -63,47 +58,42 @@ export default function PoolCard({
     ];
   }, [tvlInUsd, stakingPoolData]);
 
-  const color = colors.orange;
-
   const ongoingTransaction = useMemo(() => {
-    const ongoingTx = (transactions || []).find(
-      (currentTx) =>
-        ["stakingApproval", "stake", "unstake", "rewardClaim"].includes(
-          currentTx.type
-        ) &&
-        currentTx.stakeAsset === "vex-vet" &&
-        !currentTx.status
-    );
+    const ongoingTx = (transactions ||[]).find(currentTx =>
+      ['stakingApproval', 'stake', 'unstake', 'rewardClaim'].includes(
+        currentTx.type
+      ) && currentTx.stakeAsset === 'vex-vet' && !currentTx.status
+    )
 
     if (!ongoingTx) {
       return undefined;
     }
 
-    return ongoingTx.type;
+    return ongoingTx.type
   }, [transactions]);
 
   const actionLoadingTextBase = useMemo(() => {
     switch (ongoingTransaction) {
-      case "stake":
-        return "Staking";
-      case "stakingApproval":
-        return "Approving";
-      case "unstake":
-        return "Unstaking";
-      case "rewardClaim":
-        return "Claiming";
+      case 'stake':
+        return 'Staking'
+      case 'stakingApproval':
+        return 'Approving'
+      case 'unstake':
+        return 'Unstaking'
+      case 'rewardClaim':
+        return 'Claiming'
       default:
-        return "Loading";
+        return 'Loading'
     }
-  }, [ongoingTransaction]);
+  }, [ongoingTransaction])
 
   const renderUnstakeBalance = useCallback(() => {
     if (!account) {
-      return "---";
+      return '---'
     }
 
-    return ethers.utils.formatEther(stakingPoolData.userData.unstakedBalance);
-  }, [account, stakingPoolData]);
+    return ethers.utils.formatEther(stakingPoolData.userData.unstakedBalance)
+  }, [account, stakingPoolData])
 
   const primaryActionLoadingText = useTextAnimation(
     Boolean(ongoingTransaction),
@@ -116,32 +106,28 @@ export default function PoolCard({
       ],
       interval: 250,
     }
-  );
+  )
 
   const vexPill = useMemo(() => {
     return (
-      <ClaimableTokenPillContainer
-        onClick={() => {
-          setShowClaimModal(true);
-        }}
-      >
+      <ClaimableTokenPillContainer onClick={ () => { setShowClaimModal(true) } }>
         <ClaimableTokenPill color={color}>
           <BaseIndicator
             size={8}
             color={color}
             className="mr-2"
-            style={{ marginRight: "5px" }}
+            style={{ marginRight: '5px' }}
           />
           <Subtitle className="mr-2">VEX to claim</Subtitle>
-          <ClaimableTokenAmount color={color} style={{ marginLeft: "8px" }}>
+            <ClaimableTokenAmount color={color} style={{ marginLeft: '8px' }}>
             {account
               ? formatBigNumber(stakingPoolData.userData.claimableVex)
-              : "---"}
+              : '---'}
           </ClaimableTokenAmount>
         </ClaimableTokenPill>
       </ClaimableTokenPillContainer>
-    );
-  }, [account, color, stakingPoolData]);
+    )
+  }, [account, color, stakingPoolData])
 
   const stakingPoolButtons = useMemo(() => {
     if (!account) {
@@ -150,7 +136,7 @@ export default function PoolCard({
           role="button"
           color={colors.orange}
           onClick={() => {
-            initAccount();
+            initAccount()
           }}
           active={false}
         >
@@ -159,60 +145,58 @@ export default function PoolCard({
       );
     }
 
-    const showApprove = tokenAllowance.lt(
-      stakingPoolData.userData.unstakedBalance
-    );
-    const showClaim = stakingPoolData.userData.claimableVex.gt(0);
-    const showUnstake = stakingPoolData.userData.currentStake.gt(0);
+    const showApprove = tokenAllowance.lt(stakingPoolData.userData.unstakedBalance)
+    const showClaim = stakingPoolData.userData.claimableVex.gt(0)
+    const showUnstake = stakingPoolData.userData.currentStake.gt(0)
 
     return (
       <ButtonsContainer>
         {/*Show approve or stake depending on the balance and allowance*/}
-        {showApprove ? (
-          // APPROVE
-          <PoolCardFooterButton
-            role="button"
-            color={color}
-            onClick={() => {
-              setShowApprovalModal(true);
-            }}
-            active={ongoingTransaction === "approve"}
-          >
-            {ongoingTransaction === "approve"
-              ? primaryActionLoadingText
-              : "approve"}
-          </PoolCardFooterButton>
-        ) : (
-          // STAKE
-          <PoolCardFooterButton
-            role="button"
-            color={color}
-            onClick={() => {
-              setShowActionModal(true);
-              setIsStakeAction(true);
-            }}
-            active={ongoingTransaction === "stake"}
-          >
-            {ongoingTransaction === "stake"
-              ? primaryActionLoadingText
-              : "Stake"}
-          </PoolCardFooterButton>
-        )}
+        {showApprove
+            ?
+            // APPROVE
+            (<PoolCardFooterButton
+                role="button"
+                color={color}
+                onClick={() => {
+                    setShowApprovalModal(true)
+                }}
+                active={ongoingTransaction === 'approve'}
+            >
+                {ongoingTransaction === 'approve'
+                    ? primaryActionLoadingText
+                    : 'approve'}
+            </PoolCardFooterButton>)
+            :
+            // STAKE
+            (<PoolCardFooterButton
+                role="button"
+                color={color}
+                onClick={() => {
+                    setShowActionModal(true)
+                    setIsStakeAction(true)
+                }}
+                active={ongoingTransaction === 'stake'}
+            >
+                {ongoingTransaction === 'stake'
+                    ? primaryActionLoadingText
+                    : 'Stake'}
+            </PoolCardFooterButton>)
+        }
 
         {/* CLAIM */}
         <PoolCardFooterButton
           role="button"
           color={color}
           onClick={() => {
-            setShowClaimModal(true);
+            setShowClaimModal(true)
           }}
-          active={ongoingTransaction === "rewardClaim"}
+          active={ongoingTransaction === 'rewardClaim'}
           hidden={!showClaim}
         >
-          {ongoingTransaction === "rewardClaim"
+          {ongoingTransaction === 'rewardClaim'
             ? primaryActionLoadingText
-            : `${
-                stakingPoolData.userData.claimableVex.isZero()
+            : `${stakingPoolData.userData.claimableVex.isZero()
                   ? "Claim Info"
                   : "Claim"
               }`}
@@ -223,18 +207,18 @@ export default function PoolCard({
           role="button"
           color={color}
           onClick={() => {
-            setShowActionModal(true);
-            setIsStakeAction(false);
+            setShowActionModal(true)
+            setIsStakeAction(false)
           }}
-          active={ongoingTransaction === "unstake"}
+          active={ongoingTransaction === 'unstake'}
           hidden={!showUnstake}
         >
-          {ongoingTransaction === "unstake"
+          {ongoingTransaction === 'unstake'
             ? primaryActionLoadingText
-            : "Unstake"}
+            : 'Unstake'}
         </PoolCardFooterButton>
       </ButtonsContainer>
-    );
+    )
   }, [
     account,
     color,
@@ -244,7 +228,7 @@ export default function PoolCard({
     setShowClaimModal,
     setShowActionModal,
     stakingPoolData,
-  ]);
+  ])
 
   return (
     <Wrapper color={color}>
@@ -261,34 +245,30 @@ export default function PoolCard({
                 interactive
                 position="top"
                 trigger="mouseenter"
-                html={
+                html={(
                   <TooltipContainer>
-                    <p className="title">
-                      <b>vex-vet</b>
-                    </p>
+                    <p className="title"><b>vex-vet</b></p>
+                    <p>vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;)</p>
                     <p>
-                      vex-vet is a token that represents VEX deposits in the
-                      vex-vet liquidity pool. Stake your vex-vet tokens in the
-                      vex-vet staking pool to earn vex rewards ;)
-                    </p>
-                    <p>
-                      you can add your liquidity{" "}
+                      you can add your liquidity
+                      {' '}
                       <a
                         className="link"
                         target="_blank"
-                        href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6"
-                      >
-                        here
+                        href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6">
+                          here
                       </a>
                     </p>
                   </TooltipContainer>
-                }
+                )}
               >
                 <HelpInfo>i</HelpInfo>
               </Tooltip>
             </div>
             <PoolSubtitle>
-              Your Unstaked Balance: {renderUnstakeBalance()}
+              Your Unstaked Balance:
+              {' '}
+              {renderUnstakeBalance()}
             </PoolSubtitle>
           </div>
         </div>
@@ -322,21 +302,22 @@ export default function PoolCard({
 
         <div className="d-flex align-items-center mt-4 w-100">
           <div>
-            <SecondaryText size="12px">Need liquidity tokens?</SecondaryText>{" "}
+            <SecondaryText size="12px">Need liquidity tokens?</SecondaryText>
+            {' '}
             <SecondaryText size="12px">
               <a
                 className="link"
                 target="_blank"
-                href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6"
-              >
-                Get VEX-VET LP tokens
+                href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6">
+                  Get VEX-VET LP tokens
               </a>
             </SecondaryText>
           </div>
         </div>
       </div>
 
+
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
-  );
+  )
 }
