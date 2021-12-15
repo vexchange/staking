@@ -231,7 +231,7 @@ export default function PoolCard({
       <div className="d-flex flex-wrap w-100 p-3">
         {/* Card Title */}
         <div className="d-flex align-items-center">
-          <LogoContainer color="white">
+          <LogoContainer>
             <Image
               src={vaultOption.stakeAssetLogo}
               alt={vaultOption.stakeAsset}

@@ -50,11 +50,11 @@ export const STAKING_POOLS = [
   {
     id: 2,
     description: '-',
-    stakeAsset: "VTHO",
-    stakeAssetLogo: "/imgs/tokens/vex.svg",
+    stakeAsset: "WOV-VET",
+    stakeAssetLogo: "/imgs/tokens/wov.png",
     stakeAssetUrlPart:
-      "0x0000000000000000000000000000456E65726779-0x0000000000000000000000000000456E65726779",
-    rewardToken: "VTHO",
+      "0x0000000000000000000000000000456E65726779-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardToken: "WOV",
     stakingTokenAddress: {
       mainnet: "0x39cd888a1583498AD30E716625AE1a00ff51286D",
       testnet: "0x0000000000000000000000000000456E65726779",
