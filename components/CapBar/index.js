@@ -2,8 +2,7 @@ import React from 'react'
 
 import { SecondaryText, Title } from '../../design'
 import colors from '../../design/colors'
-// import { getAssetDisplay } from '../../utils/asset'
-import { formatAmount } from '../../utils'
+import { formatAmount, formatCurrency } from '../../utils'
 
 import { BackgroundBar, ForegroundBar } from './styled'
 
@@ -34,10 +33,7 @@ const CapBar = ({
           {copies.current}
         </SecondaryText>
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-          {loading
-            ? 'Loading...'
-            : `${displayCurrent ? displayCurrent : `$${formatAmount(current)}`
-              }`}
+          {loading ? 'Loading...' : formatCurrency(current)}
         </Title>
       </div>
 
