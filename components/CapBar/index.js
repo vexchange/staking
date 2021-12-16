@@ -18,14 +18,14 @@ const CapBar = ({
   barConfig = { height: 16, extraClassNames: 'my-3', radius: 4 },
   asset,
 }) => {
-  let percent = cap > 0 ? current / cap : 0;
+  let percent = +cap > 0 ? +current / +cap : 0;
   if (percent < 0) {
     percent = 0;
   } else if (percent > 1) {
     percent = 1;
   }
   percent *= 100;
-  current = current > cap ? cap : current;
+  current = +current > +cap ? cap : current;
 
   return (
     <div className='w-100'>
@@ -36,7 +36,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCurrent ? displayCurrent : `${formatAmount(current)} VEX-VET`
+            : `${displayCurrent ? displayCurrent : `$${formatAmount(current)}`
               }`}
         </Title>
       </div>
@@ -59,7 +59,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {loading
             ? 'Loading...'
-            : `${displayCap ? displayCap : `${formatAmount(cap)} VEX-VET`}`}
+            : `${displayCap ? displayCap : `$${formatAmount(cap)}`}`}
         </Title>
       </div>
     </div>

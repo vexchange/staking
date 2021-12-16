@@ -8,6 +8,7 @@ import { useTransactions } from '../../context/transactions'
 import { Subtitle, BaseIndicator, SecondaryText, TooltipContainer } from '../../design'
 import colors from '../../design/colors'
 
+import useAPRandVexPrice from "../../hooks/useAPRandVexPrice";
 import useTextAnimation from '../../hooks/useTextAnimation'
 import useTokenAllowance from '../../hooks/useTokenAllowance'
 
@@ -39,8 +40,23 @@ export default function PoolCard({
   const { transactions } = useTransactions()
   const { account, initAccount } = useAppContext()
   const { tokenAllowance } = useTokenAllowance()
+  const { tvlInUsd } = useAPRandVexPrice()
 
   const color = colors.orange
+
+  const [usdValueStaked, usdValuePoolSize] = useMemo(() => {
+    if (!tvlInUsd || !stakingPoolData) {
+      return [null, null];
+    }
+    return [
+      formatBigNumber(
+        tvlInUsd
+          .mul(stakingPoolData.userData.currentStake)
+          .div(stakingPoolData.poolData.poolSize)
+      ),
+      utils.formatEther(tvlInUsd),
+    ];
+  }, [tvlInUsd, stakingPoolData]);
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions ||[]).find(currentTx =>
@@ -263,11 +279,9 @@ export default function PoolCard({
         {/* Capbar */}
         <div className="w-100 mt-4">
           <CapBar
-            loading={false}
-            current={parseFloat(
-              utils.formatEther(stakingPoolData.userData.currentStake)
-            )}
-            cap={parseFloat(utils.formatEther(stakingPoolData.poolData.poolSize))}
+            loading={!(usdValueStaked && usdValuePoolSize)}
+            current={usdValueStaked}
+            cap={usdValuePoolSize}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",
