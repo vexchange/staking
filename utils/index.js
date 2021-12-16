@@ -1,5 +1,6 @@
 import { utils } from 'ethers'
 import currency from 'currency.js'
+import numeral from 'numeral'
 
 const { commify, formatEther } = utils
 
@@ -60,3 +61,5 @@ export const formatAmount = n => {
 
   return ''
 }
+
+export const formatCurrency = n => numeral(n).format('$0,0.00')
