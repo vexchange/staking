@@ -104,7 +104,7 @@ export default function VEXClaimModalContent({
       return (
         <>
           <BaseModalContentColumn marginTop={8}>
-            <Title style={{ textTransform: 'uppercase' }}>{title || `$${vaultOption.rewardToken} CLAIMED`}</Title>
+            <Title style={{ textTransform: 'uppercase' }}>{title || `REWARD CLAIMED`}</Title>
           </BaseModalContentColumn>
           <BaseModalContentColumn marginTop="auto">
             <PrimaryText className="text-center">

@@ -255,17 +255,6 @@ const ActionModal = ({
                 {formatBigNumber(stakingPoolData.poolData.poolSize)}
               </InfoData>
             </InfoColumn>
-            <InfoColumn>
-              <div className="d-flex align-items-center">
-                <SecondaryText>Pool rewards</SecondaryText>
-              </div>
-              <InfoData>
-                {formatBigNumber(
-                  stakingPoolData.poolData.poolRewardForDuration
-                )}{" "}
-                {vaultOption.rewardToken}
-              </InfoData>
-            </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
               <ActionButton
                 className="btn py-3"
@@ -328,15 +317,6 @@ const ActionModal = ({
                         BigNumber.from(ethers.utils.parseUnits(input, 18))
                       )
                 )}
-              </InfoData>
-            </InfoColumn>
-            <InfoColumn>
-              <SecondaryText>Pool rewards</SecondaryText>
-              <InfoData>
-                {formatBigNumber(
-                  stakingPoolData.poolData.poolRewardForDuration
-                )}{" "}
-                {vaultOption.rewardToken}
               </InfoData>
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">

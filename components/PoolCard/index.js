@@ -40,7 +40,7 @@ export default function PoolCard({
   const { transactions } = useTransactions();
   const { account, initAccount } = useAppContext();
   const { tokenAllowance } = useTokenAllowance(vaultOption);
-
+  let disableClaimButton = true;
   const color = colors.orange;
 
   const ongoingTransaction = useMemo(() => {
@@ -103,22 +103,29 @@ export default function PoolCard({
           setShowClaimModal(true);
         }}
       >
-        <ClaimableTokenPill color={color}>
-          <BaseIndicator
-            size={8}
-            color={color}
-            className="mr-2"
-            style={{ marginRight: "5px" }}
-          />
-          <Subtitle className="mr-2">
-            {vaultOption.rewardToken} to claim
-          </Subtitle>
-          <ClaimableTokenAmount color={color} style={{ marginLeft: "8px" }}>
-            {account
-              ? formatBigNumber(stakingPoolData.userData.claimableRewardToken)
-              : "---"}
-          </ClaimableTokenAmount>
-        </ClaimableTokenPill>
+        {stakingPoolData.userData.claimableRewardTokens.map((claimableRewardToken) => {
+          const name = Object.keys(claimableRewardToken)[0]
+          const amount = claimableRewardToken[name]
+
+          if (!amount.isZero()) {
+            disableClaimButton = false;
+          }
+
+          return (
+            <ClaimableTokenPill key={name} color={color}>
+              <BaseIndicator
+                size={8}
+                color={color}
+                className="mr-2"
+                style={{ marginRight: "5px" }}
+              />
+              <Subtitle className="mr-2">{name} to claim</Subtitle>
+              <ClaimableTokenAmount color={color} style={{ marginLeft: "8px" }}>
+                {account ? formatBigNumber(amount) : "---"}
+              </ClaimableTokenAmount>
+            </ClaimableTokenPill>
+          );
+        })}
       </ClaimableTokenPillContainer>
     );
   }, [account, color, stakingPoolData]);
@@ -142,7 +149,6 @@ export default function PoolCard({
     const showApprove = tokenAllowance.lt(
       stakingPoolData.userData.unstakedBalance
     );
-    const showClaim = stakingPoolData.userData.claimableRewardToken.gt(0);
     const showUnstake = stakingPoolData.userData.currentStake.gt(0);
 
     return (
@@ -187,15 +193,11 @@ export default function PoolCard({
             setShowClaimModal(true);
           }}
           active={ongoingTransaction === "rewardClaim"}
-          hidden={!showClaim}
+          hidden={disableClaimButton}
         >
           {ongoingTransaction === "rewardClaim"
             ? primaryActionLoadingText
-            : `${
-                stakingPoolData.userData.claimableRewardToken.isZero()
-                  ? "Claim Info"
-                  : "Claim"
-              }`}
+            : `${disableClaimButton ? "Claim Info" : "Claim"}`}
         </PoolCardFooterButton>
 
         {/* UNSTAKE */}
@@ -248,7 +250,11 @@ export default function PoolCard({
                 trigger="mouseenter"
                 html={
                   <TooltipContainer>
-                    <div dangerouslySetInnerHTML={{ __html: vaultOption.description }}></div>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: vaultOption.description,
+                      }}
+                    ></div>
                   </TooltipContainer>
                 }
               >

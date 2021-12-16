@@ -16,7 +16,6 @@ import colors from "../../design/colors";
 import { ActionButton } from "../Button";
 import VEXClaimModalContent from "../VEXModalClaimContent";
 import Modal from "../Modal";
-import Logo from "../Logo";
 import { ExternalIcon } from "../Icons";
 
 import { AssetTitle, InfoColumn, InfoData, LogoContainer } from "./styled";
@@ -51,9 +50,7 @@ export default function ClaimModal({
       const response = await connex.vendor
         .sign("tx", [clause])
         .comment(
-          `Claim ${ethers.utils.formatEther(
-            stakingPoolData.userData.claimableRewardToken
-          )} ${vaultOption.rewardToken}`
+          `Claim reward`
         )
         .request();
 
@@ -64,9 +61,6 @@ export default function ClaimModal({
       addTransaction({
         txhash,
         type: "rewardClaim",
-        amount: ethers.utils.formatEther(
-          stakingPoolData.userData.claimableRewardToken
-        ),
         stakeAsset: vaultOption.stakeAsset,
       });
 
@@ -86,6 +80,7 @@ export default function ClaimModal({
 
   const body = useMemo(() => {
     const color = colors.orange;
+    let disableClaimButton = true;
     switch (step) {
       case "info":
         return (
@@ -106,21 +101,23 @@ export default function ClaimModal({
               </AssetTitle>
             </BaseModalContentColumn>
             <InfoColumn marginTop={40}>
-              <SecondaryText>Unclaimed {vaultOption.rewardToken}</SecondaryText>
-              <InfoData>
-                {formatBigNumber(stakingPoolData.userData.claimableRewardToken)}
-              </InfoData>
-            </InfoColumn>
-            <InfoColumn>
-              <div className="d-flex align-items-center">
-                <SecondaryText>Pool rewards</SecondaryText>
-              </div>
-              <InfoData>
-                {formatBigNumber(
-                  stakingPoolData.poolData.poolRewardForDuration
-                )}{" "}
-                {vaultOption.rewardToken}
-              </InfoData>
+              {stakingPoolData.userData.claimableRewardTokens.map(
+                (claimableRewardToken) => {
+                  const name = Object.keys(claimableRewardToken)[0]
+                  const amount = claimableRewardToken[name]
+
+                  if (amount > 0) {
+                    disableClaimButton = false;
+                  }
+
+                  return (
+                    <div key={name}>
+                      <SecondaryText>Unclaimed {name} </SecondaryText>
+                      <InfoData>{formatBigNumber(amount)}</InfoData>
+                    </div>
+                  );
+                }
+              )}
             </InfoColumn>
             <BaseModalContentColumn marginTop="auto">
               <BaseUnderlineLink
@@ -140,7 +137,7 @@ export default function ClaimModal({
                 className="btn py-3 mb-2"
                 onClick={handleClaim}
                 color={color}
-                disabled={stakingPoolData.userData.claimableRewardToken.isZero()}
+                disabled={disableClaimButton}
               >
                 {"Claim"}
               </ActionButton>
