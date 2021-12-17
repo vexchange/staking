@@ -43,13 +43,11 @@ export const PoolSubtitle = styled(SecondaryText)`
 `
 
 export const ClaimableTokenPillContainer = styled.div`
-  margin-left: auto;
-
-  @media (max-width: ${sizes.sm}px) {
+    display: flex;
+    flex-wrap: wrap;
     order: 4;
+    margin: 24px 0 8px 0px;
     width: 100%;
-    margin: 24px 0px 8px 0px;
-  }
 `
 
 export const ClaimableTokenPill = styled.div`
@@ -59,6 +57,10 @@ export const ClaimableTokenPill = styled.div`
   border: ${theme.border.width} ${theme.border.style} ${props => props.color};
   background: ${props => props.color}14;
   border-radius: 100px;
+  margin: 0 10px 15px 0;
+  @media (max-width: ${sizes.sm}px) {
+    width: 100%;
+  }
 `
 
 export const ClaimableTokenAmount = styled(Subtitle)`

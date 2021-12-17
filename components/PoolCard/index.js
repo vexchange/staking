@@ -103,29 +103,34 @@ export default function PoolCard({
           setShowClaimModal(true);
         }}
       >
-        {stakingPoolData.userData.claimableRewardTokens.map((claimableRewardToken) => {
-          const name = Object.keys(claimableRewardToken)[0]
-          const amount = claimableRewardToken[name]
+        {stakingPoolData.userData.claimableRewardTokens.map(
+          (claimableRewardToken) => {
+            const name = Object.keys(claimableRewardToken)[0];
+            const amount = claimableRewardToken[name];
 
-          if (!amount.isZero()) {
-            disableClaimButton = false;
+            if (!amount.isZero()) {
+              disableClaimButton = false;
+            }
+
+            return (
+              <ClaimableTokenPill key={name} color={color}>
+                <BaseIndicator
+                  size={8}
+                  color={color}
+                  className="mr-2"
+                  style={{ marginRight: "5px" }}
+                />
+                <Subtitle className="mr-2">{name} to claim</Subtitle>
+                <ClaimableTokenAmount
+                  color={color}
+                  style={{ marginLeft: "8px" }}
+                >
+                  {account ? formatBigNumber(amount) : "---"}
+                </ClaimableTokenAmount>
+              </ClaimableTokenPill>
+            );
           }
-
-          return (
-            <ClaimableTokenPill key={name} color={color}>
-              <BaseIndicator
-                size={8}
-                color={color}
-                className="mr-2"
-                style={{ marginRight: "5px" }}
-              />
-              <Subtitle className="mr-2">{name} to claim</Subtitle>
-              <ClaimableTokenAmount color={color} style={{ marginLeft: "8px" }}>
-                {account ? formatBigNumber(amount) : "---"}
-              </ClaimableTokenAmount>
-            </ClaimableTokenPill>
-          );
-        })}
+        )}
       </ClaimableTokenPillContainer>
     );
   }, [account, color, stakingPoolData]);
