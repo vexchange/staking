@@ -58,7 +58,7 @@ export const STAKING_POOLS = [
     stakeAsset: "WOV-VET",
     stakeAssetLogo: "/imgs/tokens/wov.png",
     stakeAssetUrlPart:
-      "0x0000000000000000000000000000456E65726779-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+      "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
     rewardTokens: [
       {
         name: "WOV",
