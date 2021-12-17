@@ -63,18 +63,18 @@ export const STAKING_POOLS = [
       {
         name: "WOV",
         address: {
-          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
-          testnet: "0x0000000000000000000000000000456E65726779",
+          mainnet: "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A",
+          testnet: "0xa9d948658eDFf0273deE1D610F2552b6954f77e8",
         },
       },
     ],
     stakingTokenAddress: {
-      mainnet: "0x39cd888a1583498AD30E716625AE1a00ff51286D",
+      mainnet: "0xD86bed355d9d6A4c951e96755Dd0c3cf004d6CD0",
       testnet: "0x0000000000000000000000000000456E65726779",
     },
     rewardsAddress: {
-      mainnet: "0x538f8890a383c44e59df4c7263d96ca8048da2c7",
-      testnet: "0xeaad8ec04957373694843bbb486a0c206e2e5120",
+      mainnet: "",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
     },
   },
 ];
