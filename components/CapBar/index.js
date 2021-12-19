@@ -15,29 +15,28 @@ const CapBar = ({
   stakingPoolData,
   account,
 }) => {
-  let percent = cap > 0 ? current / cap : 0;
+  let percent = +cap > 0 ? +current / +cap : 0;
   if (percent < 0) {
     percent = 0;
   } else if (percent > 1) {
     percent = 1;
   }
   percent *= 100;
-  current = current > cap ? cap : current;
-  
+  current = +current > +cap ? cap : current;
+
   return (
-    <div className="w-100">
-      {account ? (
-        <div className="d-flex flex-row justify-content-between">
-          <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
-            {copies.current}
-          </SecondaryText>
-          <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-            {stakingPoolData.userData.loading
-              ? "Loading..."
-              : `${formatAmount(current)} ${vaultOption.stakeAsset}`}
-          </Title>
-        </div>
-      ) : null}
+    <div className='w-100'>
+      <div className='d-flex flex-row justify-content-between'>
+        <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
+          {copies.current}
+        </SecondaryText>
+        <Title fontSize={statsConfig.fontSize} lineHeight={20}>
+          {stakingPoolData.userData.loading
+            ? 'Loading...'
+            : `${displayCurrent ? displayCurrent : `$${formatAmount(current)}`
+              }`}
+        </Title>
+      </div>
 
       <div
         className={`d-flex flex-row position-relative ${barConfig.extraClassNames}`}
@@ -55,13 +54,13 @@ const CapBar = ({
           {copies.cap}
         </SecondaryText>
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-          {stakingPoolData.poolData.loading
-            ? "Loading..."
-            : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}
+          {stakingPoolData.userData.loading
+            ? 'Loading...'
+            : `${displayCap ? displayCap : `$${formatAmount(cap)}`}`}
         </Title>
       </div>
     </div>
   );
 };
 
-export default CapBar;
+export default CapBar

@@ -43,6 +43,20 @@ export default function PoolCard({
   let disableClaimButton = true;
   const color = colors.orange;
 
+  const [usdValueStaked, usdValuePoolSize] = useMemo(() => {
+    if (!tvlInUsd || !stakingPoolData) {
+      return [null, null];
+    }
+    return [
+      formatBigNumber(
+        tvlInUsd
+          .mul(stakingPoolData.userData.currentStake)
+          .div(stakingPoolData.poolData.poolSize)
+      ),
+      utils.formatEther(tvlInUsd),
+    ];
+  }, [tvlInUsd, stakingPoolData]);
+
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions || []).find(
       (currentTx) =>
@@ -277,12 +291,8 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            current={parseFloat(
-              utils.formatEther(stakingPoolData.userData.currentStake)
-            )}
-            cap={parseFloat(
-              utils.formatEther(stakingPoolData.poolData.poolSize)
-            )}
+            current={usdValueStaked}
+            cap={usdValuePoolSize}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",
@@ -324,5 +334,5 @@ export default function PoolCard({
 
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
-  );
+  )
 }
