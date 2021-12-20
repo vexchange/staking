@@ -354,5 +354,5 @@ export default function PoolCard({
 
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
-  );
+  )
 }

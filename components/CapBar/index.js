@@ -15,7 +15,7 @@ const CapBar = ({
   stakingPoolData,
   account,
 }) => {
-  let percent = cap > 0 ? current / cap : 0;
+  let percent = +cap > 0 ? +current / +cap : 0;
   if (percent < 0) {
     percent = 0;
   } else if (percent > 1) {
@@ -64,4 +64,4 @@ const CapBar = ({
   );
 };
 
-export default CapBar;
+export default CapBar
