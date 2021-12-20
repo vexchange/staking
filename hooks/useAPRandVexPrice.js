@@ -1,14 +1,14 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
 import { Fetcher, Token, Route } from "vexchange-sdk";
-import { CHAIN_ID, REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, VECHAIN_NODE, WVET_ADDRESS } from "../constants";
+import { REWARD_TOKEN_ADDRESSES, STAKING_TOKEN_ADDRESSES, WVET_ADDRESS } from "../constants";
 import { find } from "lodash";
 import { BigNumber, ethers } from "ethers";
 import MultiRewards from "../constants/abis/MultiRewards";
 import { parseUnits } from "ethers/lib/utils";
 import CoinGecko from 'coingecko-api';
 import IERC20 from "../constants/abis/IERC20";
-import useFetchStakingPoolsData from "./useFetchStakingPoolsData";
+import useFetchStakingPoolData from "./useFetchStakingPoolData";
 
 const useAPRandVexPrice = () => {
     const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
@@ -24,7 +24,7 @@ const useAPRandVexPrice = () => {
      */
     const [apr, setApr] = useState(0)
     const { connex, rewardsContract } = useAppContext()
-    const { poolsData } = useFetchStakingPoolsData()
+    const { poolData } = useFetchStakingPoolData()
 
     const getMidPrice = async(
         connex,
@@ -32,14 +32,17 @@ const useAPRandVexPrice = () => {
         quoteToken,
         baseDecimal = 18,
         quoteDecimal = 18,
-        chainId = CHAIN_ID.mainnet,
+        chainId = 1,
     ) => {
+        if (chainId == undefined) {
+            chainId = ChainId.MAINNET
+        }
         let base = new Token(chainId, baseToken, baseDecimal);
         let quote = new Token(chainId, quoteToken, quoteDecimal);
         let pair = await Fetcher.fetchPairData(quote, base, connex);
-        let route = new Route([pair], base);
-        let base2quote = route.midPrice.toSignificant(6);
-        let quote2base = route.midPrice.invert().toSignificant(6);
+        let route = await new Route([pair], base);
+        let base2quote = await route.midPrice.toSignificant(6);
+        let quote2base = await route.midPrice.invert().toSignificant(6);
         return {
             base2quote: parseFloat(base2quote),
             quote2base: parseFloat(quote2base),
@@ -61,10 +64,9 @@ const useAPRandVexPrice = () => {
             const usdPerVet = parseFloat(data)
             setUsdPerVet(usdPerVet)
 
-            const result = await getMidPrice(
-                connex,
-                WVET_ADDRESS[VECHAIN_NODE],
-                REWARD_TOKEN_ADDRESSES[VECHAIN_NODE]
+            const result = await getMidPrice(connex,
+                WVET_ADDRESS.mainnet,
+                REWARD_TOKEN_ADDRESSES.mainnet
             );
 
             const vexPerVet = result.base2quote;
@@ -82,21 +84,21 @@ const useAPRandVexPrice = () => {
     useEffect(calculateIndividualTokenPrices, [connex])
 
     const calculateApr = async () => {
-        if (!rewardsContract || !pair || poolsData.poolSize.eq('0') ||
+        if (!rewardsContract || !pair || poolData.poolSize.eq('0') ||
             !connex || !usdPerVex) return;
 
         const rewardDataABI = find(MultiRewards, { name: 'rewardData' });
         let method = rewardsContract.method(rewardDataABI);
-        let res = await method.call(REWARD_TOKEN_ADDRESSES[VECHAIN_NODE]);
+        let res = await method.call(REWARD_TOKEN_ADDRESSES.mainnet);
         const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
 
         try {
             const totalSupplyABI = find(IERC20, { name: 'totalSupply' })
-            method = connex.thor.account(STAKING_TOKEN_ADDRESSES[VECHAIN_NODE]).method(totalSupplyABI)
+            method = connex.thor.account(STAKING_TOKEN_ADDRESSES.mainnet).method(totalSupplyABI)
             res = await method.call()
 
             const totalLPTokenSupply = BigNumber.from(res.decoded[0])
-            const numberOfLPTokensStaked = poolsData.poolSize;
+            const numberOfLPTokensStaked = poolData.poolSize;
 
             console.assert(numberOfLPTokensStaked.lte(totalLPTokenSupply),
                 "Staking Pool Size greater than total LP token supply. Something's wrong")
@@ -131,7 +133,7 @@ const useAPRandVexPrice = () => {
         }
     }
 
-    useEffect(calculateApr, [connex, rewardsContract, pair, poolsData, usdPerVex])
+    useEffect(calculateApr, [connex, rewardsContract, pair, poolData, usdPerVex])
 
     return { usdPerVex, apr, tvlInUsd }
 }

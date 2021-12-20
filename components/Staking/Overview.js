@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Subtitle, Title, PrimaryText } from '../../design'
-import useAPRandVexPrice from '../../hooks/useAPRandVexPrice'
+import useOverview from '../../hooks/useOverview'
 import useTextAnimation from '../../hooks/useTextAnimation'
 import { formatBigNumber, formatAmount } from "../../utils";
 import { ExternalIcon } from '../Icons'
@@ -18,8 +18,9 @@ import {
 import { VECHAIN_NODE } from '../../constants';
 
 export default function Overview() {
+  return null
   const { usdPerVex, apr, tvlInUsd } = VECHAIN_NODE === 'mainnet'
-    ? useAPRandVexPrice()
+    ? useOverview()
     : { usdPerVex: 1, apr: 1, tvlInUsd: 1 }
   const loadingText = useTextAnimation(true)
   const vexPrice = useMemo(() => {

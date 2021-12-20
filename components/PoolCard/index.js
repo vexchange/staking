@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ethers, utils } from "ethers";
 import { Tooltip } from "react-tippy";
-import { formatBigNumber } from "../../utils";
+import { calculateAprAndTvl, formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
 import { useTransactions } from "../../context/transactions";
 import {
@@ -24,6 +24,7 @@ import {
   LogoContainer,
   PoolCardFooter,
   PoolCardFooterButton,
+  PoolCardInfoContainer,
   PoolSubtitle,
   PoolTitle,
   Wrapper,
@@ -38,10 +39,35 @@ export default function PoolCard({
   setShowActionModal,
 }) {
   const { transactions } = useTransactions();
-  const { account, initAccount } = useAppContext();
+  const { connex, account, connexStakingPools, initAccount } = useAppContext();
   const { tokenAllowance } = useTokenAllowance(vaultOption);
   let disableClaimButton = true;
   const color = colors.orange;
+
+  // TODO: refactor it
+  let apr = 0
+  let usdValueStaked = 0
+  let usdValuePoolSize = 0
+  useEffect(async () => {
+    if (!connexStakingPools || !stakingPoolData || !vaultOption || !connex) {
+      return;
+    }
+
+    const res = await calculateAprAndTvl(
+      connex,
+      vaultOption,
+      stakingPoolData,
+      connexStakingPools[vaultOption.id].rewardsContract
+    );
+
+    console.log(res)
+    if (!res) return
+
+    apr = res.apr
+    usdValueStaked = res.usdValueStaked
+    usdValuePoolSize = res.usdValuePoolSize
+  }, [connexStakingPools, stakingPoolData, vaultOption, connex])
+
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions || []).find(
@@ -236,40 +262,48 @@ export default function PoolCard({
   return (
     <Wrapper color={color}>
       <div className="d-flex flex-wrap w-100 p-3">
-        {/* Card Title */}
-        <div className="d-flex align-items-center">
-          <LogoContainer>
-            <Image
-              src={vaultOption.stakeAssetLogo}
-              alt={vaultOption.stakeAsset}
-              width={40}
-              height={37}
-            />
-          </LogoContainer>
-          <div className="d-flex flex-column">
-            <div className="d-flex align-items-center">
-              <PoolTitle>{vaultOption.stakeAsset}</PoolTitle>
-              <Tooltip
-                interactive
-                position="top"
-                trigger="mouseenter"
-                html={
-                  <TooltipContainer>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: vaultOption.description,
-                      }}
-                    ></div>
-                  </TooltipContainer>
-                }
-              >
-                <HelpInfo>i</HelpInfo>
-              </Tooltip>
+        <div className="d-flex w-100 justify-content-between">
+          {/* Card Title */}
+          <div className="d-flex align-items-center">
+            <LogoContainer>
+              <Image
+                src={vaultOption.stakeAssetLogo}
+                alt={vaultOption.stakeAsset}
+                width={40}
+                height={37}
+              />
+            </LogoContainer>
+            <div className="d-flex flex-column">
+              <div className="d-flex align-items-center">
+                <PoolTitle>{vaultOption.stakeAsset}</PoolTitle>
+                <Tooltip
+                  interactive
+                  position="top"
+                  trigger="mouseenter"
+                  html={
+                    <TooltipContainer>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: vaultOption.description,
+                        }}
+                      ></div>
+                    </TooltipContainer>
+                  }
+                >
+                  <HelpInfo>i</HelpInfo>
+                </Tooltip>
+              </div>
+              <PoolSubtitle>
+                Your Unstaked Balance: {renderUnstakeBalance()}
+              </PoolSubtitle>
             </div>
-            <PoolSubtitle>
-              Your Unstaked Balance: {renderUnstakeBalance()}
-            </PoolSubtitle>
           </div>
+
+          {/* Pool info */}
+          <PoolCardInfoContainer color={color}>
+            <span>Est. APR:</span>
+            <strong>{apr}%</strong>
+          </PoolCardInfoContainer>
         </div>
 
         {/* Claimable Pill */}
@@ -277,12 +311,8 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            current={parseFloat(
-              utils.formatEther(stakingPoolData.userData.currentStake)
-            )}
-            cap={parseFloat(
-              utils.formatEther(stakingPoolData.poolData.poolSize)
-            )}
+            current={usdValueStaked}
+            cap={usdValuePoolSize}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",

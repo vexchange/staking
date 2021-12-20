@@ -1,13 +1,13 @@
-export const VECHAIN_NODE = "testnet";
-
+export const VECHAIN_NODE = "mainnet";
+export const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
 export const VEX_ADDRESS = {
   mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
   testnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
 };
 
 export const WVET_ADDRESS = {
-  mainnet: "0xd8ccdd85abdbf68dfec95f06c973e87b1b5a9997",
-  testnet: "0x93e5fa8011612fab061ef58cbab9262d2e76407b",
+  mainnet: "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+  testnet: "0x93E5Fa8011612FAB061eF58CbAB9262d2e76407b",
 };
 
 export const NETWORK_NAMES = {
@@ -52,29 +52,29 @@ export const STAKING_POOLS = [
       testnet: "0x03ec9c93ed8a0dd68a9a4ac868c06fae3eecad01",
     },
   },
-  {
-    id: 2,
-    description: "-",
-    stakeAsset: "WOV-VET",
-    stakeAssetLogo: "/imgs/tokens/wov.png",
-    stakeAssetUrlPart:
-      "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
-    rewardTokens: [
-      {
-        name: "WOV",
-        address: {
-          mainnet: "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A",
-          testnet: "0xa9d948658eDFf0273deE1D610F2552b6954f77e8",
-        },
-      },
-    ],
-    stakingTokenAddress: {
-      mainnet: "0xD86bed355d9d6A4c951e96755Dd0c3cf004d6CD0",
-      testnet: "0x0000000000000000000000000000456E65726779",
-    },
-    rewardsAddress: {
-      mainnet: "",
-      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
-    },
-  },
+  // {
+  //   id: 2,
+  //   description: "-",
+  //   stakeAsset: "WOV-VET",
+  //   stakeAssetLogo: "/imgs/tokens/wov.png",
+  //   stakeAssetUrlPart:
+  //     "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+  //   rewardTokens: [
+  //     {
+  //       name: "WOV",
+  //       address: {
+  //         mainnet: "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A",
+  //         testnet: "0xa9d948658eDFf0273deE1D610F2552b6954f77e8",
+  //       },
+  //     },
+  //   ],
+  //   stakingTokenAddress: {
+  //     mainnet: "0xD86bed355d9d6A4c951e96755Dd0c3cf004d6CD0",
+  //     testnet: "0x0000000000000000000000000000456E65726779",
+  //   },
+  //   rewardsAddress: {
+  //     mainnet: "",
+  //     testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+  //   },
+  // },
 ];

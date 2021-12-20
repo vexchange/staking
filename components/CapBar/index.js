@@ -1,7 +1,7 @@
 import React from "react";
 import { SecondaryText, Title } from "../../design";
 import colors from "../../design/colors";
-import { formatAmount } from "../../utils";
+import { formatAmount, formatCurrency } from "../../utils";
 import { BackgroundBar, ForegroundBar } from "./styled";
 
 const CapBar = ({
@@ -23,7 +23,7 @@ const CapBar = ({
   }
   percent *= 100;
   current = current > cap ? cap : current;
-  
+
   return (
     <div className="w-100">
       {account ? (
@@ -34,7 +34,7 @@ const CapBar = ({
           <Title fontSize={statsConfig.fontSize} lineHeight={20}>
             {stakingPoolData.userData.loading
               ? "Loading..."
-              : `${formatAmount(current)} ${vaultOption.stakeAsset}`}
+              : `${formatCurrency(formatAmount(current))}`}
           </Title>
         </div>
       ) : null}
@@ -57,7 +57,7 @@ const CapBar = ({
         <Title fontSize={statsConfig.fontSize} lineHeight={20}>
           {stakingPoolData.poolData.loading
             ? "Loading..."
-            : `${formatAmount(cap)} ${vaultOption.stakeAsset}`}
+            : `${formatCurrency(formatAmount(cap))}`}
         </Title>
       </div>
     </div>
