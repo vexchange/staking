@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
-import moment from "moment";
+import { ethers, constants, utils } from "ethers";
 import { find } from "lodash";
 import IERC20 from "../constants/abis/IERC20.js";
 import MultiRewards from "../constants/abis/MultiRewards.js";
-import { STAKING_POOLS, VECHAIN_NODE } from "../constants";
+import {
+  NUM_SECONDS_IN_A_YEAR,
+  STAKING_POOLS,
+  VECHAIN_NODE,
+} from "../constants";
 import { useAppContext } from "../context/app";
+import useOverview from "../hooks/useOverview";
 import { defaultStakingPoolData, defaultUserData } from "../models/staking";
+import { parseUnits } from "@ethersproject/units";
+import { formatBigNumber } from "../utils/index.js";
 
 const useFetchStakingPoolsData = () => {
-  const { connex, account, tick } = useAppContext();
+  const { usdPerVet, poolInfo } = useOverview();
+  const { connex, connexStakingPools, account, tick } = useAppContext();
   const [poolData, setPoolData] = useState(defaultStakingPoolData);
   const [userData, setUserData] = useState(defaultUserData);
   const totalSupplyABI = find(IERC20, { name: "totalSupply" });
@@ -78,10 +86,51 @@ const useFetchStakingPoolsData = () => {
           decoded: { 0: poolSize },
         } = await stakingPoolsFunctions[stakingPool.id].getBalanceOf.call();
 
+        const rewardDataABI = find(MultiRewards, { name: "rewardData" });
+        let method =
+          connexStakingPools[stakingPool.id].rewardsContract.method(
+            rewardDataABI
+          );
+        let res = await method.call(stakingPool.rewardTokens[0].address[VECHAIN_NODE]);
+        const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
+
+        const totalSupplyABI = find(IERC20, { name: "totalSupply" });
+        method = connex.thor
+          .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
+          .method(totalSupplyABI);
+        res = await method.call();
+
+        const totalLPTokenSupply = BigNumber.from(res.decoded[0]);
+        const numberOfLPTokensStaked = poolSize;
+        // This is calculated in the amount of vex tokens instead of usd
+        const tokenTvl =
+          poolInfo[stakingPool.id].pair.tokenAmounts[0].toFixed(18);
+        // Multiply by two to get the pool TVL as this is a 50-50 pool
+        const tvlInToken = parseUnits(tokenTvl, 18).mul(2);
+
+        const apr = rewardRate
+          .mul(NUM_SECONDS_IN_A_YEAR)
+          .mul(parseUnits("1", "ether")) // More units for precision
+          .mul(100) // Convert into percentage
+          // The following two lines take into account
+          // that not all LP tokens are staked on the staking site
+          .mul(totalLPTokenSupply)
+          .div(numberOfLPTokensStaked)
+          // We divide all the rewards by the total VEX TVL
+          .div(tvlInToken);
+
+        const tvlInUsd = tvlInToken
+          .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
+          .mul(numberOfLPTokensStaked)
+          .div(totalLPTokenSupply)
+          .div(parseUnits("1", "ether"));
+
         return {
           poolId: stakingPool.id,
           vault: stakingPool.stakeAsset,
           poolSize: BigNumber.from(poolSize),
+          apr,
+          tvlInUsd,
         };
       })
     );
@@ -114,10 +163,10 @@ const useFetchStakingPoolsData = () => {
                 { [rewardToken.name]: BigNumber.from(earned) },
               ];
 
-              resolve()
-            })
+              resolve();
+            });
           })
-        )
+        );
 
         // Unstaked balance
         const {
@@ -136,9 +185,16 @@ const useFetchStakingPoolsData = () => {
           stakingPool.rewardsAddress[VECHAIN_NODE]
         );
 
+        const currentPool = poolData.filter(
+          (poolData) => poolData.poolId == stakingPool.id
+        )[0];
+        const currentStake = BigNumber.from(
+          currentPool.tvlInUsd.mul(accountBalanceOf).div(currentPool.poolSize)
+        );
+
         return {
           poolId: stakingPool.id,
-          currentStake: BigNumber.from(accountBalanceOf),
+          currentStake,
           claimableRewardTokens,
           unstakedBalance: BigNumber.from(unstakedBalance),
           unstakedAllowance: BigNumber.from(unstakedAllowance),
@@ -153,7 +209,12 @@ const useFetchStakingPoolsData = () => {
       setPoolData(stakingPoolData);
     };
 
-    if (connex) {
+    if (
+      connex &&
+      connexStakingPools &&
+      poolInfo &&
+      stakingPoolsFunctions.length > 0
+    ) {
       getStakingPoolsData();
     }
   }, [connex, tick]);
@@ -164,7 +225,7 @@ const useFetchStakingPoolsData = () => {
       setUserData(accountData);
     };
 
-    if (account) {
+    if (account && poolInfo && poolData && poolData.length > 0) {
       getAccountData();
     }
   }, [account, tick]);

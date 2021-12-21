@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { ethers, utils } from "ethers";
 import { Tooltip } from "react-tippy";
-import { calculateAprAndTvl, formatBigNumber } from "../../utils";
+import { fetchPoolInfo, formatAmount, formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
 import { useTransactions } from "../../context/transactions";
 import {
@@ -43,31 +43,6 @@ export default function PoolCard({
   const { tokenAllowance } = useTokenAllowance(vaultOption);
   let disableClaimButton = true;
   const color = colors.orange;
-
-  // TODO: refactor it
-  let apr = 0
-  let usdValueStaked = 0
-  let usdValuePoolSize = 0
-  useEffect(async () => {
-    if (!connexStakingPools || !stakingPoolData || !vaultOption || !connex) {
-      return;
-    }
-
-    const res = await calculateAprAndTvl(
-      connex,
-      vaultOption,
-      stakingPoolData,
-      connexStakingPools[vaultOption.id].rewardsContract
-    );
-
-    console.log(res)
-    if (!res) return
-
-    apr = res.apr
-    usdValueStaked = res.usdValueStaked
-    usdValuePoolSize = res.usdValuePoolSize
-  }, [connexStakingPools, stakingPoolData, vaultOption, connex])
-
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions || []).find(
@@ -302,7 +277,12 @@ export default function PoolCard({
           {/* Pool info */}
           <PoolCardInfoContainer color={color}>
             <span>Est. APR:</span>
-            <strong>{apr}%</strong>
+            <strong>
+              {stakingPoolData.poolData.apr
+                ? formatAmount(formatBigNumber(stakingPoolData.poolData.apr))
+                : "loading"}
+              %
+            </strong>
           </PoolCardInfoContainer>
         </div>
 
@@ -311,8 +291,8 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            current={usdValueStaked}
-            cap={usdValuePoolSize}
+            current={stakingPoolData.userData.currentStake}
+            cap={stakingPoolData.poolData.tvlInUsd}
             copies={{
               current: "Your Current Stake",
               cap: "Pool Size",
@@ -354,5 +334,5 @@ export default function PoolCard({
 
       <PoolCardFooter>{stakingPoolButtons}</PoolCardFooter>
     </Wrapper>
-  )
+  );
 }

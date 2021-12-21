@@ -3,34 +3,16 @@ import { useEffect, useState } from "react";
 import { Fetcher, Token, Route } from "vexchange-sdk";
 import {
   CHAIN_ID,
-  REWARD_TOKEN_ADDRESSES,
-  STAKING_TOKEN_ADDRESSES,
+  STAKING_POOLS,
   VECHAIN_NODE,
   WVET_ADDRESS,
 } from "../constants";
-import { find } from "lodash";
-import { BigNumber, ethers } from "ethers";
-import MultiRewards from "../constants/abis/MultiRewards";
-import { parseUnits } from "ethers/lib/utils";
 import CoinGecko from "coingecko-api";
-import IERC20 from "../constants/abis/IERC20";
-import useFetchStakingPoolsData from "./useFetchStakingPoolsData";
-import { calculateAprAndTvl } from "../utils";
 
 const useOverview = () => {
   const [usdPerVet, setUsdPerVet] = useState(0);
-  const [vexPerVet, setVexPerVet] = useState(0);
-  const [usdPerVex, setUsdPerVex] = useState(0);
-  const [tvlInUsd, setTvlInUsd] = useState(0);
-  const [pair, setPair] = useState(null);
-
-  /**
-   * This is a percentage in BigNumber representation
-   * i.e. 20% will be represented as 20_000_000_000_000_000_000
-   */
-  const [apr, setApr] = useState(0);
+  const [poolInfo, setPoolInfo] = useState(null);
   const { connex } = useAppContext();
-  const { poolsData } = useFetchStakingPoolsData();
 
   const getMidPrice = async (
     connex,
@@ -65,21 +47,30 @@ const useOverview = () => {
       });
       const data = res.data.vechain.usd;
       const usdPerVet = parseFloat(data);
-      setUsdPerVet(usdPerVet);
 
-      const result = await getMidPrice(
-        connex,
-        WVET_ADDRESS[VECHAIN_NODE],
-        REWARD_TOKEN_ADDRESSES[VECHAIN_NODE]
+      let poolInfo = [];
+      await Promise.all(
+        STAKING_POOLS.map(async (stakingPool) => {
+          const result = await getMidPrice(
+            connex,
+            WVET_ADDRESS[VECHAIN_NODE],
+            stakingPool.rewardTokens[0].address[VECHAIN_NODE]
+          );
+
+          const tokenPerVet = result.base2quote;
+          const usdPerToken = usdPerVet / tokenPerVet;
+          const pair = result.pair;
+
+          poolInfo[stakingPool.id] = {
+            tokenPerVet,
+            usdPerToken,
+            pair,
+          };
+        })
       );
 
-      const vexPerVet = result.base2quote;
-      const usdPerVex = usdPerVet / vexPerVet;
-      setVexPerVet(vexPerVet);
-      setUsdPerVex(usdPerVex);
-
-      const pair = result.pair;
-      setPair(pair);
+      setUsdPerVet(usdPerVet);
+      setPoolInfo(poolInfo);
     } catch (error) {
       console.error("Error fetching", error);
     }
@@ -87,7 +78,7 @@ const useOverview = () => {
 
   useEffect(calculateIndividualTokenPrices, [connex]);
 
-  return { usdPerVex, apr, tvlInUsd };
+  return { usdPerVet, poolInfo };
 };
 
 export default useOverview;
