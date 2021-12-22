@@ -3,7 +3,7 @@ import { SecondaryText, Title } from "../../design";
 import colors from "../../design/colors";
 import { formatAmount, formatBigNumber, formatCurrency } from "../../utils";
 import { BackgroundBar, ForegroundBar } from "./styled";
-import { ethers, constants, utils } from 'ethers'
+import { utils } from 'ethers'
 
 const CapBar = ({
   current,

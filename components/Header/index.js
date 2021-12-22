@@ -9,9 +9,7 @@ import Logo from "../Logo";
 
 import {
   SecondaryMobileNavItem,
-  HeaderAbsoluteContainer,
   HeaderContainer,
-  LinksContainer,
   LogoContainer,
   NavItem,
   NavLinkText,

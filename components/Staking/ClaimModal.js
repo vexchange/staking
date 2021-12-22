@@ -19,7 +19,6 @@ import Modal from "../Modal";
 import { ExternalIcon } from "../Icons";
 
 import { AssetTitle, InfoColumn, InfoData, LogoContainer } from "./styled";
-import { ethers } from "ethers";
 
 export default function ClaimModal({
   show,

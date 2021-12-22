@@ -1,16 +1,9 @@
-import { BigNumber, ethers, utils } from "ethers";
+import { utils } from "ethers";
 import currency from "currency.js";
 import {
   CHAIN_ID,
-  NUM_SECONDS_IN_A_YEAR,
   VECHAIN_NODE,
-  VEX_ADDRESS,
-  WVET_ADDRESS,
 } from "../constants";
-import IERC20 from "../constants/abis/IERC20";
-import { parseUnits } from "ethers/lib/utils";
-import { find } from "lodash";
-import MultiRewards from "../constants/abis/MultiRewards";
 import { Fetcher, Token, Route } from "vexchange-sdk";
 import numeral from "numeral";
 

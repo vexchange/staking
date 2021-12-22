@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import {
   BaseLink,
   BaseModalContentColumn,
-  PrimaryText,
   SecondaryText,
   Title,
 } from '../../design'

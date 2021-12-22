@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
-import { ethers, constants, utils } from "ethers";
+import { ethers } from "ethers";
 import { find } from "lodash";
 import IERC20 from "../constants/abis/IERC20.js";
 import MultiRewards from "../constants/abis/MultiRewards.js";
@@ -13,10 +13,9 @@ import { useAppContext } from "../context/app";
 import useOverview from "../hooks/useOverview";
 import { defaultStakingPoolData, defaultUserData } from "../models/staking";
 import { parseUnits } from "@ethersproject/units";
-import { formatBigNumber } from "../utils/index.js";
 
 const useFetchStakingPoolsData = () => {
-  const { usdPerVet, poolInfo } = useOverview();
+  const { poolInfo } = useOverview();
   const { connex, connexStakingPools, account, tick } = useAppContext();
   const [poolData, setPoolData] = useState(defaultStakingPoolData);
   const [userData, setUserData] = useState(defaultUserData);

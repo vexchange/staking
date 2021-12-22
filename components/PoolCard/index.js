@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { BigNumber, ethers, utils } from "ethers";
+import { useCallback, useMemo } from "react";
+import { BigNumber, ethers } from "ethers";
 import { Tooltip } from "react-tippy";
-import { fetchPoolInfo, formatAmount, formatBigNumber } from "../../utils";
+import { formatAmount, formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
 import { useTransactions } from "../../context/transactions";
 import {
