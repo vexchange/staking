@@ -27,7 +27,7 @@ import {
 import TrafficLight from "../TrafficLight";
 import { ActionButton } from "../Button";
 import Modal from "../Modal";
-import Logo from "../Logo";
+import Image from "next/image";
 
 import {
   Arrow,
@@ -205,8 +205,15 @@ const ActionModal = ({
         return (
           <>
             <BaseModalContentColumn>
-              <LogoContainer color="white">
-                <Logo />
+              <LogoContainer>
+                <LogoContainer>
+                  <Image
+                    src={vaultOption.stakeAssetLogo}
+                    alt={vaultOption.stakeAsset}
+                    width={40}
+                    height={37}
+                  />
+                </LogoContainer>
               </LogoContainer>
             </BaseModalContentColumn>
             <BaseModalContentColumn marginTop={8}>
