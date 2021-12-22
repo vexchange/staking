@@ -65,6 +65,7 @@ export const ClaimableTokenPillContainer = styled.div`
   order: 4;
   margin: 24px 0 8px 0px;
   width: 100%;
+  min-height: 53px;
 `;
 
 export const ClaimableTokenPill = styled.div`
