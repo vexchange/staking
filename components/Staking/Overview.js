@@ -1,15 +1,21 @@
 import { Subtitle, Title, PrimaryText } from '../../design'
+import useVexData from '../../hooks/useVexData'
+import { formatCurrency } from '../../utils'
 import { ExternalIcon } from '../Icons'
 import {
   OverviewContainer,
   OverviewDescription,
   OverviewInfo,
+  OverviewKPI,
   OverviewKPIContainer,
+  OverviewLabel,
   OverviewTag,
   UnderlineLink,
 } from './styled'
 
 export default function Overview() {
+  const { usdPerVex } = useVexData()
+
   return (
     <OverviewContainer>
       <OverviewInfo>
@@ -36,14 +42,10 @@ export default function Overview() {
         </UnderlineLink>
       </OverviewInfo>
       <OverviewKPIContainer>
-        {/* <OverviewKPI>
+        <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
-          <Title>{vexPrice}</Title>
-        </OverviewKPI> */}
-        {/* <OverviewKPI>
-          <OverviewLabel>Estimated APR</OverviewLabel>
-          <Title>{percentageAPR} %</Title>
-        </OverviewKPI> */}
+          <Title>{usdPerVex === 0 ? 'Loading...' : formatCurrency(usdPerVex)}</Title>
+        </OverviewKPI>
         {/* <OverviewKPI>
           <OverviewLabel>USD Value Staked</OverviewLabel>
           <Title>{usdValueStaked}</Title>
