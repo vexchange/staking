@@ -1,7 +1,10 @@
-import { Subtitle, Title, PrimaryText } from '../../design'
-import useVexData from '../../hooks/useVexData'
-import { formatCurrency } from '../../utils'
-import { ExternalIcon } from '../Icons'
+import { BigNumber, utils } from "ethers";
+import { useMemo } from "react";
+import { Subtitle, Title, PrimaryText } from "../../design";
+import useFetchStakingPoolsData from "../../hooks/useFetchStakingPoolsData";
+import useVexData from "../../hooks/useVexData";
+import { formatAmount, formatCurrency } from "../../utils";
+import { ExternalIcon } from "../Icons";
 import {
   OverviewContainer,
   OverviewDescription,
@@ -11,22 +14,36 @@ import {
   OverviewLabel,
   OverviewTag,
   UnderlineLink,
-} from './styled'
+} from "./styled";
 
 export default function Overview() {
-  const { usdPerVex } = useVexData()
+  const { usdPerVex } = useVexData();
+  const { poolData } = useFetchStakingPoolsData();
+  const calculateTotalTvlUsd = useMemo(() => {
+    let total = BigNumber.from(0);
+
+    if (!poolData.length) return total;
+
+    poolData.map((poolItem) => {
+      total = total.add(poolItem.tvlInUsd);
+    });
+
+    return total;
+  }, [poolData]);
 
   return (
     <OverviewContainer>
       <OverviewInfo>
         <OverviewTag>
-          <Subtitle style={{ textTransform: 'uppercase' }}>
+          <Subtitle style={{ textTransform: "uppercase" }}>
             Staking on Vexchange
           </Subtitle>
         </OverviewTag>
         <Title className="mt-3 w-100">Liquidity Mining Program</Title>
         <OverviewDescription className="mt-3 w-100">
-          The program aims to incentivize VEX liquidity, expand the voting power to those who miss out on the airdrop and to distribute the governance token to those who have the most skin in the game.
+          The program aims to incentivize VEX liquidity, expand the voting power
+          to those who miss out on the airdrop and to distribute the governance
+          token to those who have the most skin in the game.
         </OverviewDescription>
         <UnderlineLink
           href="https://medium.com/@vexchange/vex-launch-information-9e14b9da4b64"
@@ -44,13 +61,19 @@ export default function Overview() {
       <OverviewKPIContainer>
         <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
-          <Title>{usdPerVex === 0 ? 'Loading...' : formatCurrency(usdPerVex)}</Title>
+          <Title>
+            {usdPerVex === 0 ? "Loading..." : formatCurrency(usdPerVex)}
+          </Title>
         </OverviewKPI>
-        {/* <OverviewKPI>
+        <OverviewKPI>
           <OverviewLabel>USD Value Staked</OverviewLabel>
-          <Title>{usdValueStaked}</Title>
-        </OverviewKPI> */}
+          <Title>
+            {calculateTotalTvlUsd.gt(0)
+              ? `$${formatAmount(utils.formatEther(calculateTotalTvlUsd))}`
+              : "Loading..."}
+          </Title>
+        </OverviewKPI>
       </OverviewKPIContainer>
     </OverviewContainer>
-  )
+  );
 }

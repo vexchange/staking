@@ -39,12 +39,12 @@ export default function PoolCard({
   setShowActionModal,
 }) {
   const { transactions } = useTransactions();
-  const { connex, account, connexStakingPools, initAccount } = useAppContext();
+  const { account, initAccount } = useAppContext();
   const { tokenAllowance } = useTokenAllowance(vaultOption);
   let disableClaimButton = true;
   const color = colors.orange;
 
-  const currentStake = useMemo(() => {
+  const currentStakeInUsd = useMemo(() => {
     if (
       !stakingPoolData.poolData.tvlInUsd ||
       stakingPoolData.poolData.tvlInUsd.eq(0) ||
@@ -307,7 +307,7 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            current={currentStake}
+            current={currentStakeInUsd}
             cap={stakingPoolData.poolData.tvlInUsd}
             copies={{
               current: "Your Current Stake",
