@@ -49,12 +49,13 @@ export const PoolCardInfoContainer = styled.div`
   font-family: VCR, sans-serif;
   span {
     display: inline-block;
-    font-size: 14px;
-    padding: 5px;
+    font-size: 12px;
+    padding-bottom: 11px;
+    margin-right: 15px;
+    align-self: flex-end;
   }
   strong {
     font-size: 20px;
-
   }
 `;
 

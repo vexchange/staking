@@ -8,7 +8,7 @@ export const defaultStakingPoolData = {
 export const defaultUserData = {
   currentStake: BigNumber.from(0),
   claimableRewardTokens: [],
-  loading: true,
   unstakedBalance: BigNumber.from(0),
   unstakedAllowance: BigNumber.from(0),
+  loading: true,
 };

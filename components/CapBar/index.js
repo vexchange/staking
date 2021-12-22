@@ -40,7 +40,7 @@ const CapBar = ({
             {copies.current}
           </SecondaryText>
           <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-            {stakingPoolData.userData.loading
+            {stakingPoolData.poolData.loading
               ? "Loading..."
               : formatCurrency(current)}
           </Title>

@@ -108,30 +108,41 @@ const useFetchStakingPoolsData = () => {
         // Multiply by two to get the pool TVL as this is a 50-50 pool
         const tvlInToken = parseUnits(tokenTvl, 18).mul(2);
 
-        const apr = rewardRate
-          .mul(NUM_SECONDS_IN_A_YEAR)
-          .mul(parseUnits("1", "ether")) // More units for precision
-          .mul(100) // Convert into percentage
-          // The following two lines take into account
-          // that not all LP tokens are staked on the staking site
-          .mul(totalLPTokenSupply)
-          .div(numberOfLPTokensStaked)
-          // We divide all the rewards by the total VEX TVL
-          .div(tvlInToken);
+        try {
+          const apr = rewardRate
+            .mul(NUM_SECONDS_IN_A_YEAR)
+            .mul(parseUnits("1", "ether")) // More units for precision
+            .mul(100) // Convert into percentage
+            // The following two lines take into account
+            // that not all LP tokens are staked on the staking site
+            .mul(totalLPTokenSupply)
+            .div(numberOfLPTokensStaked)
+            // We divide all the rewards by the total VEX TVL
+            .div(tvlInToken);
 
-        const tvlInUsd = tvlInToken
-          .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
-          .mul(numberOfLPTokensStaked)
-          .div(totalLPTokenSupply)
-          .div(parseUnits("1", "ether"));
+          const tvlInUsd = tvlInToken
+            .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
+            .mul(numberOfLPTokensStaked)
+            .div(totalLPTokenSupply)
+            .div(parseUnits("1", "ether"));
 
-        return {
-          poolId: stakingPool.id,
-          vault: stakingPool.stakeAsset,
-          poolSize: BigNumber.from(poolSize),
-          apr,
-          tvlInUsd,
-        };
+          return {
+            poolId: stakingPool.id,
+            vault: stakingPool.stakeAsset,
+            poolSize: BigNumber.from(poolSize),
+            apr,
+            tvlInUsd,
+          };
+        } catch (err) {
+          console.log(`Pool ${stakingPool.id} is empty`)
+          return {
+            poolId: stakingPool.id,
+            vault: stakingPool.stakeAsset,
+            poolSize: BigNumber.from(0),
+            apr: BigNumber.from(0),
+            tvlInUsd: BigNumber.from(0),
+          };
+        }
       })
     );
   };
@@ -185,16 +196,9 @@ const useFetchStakingPoolsData = () => {
           stakingPool.rewardsAddress[VECHAIN_NODE]
         );
 
-        const currentPool = poolData.filter(
-          (poolData) => poolData.poolId == stakingPool.id
-        )[0];
-        const currentStake = BigNumber.from(
-          currentPool.tvlInUsd.mul(accountBalanceOf).div(currentPool.poolSize)
-        );
-
         return {
           poolId: stakingPool.id,
-          currentStake,
+          currentStake: BigNumber.from(accountBalanceOf),
           claimableRewardTokens,
           unstakedBalance: BigNumber.from(unstakedBalance),
           unstakedAllowance: BigNumber.from(unstakedAllowance),
@@ -225,7 +229,7 @@ const useFetchStakingPoolsData = () => {
       setUserData(accountData);
     };
 
-    if (account && poolInfo && poolData && poolData.length > 0) {
+    if (account) {
       getAccountData();
     }
   }, [account, tick]);

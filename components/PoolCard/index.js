@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { Tooltip } from "react-tippy";
 import { fetchPoolInfo, formatAmount, formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
@@ -43,6 +43,21 @@ export default function PoolCard({
   const { tokenAllowance } = useTokenAllowance(vaultOption);
   let disableClaimButton = true;
   const color = colors.orange;
+
+  const currentStake = useMemo(() => {
+    if (
+      !stakingPoolData.poolData.tvlInUsd ||
+      stakingPoolData.poolData.tvlInUsd.eq(0) ||
+      !stakingPoolData.userData.currentStake
+    )
+      return;
+
+    return BigNumber.from(
+      stakingPoolData.poolData.tvlInUsd
+        .mul(stakingPoolData.userData.currentStake)
+        .div(stakingPoolData.poolData.poolSize)
+    );
+  }, [stakingPoolData]);
 
   const ongoingTransaction = useMemo(() => {
     const ongoingTx = (transactions || []).find(
@@ -279,9 +294,10 @@ export default function PoolCard({
             <span>Est. APR:</span>
             <strong>
               {stakingPoolData.poolData.apr
-                ? formatAmount(formatBigNumber(stakingPoolData.poolData.apr))
-                : "loading"}
-              %
+                ? `${formatAmount(
+                    formatBigNumber(stakingPoolData.poolData.apr)
+                  )}%`
+                : "Loading..."}
             </strong>
           </PoolCardInfoContainer>
         </div>
@@ -291,7 +307,7 @@ export default function PoolCard({
 
         <div className="w-100 mt-4">
           <CapBar
-            current={stakingPoolData.userData.currentStake}
+            current={currentStake}
             cap={stakingPoolData.poolData.tvlInUsd}
             copies={{
               current: "Your Current Stake",
