@@ -48,9 +48,7 @@ export default function ClaimModal({
     try {
       const response = await connex.vendor
         .sign("tx", [clause])
-        .comment(
-          `Claim reward`
-        )
+        .comment(`Claim reward`)
         .request();
 
       setStep("claiming");
@@ -99,38 +97,28 @@ export default function ClaimModal({
                 {vaultOption.stakeAsset}
               </AssetTitle>
             </BaseModalContentColumn>
-            <InfoColumn marginTop={40}>
+            <div marginTop={40}>
               {stakingPoolData.userData.claimableRewardTokens.map(
                 (claimableRewardToken) => {
-                  const name = Object.keys(claimableRewardToken)[0]
-                  const amount = claimableRewardToken[name]
+                  const name = Object.keys(claimableRewardToken)[0];
+                  const amount = claimableRewardToken[name];
 
                   if (amount > 0) {
                     disableClaimButton = false;
                   }
 
                   return (
-                    <div key={name}>
-                      <SecondaryText>Unclaimed {name} </SecondaryText>
-                      <InfoData>{formatBigNumber(amount)}</InfoData>
-                    </div>
+                    <InfoColumn>
+                      <div key={name}>
+                        <SecondaryText>Unclaimed {name}: </SecondaryText>
+                        <InfoData>{formatBigNumber(amount)}</InfoData>
+                      </div>
+                    </InfoColumn>
                   );
                 }
               )}
-            </InfoColumn>
-            <BaseModalContentColumn marginTop="auto">
-              <BaseUnderlineLink
-                href="https://medium.com/@vexchange/vex-launch-information-9e14b9da4b64"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="d-flex align-items-center"
-              >
-                <>
-                  <SecondaryText>Read about $VEX</SecondaryText>
-                  <ExternalIcon className="ml-1" />
-                </>
-              </BaseUnderlineLink>
-            </BaseModalContentColumn>
+            </div>
+            <BaseModalContentColumn marginTop="auto"></BaseModalContentColumn>
             <BaseModalContentColumn>
               <ActionButton
                 className="btn py-3 mb-2"
