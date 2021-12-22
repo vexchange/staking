@@ -55,7 +55,9 @@ export const PoolCardInfoContainer = styled.div`
     align-self: flex-end;
   }
   strong {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: normal;
+    color: ${colors.orange};
   }
 `;
 
