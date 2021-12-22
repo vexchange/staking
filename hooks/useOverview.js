@@ -8,32 +8,12 @@ import {
   WVET_ADDRESS,
 } from "../constants";
 import CoinGecko from "coingecko-api";
+import { getMidPrice } from "../utils";
 
 const useOverview = () => {
   const [usdPerVet, setUsdPerVet] = useState(0);
   const [poolInfo, setPoolInfo] = useState(null);
   const { connex } = useAppContext();
-
-  const getMidPrice = async (
-    connex,
-    baseToken,
-    quoteToken,
-    baseDecimal = 18,
-    quoteDecimal = 18,
-    chainId = CHAIN_ID.mainnet
-  ) => {
-    let base = new Token(chainId, baseToken, baseDecimal);
-    let quote = new Token(chainId, quoteToken, quoteDecimal);
-    let pair = await Fetcher.fetchPairData(quote, base, connex);
-    let route = new Route([pair], base);
-    let base2quote = route.midPrice.toSignificant(6);
-    let quote2base = route.midPrice.invert().toSignificant(6);
-    return {
-      base2quote: parseFloat(base2quote),
-      quote2base: parseFloat(quote2base),
-      pair,
-    };
-  };
 
   const calculateIndividualTokenPrices = async () => {
     if (!connex) return;

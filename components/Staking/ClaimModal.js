@@ -108,8 +108,8 @@ export default function ClaimModal({
                   }
 
                   return (
-                    <InfoColumn>
-                      <div key={name}>
+                    <InfoColumn key={name}>
+                      <div>
                         <SecondaryText>Unclaimed {name}: </SecondaryText>
                         <InfoData>{formatBigNumber(amount)}</InfoData>
                       </div>
