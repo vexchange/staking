@@ -130,7 +130,7 @@ const useFetchStakingPoolsData = () => {
             .div(totalLPTokenSupply)
             .div(parseUnits("1", "ether"));
         } catch (err) {
-          console.log(`Pool ${stakingPool.id} is empty`);
+          console.log(stakingPool.id, err);
         }
 
         return {
