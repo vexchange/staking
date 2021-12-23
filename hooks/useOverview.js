@@ -13,7 +13,7 @@ import { getMidPrice } from "../utils";
 const useOverview = () => {
   const [usdPerVet, setUsdPerVet] = useState(0);
   const [poolInfo, setPoolInfo] = useState(null);
-  const { connex } = useAppContext();
+  const { connex, tick } = useAppContext();
 
   const calculateIndividualTokenPrices = async () => {
     if (!connex) return;
@@ -56,7 +56,7 @@ const useOverview = () => {
     }
   };
 
-  useEffect(calculateIndividualTokenPrices, [connex]);
+  useEffect(calculateIndividualTokenPrices, [connex, tick]);
 
   return { usdPerVet, poolInfo };
 };
