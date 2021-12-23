@@ -1,55 +1,35 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from "react";
 
-import { useStakingPoolData } from '../../context/data'
-import { Title } from '../../design'
-import { useTransactions } from '../../context/transactions'
+import { useStakingPoolsData } from "../../context/data";
+import { Title } from "../../design";
 
-import PoolCard from '../PoolCard'
+import PoolCard from "../PoolCard";
 
-import { StakingPoolsContainer } from './styled'
-import ApproveModal from './ApproveModal'
-import ActionModal from '../ActionModal'
-import ClaimModal from './ClaimModal'
+import { StakingPoolsContainer } from "./styled";
+import ApproveModal from "./ApproveModal";
+import ActionModal from "../ActionModal";
+import ClaimModal from "./ClaimModal";
+import { STAKING_POOLS } from "../../constants";
+import { isArray } from "lodash";
 
 const StakingPool = ({ vaultOption }) => {
-  const { transactions } = useTransactions()
-  const { stakingPoolData } = useStakingPoolData(vaultOption)
+  const { stakingPoolsData } = useStakingPoolsData();
+  let stakingPoolData = {};
 
-  const [showApprovalModal, setShowApprovalModal] = useState(false)
-  const [isStakeAction, setIsStakeAction] = useState(true)
-  const [showActionModal, setShowActionModal] = useState(false)
-  const [showClaimModal, setShowClaimModal] = useState(false)
-
-  const ongoingTransaction = useMemo(() => {
-    const ongoingTx = (transactions || []).find(currentTx => [
-      'stakingApproval',
-      'stake',
-      'unstake',
-      'rewardClaim',
-    ].includes(
-      currentTx.type,
-    ) && currentTx.stakeAsset === vaultOption && !currentTx.status)
-
-    if (!ongoingTx) {
-      return undefined
+  Object.keys(stakingPoolsData).map((key) => {
+    if (isArray(stakingPoolsData[key])) {
+      stakingPoolData[key] = stakingPoolsData[key].filter((stakingPool) => {
+        return stakingPool.poolId === vaultOption.id;
+      })[0];
+    } else {
+      stakingPoolData[key] = stakingPoolsData[key]
     }
+  });
 
-    return ongoingTx.type
-  }, [transactions, vaultOption])
-
-  const showStakeModal = useMemo(() => {
-    if (ongoingTransaction === 'stake') {
-      /** Always show staking modal when there is ongoing transaction */
-      return true
-    }
-
-    if (ongoingTransaction === 'unstake') {
-      /** Likewise with unstaking transaction */
-      return false
-    }
-
-    return isStakeAction
-  }, [isStakeAction, ongoingTransaction])
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [isStakeAction, setIsStakeAction] = useState(true);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
   return (
     <>
@@ -74,14 +54,15 @@ const StakingPool = ({ vaultOption }) => {
       />
       <PoolCard
         stakingPoolData={stakingPoolData}
+        vaultOption={vaultOption}
         setShowApprovalModal={setShowApprovalModal}
         setShowClaimModal={setShowClaimModal}
         setShowActionModal={setShowActionModal}
         setIsStakeAction={setIsStakeAction}
       />
     </>
-  )
-}
+  );
+};
 
 export default function Pools() {
   return (
@@ -91,12 +72,14 @@ export default function Pools() {
         lineHeight={24}
         className="mb-4 w-100"
         style={{
-          textTransform: 'uppercase',
+          textTransform: "uppercase",
         }}
       >
         Staking Pools
       </Title>
-      <StakingPool vaultOption="vex-vet" />
+      {STAKING_POOLS.map((stakingPool) => (
+        <StakingPool key={stakingPool.id} vaultOption={stakingPool} />
+      ))}
     </StakingPoolsContainer>
-  )
+  );
 }

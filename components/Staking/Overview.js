@@ -1,11 +1,10 @@
-import { useMemo } from 'react'
-import { Subtitle, Title, PrimaryText } from '../../design'
-import useAPRandVexPrice from '../../hooks/useAPRandVexPrice'
-import useTextAnimation from '../../hooks/useTextAnimation'
-import useStakingPool from '../../hooks/useStakingPool'
-import { formatBigNumber, formatAmount } from "../../utils";
-import { ExternalIcon } from '../Icons'
-import { formatEther } from "ethers/lib/utils";
+import { BigNumber, utils } from "ethers";
+import { useMemo } from "react";
+import { Subtitle, Title, PrimaryText } from "../../design";
+import useFetchStakingPoolsData from "../../hooks/useFetchStakingPoolsData";
+import useVexData from "../../hooks/useVexData";
+import { formatAmount, formatCurrency } from "../../utils";
+import { ExternalIcon } from "../Icons";
 import {
   OverviewContainer,
   OverviewDescription,
@@ -15,54 +14,36 @@ import {
   OverviewLabel,
   OverviewTag,
   UnderlineLink,
-} from './styled'
-
-
+} from "./styled";
 
 export default function Overview() {
-  const { loading: stakingLoading } = useStakingPool('vex-vet')
-  const { usdPerVex, apr, tvlInUsd } = useAPRandVexPrice()
-  const loadingText = useTextAnimation(stakingLoading)
+  const { usdPerVex } = useVexData();
+  const { poolData } = useFetchStakingPoolsData();
+  const calculateTotalTvlUsd = useMemo(() => {
+    let total = BigNumber.from(0);
 
-  const vexPrice = useMemo(() => {
-    if (stakingLoading || !usdPerVex) {
-      return loadingText
-    }
+    if (!poolData.length) return total;
 
-    return ('$' + usdPerVex.toPrecision(4))
-  }, [stakingLoading, loadingText, usdPerVex])
+    poolData.map((poolItem) => {
+      total = total.add(poolItem.tvlInUsd);
+    });
 
-  const percentageAPR = useMemo(() => {
-    if (!apr) {
-      return loadingText
-    }
-
-    // return apr
-    if (apr._isBigNumber) return formatBigNumber(apr)
-    else return apr
-
-  }, [apr])
-
-  const usdValueStaked = useMemo( () => {
-    if (!tvlInUsd) {
-      return loadingText;
-    }
-
-    if (tvlInUsd._isBigNumber) return '$' + formatAmount(formatEther(tvlInUsd))
-    else return tvlInUsd
-  }, [tvlInUsd])
+    return total;
+  }, [poolData]);
 
   return (
     <OverviewContainer>
       <OverviewInfo>
         <OverviewTag>
-          <Subtitle style={{ textTransform: 'uppercase' }}>
+          <Subtitle style={{ textTransform: "uppercase" }}>
             Staking on Vexchange
           </Subtitle>
         </OverviewTag>
         <Title className="mt-3 w-100">Liquidity Mining Program</Title>
         <OverviewDescription className="mt-3 w-100">
-          The program aims to incentivize VEX liquidity, expand the voting power to those who miss out on the airdrop and to distribute the governance token to those who have the most skin in the game.
+          The program aims to incentivize VEX liquidity, expand the voting power
+          to those who miss out on the airdrop and to distribute the governance
+          token to those who have the most skin in the game.
         </OverviewDescription>
         <UnderlineLink
           href="https://medium.com/@vexchange/vex-launch-information-9e14b9da4b64"
@@ -80,17 +61,19 @@ export default function Overview() {
       <OverviewKPIContainer>
         <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
-          <Title>{vexPrice}</Title>
-        </OverviewKPI>
-        <OverviewKPI>
-          <OverviewLabel>Estimated APR</OverviewLabel>
-          <Title>{percentageAPR} %</Title>
+          <Title>
+            {usdPerVex === 0 ? "Loading..." : formatCurrency(usdPerVex)}
+          </Title>
         </OverviewKPI>
         <OverviewKPI>
           <OverviewLabel>USD Value Staked</OverviewLabel>
-          <Title>{usdValueStaked}</Title>
+          <Title>
+            {calculateTotalTvlUsd.gt(0)
+              ? `$${formatAmount(utils.formatEther(calculateTotalTvlUsd))}`
+              : "Loading..."}
+          </Title>
         </OverviewKPI>
       </OverviewKPIContainer>
     </OverviewContainer>
-  )
+  );
 }

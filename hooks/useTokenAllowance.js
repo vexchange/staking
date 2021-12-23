@@ -3,22 +3,22 @@ import { BigNumber, constants } from 'ethers'
 import { find } from 'lodash'
 
 import { useAppContext } from '../context/app'
-import { REWARDS_ADDRESSES, STAKING_TOKEN_ADDRESSES } from '../constants'
+import { VECHAIN_NODE } from '../constants'
 import IERC20 from '../constants/abis/IERC20.js'
 
-const useTokenAllowance = () => {
-  const { account, connex, tick, stakingTokenContract } = useAppContext()
+const useTokenAllowance = (vaultOption) => {
+  const { account, connex, tick, connexStakingPools } = useAppContext()
   const allowanceABI = find(IERC20, { name: 'allowance' })
   const [tokenAllowance, setTokenAllowance] = useState(constants.Zero)
 
   const getAllowance = async () => {
-    if (connex && account) {
-      const method = stakingTokenContract.method(allowanceABI)
+    if (connex && account && connexStakingPools) {
+      const method = connexStakingPools[vaultOption.id].stakingTokenContract.method(allowanceABI)
       const {
         decoded: {
           0: _allowance,
         },
-      } = await method.call(account, REWARDS_ADDRESSES.mainnet)
+      } = await method.call(account, vaultOption.rewardsAddress[VECHAIN_NODE])
       setTokenAllowance(BigNumber.from(_allowance))
     }
   }
