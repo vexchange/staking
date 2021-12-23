@@ -1,10 +1,8 @@
 import { useCallback, useState, useMemo } from 'react'
 import { find } from 'lodash'
-import { BigNumber, constants, utils } from 'ethers'
-
+import { constants } from 'ethers'
 import IERC20 from '../../constants/abis/IERC20.js'
 import { getExploreURI } from '../../utils'
-
 import {
   BaseModalContentColumn,
   BaseUnderlineLink,
@@ -13,15 +11,11 @@ import {
   Title,
 } from '../../design'
 import TrafficLight from "../TrafficLight";
-
 import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
-
 import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
-import {REWARDS_ADDRESSES} from "../../constants";
-
-const { parseUnits } = utils
+import {VECHAIN_NODE} from "../../constants";
 
 export default function ApproveModal({
   show,
@@ -30,18 +24,14 @@ export default function ApproveModal({
   vaultOption,
 }) {
   const { addTransaction } = useTransactions()
-  const { connex, account, stakingTokenContract, ticker } = useAppContext()
+  const { connex, account, connexStakingPools, ticker } = useAppContext()
   const [step, setStep] = useState('info')
   const [txId, setTxId] = useState('');
 
   const handleApprove = useCallback(async () => {
-    if (!stakingTokenContract) {
-      return
-    }
-
     const approveABI = find(IERC20, { name: 'approve' })
-    const method = stakingTokenContract.method(approveABI)
-    const clause = method.asClause(REWARDS_ADDRESSES.mainnet, constants.MaxUint256)
+    const method = connexStakingPools[vaultOption.id].stakingTokenContract.method(approveABI)
+    const clause = method.asClause(vaultOption.rewardsAddress[VECHAIN_NODE], constants.MaxUint256)
 
     setStep('approve')
 
@@ -60,7 +50,7 @@ export default function ApproveModal({
       addTransaction({
         txhash,
         type: 'stakingApproval',
-        stakeAsset: vaultOption,
+        stakeAsset: vaultOption.stakeAsset,
       })
 
       const txVisitor = connex.thor.transaction(txhash)
@@ -78,13 +68,11 @@ export default function ApproveModal({
     }
   }, [
     find,
-    REWARDS_ADDRESSES,
     IERC20,
     addTransaction,
     onClose,
-    stakingTokenContract,
     connex,
-    vaultOption,
+    vaultOption.stakeAsset,
   ])
 
   const handleClose = useCallback(() => {
@@ -145,7 +133,7 @@ export default function ApproveModal({
 
   const modalHeight = useMemo(() => {
     if (step === 'info') {
-      return stakingPoolData.userData.unstakedBalance.isZero() ? 476 : 504
+      return stakingPoolData.userData && stakingPoolData.userData.unstakedBalance.isZero() ? 476 : 504
     }
 
     return 424

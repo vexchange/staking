@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import {
   BaseLink,
   BaseModalContentColumn,
-  PrimaryText,
   SecondaryText,
   Title,
 } from '../../design'
@@ -74,7 +73,7 @@ export const OverviewKPIContainer = styled.div`
 
 export const OverviewKPI = styled.div`
   padding: 16px;
-  width: calc(100% / 3);
+  width: calc(100% / 2);
   display: flex;
   flex-wrap: wrap;
   border-top: ${theme.border.width} ${theme.border.style} ${colors.border};
