@@ -13,7 +13,7 @@ import { getMidPrice } from "../utils";
 const useVexData = () => {
   const [usdPerVex, setUsdPerVex] = useState(0);
   const { usdPerVet } = useOverview()
-  const { connex } = useAppContext();
+  const { connex, tick } = useAppContext();
 
   const calculateVexTokenPrices = async () => {
     if (!connex && !usdPerVet) return;
@@ -34,7 +34,7 @@ const useVexData = () => {
     }
   };
 
-  useEffect(calculateVexTokenPrices, [connex, usdPerVet]);
+  useEffect(calculateVexTokenPrices, [connex, tick]);
 
   return { usdPerVex };
 };
