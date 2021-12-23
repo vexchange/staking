@@ -147,6 +147,7 @@ function AccountStatus({ variant }) {
           handleCopyAddress,
           renderCopiedButton()
         )}
+        {renderMenuItem('DISCONNECT WALLET', () => { userAccount.remove() })}
         {renderMenuItem("OPEN IN EXPLORER", handleOpenExplore)}
         <MenuCloseItem role="button" onClick={onCloseMenu}>
           <MenuButton isOpen={true} onToggle={onCloseMenu} />

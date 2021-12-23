@@ -14,43 +14,10 @@ import {
   NavItem,
   NavLinkText,
 } from "./styled";
+import { VECHAIN_NODE } from "../../constants";
 
 function Header() {
-  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const renderLinkItem = (
-    title,
-    href,
-    isSelected,
-    primary = true,
-    external = false
-  ) => (
-    <BaseLink
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noreferrer noopener" : undefined}
-      onClick={() => {
-        if (!external) setIsMenuOpen(false);
-      }}
-    >
-      {primary ? (
-        <NavItem isSelected={isSelected}>
-          <NavLinkText>{title}</NavLinkText>
-        </NavItem>
-      ) : (
-        <SecondaryMobileNavItem>
-          <Title
-            fontSize={18}
-            color={`${colors.primaryText}7A`}
-            style={{ textTransform: "uppercase" }}
-          >
-            {title}
-          </Title>
-        </SecondaryMobileNavItem>
-      )}
-    </BaseLink>
-  );
 
   return (
     <HeaderContainer
@@ -62,6 +29,10 @@ function Header() {
           <Logo />
         </a>
       </LogoContainer>
+
+      {VECHAIN_NODE === "testnet" ? (
+        <div style={{ color: "red" }}>TESTNET</div>
+      ) : null}
 
       <AccountStatus variant="desktop" />
     </HeaderContainer>
