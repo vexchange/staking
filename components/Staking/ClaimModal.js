@@ -8,7 +8,6 @@ import { useAppContext } from "../../context/app";
 
 import {
   BaseModalContentColumn,
-  BaseUnderlineLink,
   SecondaryText,
 } from "../../design";
 import colors from "../../design/colors";
@@ -16,7 +15,6 @@ import colors from "../../design/colors";
 import { ActionButton } from "../Button";
 import VEXClaimModalContent from "../VEXModalClaimContent";
 import Modal from "../Modal";
-import { ExternalIcon } from "../Icons";
 
 import { AssetTitle, InfoColumn, InfoData, LogoContainer } from "./styled";
 

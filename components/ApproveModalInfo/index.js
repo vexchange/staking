@@ -1,45 +1,38 @@
-import colors from '../../design/colors'
-
+import colors from "../../design/colors";
 import {
   BaseModalContentColumn,
   BaseUnderlineLink,
   PrimaryText,
   SecondaryText,
-} from '../../design'
+} from "../../design";
+import Image from "next/image";
+import { ActionButton } from "../Button";
+import { LogoContainer, ApproveAssetTitle, ErrorMessage } from "./styled";
 
-import Logo from '../Logo'
-import { ActionButton } from '../Button'
-
-import {
-  LogoContainer,
-  ApproveAssetTitle,
-  ErrorMessage,
-} from './styled'
-
-const ApproveModalInfo = ({
-  vaultOption,
-  stakingPoolData,
-  onApprove,
-}) => {
-  const color = colors.orange
+const ApproveModalInfo = ({ vaultOption, stakingPoolData, onApprove }) => {
+  const color = colors.orange;
 
   return (
     <>
       <BaseModalContentColumn>
         <LogoContainer color={color}>
-          <Logo />
+          <Image
+            src={vaultOption.stakeAssetLogo}
+            alt={vaultOption.stakeAsset}
+            width={40}
+            height={37}
+          />
         </LogoContainer>
       </BaseModalContentColumn>
       <BaseModalContentColumn marginTop={8}>
-        <ApproveAssetTitle str={vaultOption.stakeAsset}>{vaultOption.stakeAsset}</ApproveAssetTitle>
+        <ApproveAssetTitle str={vaultOption.stakeAsset}>
+          {vaultOption.stakeAsset}
+        </ApproveAssetTitle>
       </BaseModalContentColumn>
       <BaseModalContentColumn>
         <PrimaryText className="text-center font-weight-normal">
-          Before you stake, the pool needs your permission to hold your
-          {' '}
-          {vaultOption.stakeAsset}
-          {' '}
-          tokens.
+          Before you stake, the pool needs your permission to hold your{" "}
+          {vaultOption.stakeAsset} tokens.
         </PrimaryText>
       </BaseModalContentColumn>
       <BaseModalContentColumn marginTop={16}>
@@ -68,7 +61,7 @@ const ApproveModalInfo = ({
         </BaseModalContentColumn>
       )}
     </>
-  )
-}
+  );
+};
 
-export default ApproveModalInfo
+export default ApproveModalInfo;
