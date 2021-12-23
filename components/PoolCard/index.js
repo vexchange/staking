@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { Tooltip } from "react-tippy";
 import { formatAmount, formatBigNumber } from "../../utils";
 import { useAppContext } from "../../context/app";
@@ -52,11 +52,9 @@ export default function PoolCard({
     )
       return;
 
-    return BigNumber.from(
-      stakingPoolData.poolData.tvlInUsd
+    return stakingPoolData.poolData.tvlInUsd
         .mul(stakingPoolData.userData.currentStake)
-        .div(stakingPoolData.poolData.poolSize)
-    );
+        .div(stakingPoolData.poolData.poolSize);
   }, [stakingPoolData]);
 
   const ongoingTransaction = useMemo(() => {
