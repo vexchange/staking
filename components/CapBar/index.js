@@ -34,18 +34,16 @@ const CapBar = ({
 
   return (
     <div className="w-100">
-      {account ? (
-        <div className="d-flex flex-row justify-content-between">
-          <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
-            {copies.current}
-          </SecondaryText>
-          <Title fontSize={statsConfig.fontSize} lineHeight={20}>
-            {stakingPoolData.poolData.loading
-              ? "Loading..."
-              : formatCurrency(current)}
-          </Title>
-        </div>
-      ) : null}
+      <div className="d-flex flex-row justify-content-between">
+        <SecondaryText color={colors.text} fontSize={labelConfig.fontSize}>
+          {copies.current}
+        </SecondaryText>
+        <Title fontSize={statsConfig.fontSize} lineHeight={20}>
+          {stakingPoolData.poolData.loading
+            ? "Loading..."
+            : formatCurrency(current)}
+        </Title>
+      </div>
 
       <div
         className={`d-flex flex-row position-relative ${barConfig.extraClassNames}`}
