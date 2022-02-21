@@ -1,8 +1,6 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
-import { Fetcher, Token, Route } from "vexchange-sdk";
 import {
-  CHAIN_ID,
   STAKING_POOLS,
   VECHAIN_NODE,
   WVET_ADDRESS,
@@ -51,7 +49,8 @@ const useOverview = () => {
 
       setUsdPerVet(usdPerVet);
       setPoolInfo(poolInfo);
-    } catch (error) {
+    }
+    catch (error) {
       console.error("Error fetching", error);
     }
   };

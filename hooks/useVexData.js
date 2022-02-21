@@ -29,7 +29,8 @@ const useVexData = () => {
       const usdPerVex = usdPerVet / vexPerVet;
 
       setUsdPerVex(usdPerVex);
-    } catch (error) {
+    }
+    catch (error) {
       console.error("Error fetching", error);
     }
   };
