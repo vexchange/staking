@@ -1,8 +1,6 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
-import { Fetcher, Token, Route } from "vexchange-sdk";
 import {
-  CHAIN_ID,
   VECHAIN_NODE,
   VEX_ADDRESS,
   WVET_ADDRESS,

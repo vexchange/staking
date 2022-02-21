@@ -13,12 +13,16 @@ import { useAppContext } from "../context/app";
 import useOverview from "../hooks/useOverview";
 import { defaultStakingPoolData, defaultUserData } from "../models/staking";
 import { parseUnits } from "@ethersproject/units";
+import useTokenPriceData from "./useTokenPriceData";
+
 
 const useFetchStakingPoolsData = () => {
   const { poolInfo } = useOverview();
   const { connex, connexStakingPools, account, tick } = useAppContext();
   const [poolData, setPoolData] = useState(defaultStakingPoolData);
   const [userData, setUserData] = useState(defaultUserData);
+  const { price } = useTokenPriceData();
+
   const totalSupplyABI = find(IERC20, { name: "totalSupply" });
   const balanceOfABI = find(IERC20, { name: "balanceOf" });
   const allowanceABI = find(IERC20, { name: "allowance" });
@@ -129,7 +133,8 @@ const useFetchStakingPoolsData = () => {
             .mul(numberOfLPTokensStaked)
             .div(totalLPTokenSupply)
             .div(parseUnits("1", "ether"));
-        } catch (err) {
+        }
+        catch (err) {
           console.log(stakingPool.id, err);
         }
 

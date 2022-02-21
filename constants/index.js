@@ -73,3 +73,6 @@ export const STAKING_POOLS = [
     },
   },
 ];
+
+export const API_BASE_URL = "https://api.vexchange.io/";
+export const API_ENDPOINT = "v1/tokens";
