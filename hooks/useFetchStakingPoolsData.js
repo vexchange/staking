@@ -106,15 +106,14 @@ const useFetchStakingPoolsData = () => {
           const totalLPTokenSupply = BigNumber.from(res.decoded[0]);
           const numberOfLPTokensStaked = poolSize;
 
-          // This is calculated in the amount of other tokens (not VET) instead of usd
-          // Need to refactor to programatically get the reward token...
-          const tokenTvl = poolInfo[stakingPool.id].pair.tokenAmounts[0].toFixed(18);
+          const token0UsdPrice = parseUnits(tokenPrices[poolInfo[stakingPool.id].pair.tokenAmounts[0].token.address].usdPrice.toFixed(18), 18);
+          const token1UsdPrice = parseUnits(tokenPrices[poolInfo[stakingPool.id].pair.tokenAmounts[1].token.address].usdPrice.toFixed(18), 18);
 
-          // Multiply by two to get the pool TVL as this is a 50-50 pool
-          const tvlInToken = parseUnits(tokenTvl, 18).mul(2);
+          const token0Amount = parseUnits(poolInfo[stakingPool.id].pair.reserve0.toExact());
+          const token1Amount = parseUnits(poolInfo[stakingPool.id].pair.reserve1.toExact());
 
-          tvlInUsd = tvlInToken
-              .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
+          tvlInUsd = token0Amount.mul(token0UsdPrice)
+              .add(token1Amount.mul(token1UsdPrice))
               // Takes into account that not all LP tokens are staked
               .mul(numberOfLPTokensStaked)
               .div(totalLPTokenSupply)
@@ -122,6 +121,8 @@ const useFetchStakingPoolsData = () => {
 
           const rewardDataABI = find(MultiRewards, { name: "rewardData" });
           method = connexStakingPools[stakingPool.id].rewardsContract.method(rewardDataABI);
+
+          // reduce the different token rewards into a single APR number
           totalApr = await stakingPool.rewardTokens.reduce(async (accumulated, curr) => {
             const tokenAddress = curr.address[VECHAIN_NODE];
             // convert to BigNumber for calculation, complains of underflow otherwise
