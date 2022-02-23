@@ -6,7 +6,6 @@ const useTokenPriceData = () =>
 {
     const [tokenPrices, setTokenPrices] = useState(null);
 
-
     const fetchPriceData = async () =>
     {
         const result = await axios.get(API_BASE_URL+API_ENDPOINT);

@@ -21,7 +21,7 @@ const useFetchStakingPoolsData = () => {
   const { connex, connexStakingPools, account, tick } = useAppContext();
   const [poolData, setPoolData] = useState(defaultStakingPoolData);
   const [userData, setUserData] = useState(defaultUserData);
-  const { price } = useTokenPriceData();
+  const { tokenPrices } = useTokenPriceData();
 
   const totalSupplyABI = find(IERC20, { name: "totalSupply" });
   const balanceOfABI = find(IERC20, { name: "balanceOf" });
@@ -85,54 +85,59 @@ const useFetchStakingPoolsData = () => {
     return await Promise.all(
       STAKING_POOLS.map(async (stakingPool) => {
         let poolSize = BigNumber.from(0);
-        let apr = BigNumber.from(0);
+        let totalApr = BigNumber.from(0);
         let tvlInUsd = BigNumber.from(0);
         try {
           // Pool size
           const {
             decoded: { 0: poolBalanceOf },
           } = await stakingPoolsFunctions[stakingPool.id].getBalanceOf.call();
-          poolSize = BigNumber.from(poolBalanceOf)
-          const rewardDataABI = find(MultiRewards, { name: "rewardData" });
-          let method =
-            connexStakingPools[stakingPool.id].rewardsContract.method(
-              rewardDataABI
-            );
-          let res = await method.call(
-            stakingPool.rewardTokens[0].address[VECHAIN_NODE]
-          );
-          const rewardRate = ethers.BigNumber.from(res.decoded.rewardRate);
+          poolSize = BigNumber.from(poolBalanceOf);
+
+          // placeholder for function call return values
+          let method;
+          let res;
+
           const totalSupplyABI = find(IERC20, { name: "totalSupply" });
           method = connex.thor
-            .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
-            .method(totalSupplyABI);
+              .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
+              .method(totalSupplyABI);
           res = await method.call();
           const totalLPTokenSupply = BigNumber.from(res.decoded[0]);
           const numberOfLPTokensStaked = poolSize;
 
-          // This is calculated in the amount of vex tokens instead of usd
-          const tokenTvl =
-            poolInfo[stakingPool.id].pair.tokenAmounts[0].toFixed(18);
+          // This is calculated in the amount of other tokens (not VET) instead of usd
+          // Need to refactor to programatically get the reward token...
+          const tokenTvl = poolInfo[stakingPool.id].pair.tokenAmounts[0].toFixed(18);
 
           // Multiply by two to get the pool TVL as this is a 50-50 pool
           const tvlInToken = parseUnits(tokenTvl, 18).mul(2);
 
-          apr = rewardRate
-            .mul(NUM_SECONDS_IN_A_YEAR)
-            .mul(parseUnits("1", "ether")) // More units for precision
-            .mul(100) // Convert into percentage
-            // The following two lines take into account
-            // that not all LP tokens are staked on the staking site
-            .mul(totalLPTokenSupply)
-            .div(numberOfLPTokensStaked)
-            // We divide all the rewards by the total reward token TVL
-            .div(tvlInToken);
-
           tvlInUsd = tvlInToken
-            .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
-            .mul(numberOfLPTokensStaked)
-            .div(totalLPTokenSupply)
-            .div(parseUnits("1", "ether"));
+              .mul(parseUnits(poolInfo[stakingPool.id].usdPerToken.toString()))
+              // Takes into account that not all LP tokens are staked
+              .mul(numberOfLPTokensStaked)
+              .div(totalLPTokenSupply)
+              .div(parseUnits("1", "ether"));
+
+          const rewardDataABI = find(MultiRewards, { name: "rewardData" });
+          method = connexStakingPools[stakingPool.id].rewardsContract.method(rewardDataABI);
+          totalApr = await stakingPool.rewardTokens.reduce(async (accumulated, curr) => {
+            const tokenAddress = curr.address[VECHAIN_NODE];
+            // convert to BigNumber for calculation, complains of underflow otherwise
+            const tokenUsdPrice = parseUnits(tokenPrices[tokenAddress].usdPrice.toFixed(18), 18);
+
+            res = await method.call(curr.address[VECHAIN_NODE]);
+            const rewardRate = BigNumber.from(res.decoded.rewardRate);
+
+            const tokenApr = rewardRate
+                              .mul(tokenUsdPrice)
+                              .mul(NUM_SECONDS_IN_A_YEAR)
+                              .mul(100) // convert into percentage
+                              .div(tvlInUsd)
+
+            return accumulated.add(tokenApr);
+          }, ethers.constants.Zero);
         }
         catch (err) {
           console.log(stakingPool.id, err);
@@ -142,7 +147,7 @@ const useFetchStakingPoolsData = () => {
           poolId: stakingPool.id,
           vault: stakingPool.stakeAsset,
           poolSize,
-          apr,
+          apr: totalApr,
           tvlInUsd,
         };
       })
@@ -219,11 +224,12 @@ const useFetchStakingPoolsData = () => {
       connex &&
       connexStakingPools &&
       poolInfo &&
-      stakingPoolsFunctions.length > 0
+      stakingPoolsFunctions.length > 0 &&
+      tokenPrices
     ) {
       getStakingPoolsData();
     }
-  }, [connex, tick, connexStakingPools, poolInfo]);
+  }, [connex, tick, connexStakingPools, poolInfo, tokenPrices]);
 
   useEffect(() => {
     const getAccountData = async () => {
