@@ -16,7 +16,6 @@
     "@vechain/connex": "^2.0.5",
     "axios": "^0.26.0",
     "bootstrap": "5.1.3",
-    "coingecko-api": "^1.0.10",
     "currency.js": "^2.0.4",
     "ethers": "^5.5.1",
     "lodash": "^4.17.21",

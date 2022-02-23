@@ -1,8 +1,8 @@
 import { BigNumber, utils } from "ethers";
-import { useMemo } from "react";
+import {useEffect, useMemo} from "react";
 import { Subtitle, Title, PrimaryText } from "../../design";
 import useFetchStakingPoolsData from "../../hooks/useFetchStakingPoolsData";
-import useVexData from "../../hooks/useVexData";
+import useTokenPriceData from "../../hooks/useTokenPriceData";
 import { formatAmount, formatCurrency } from "../../utils";
 import { ExternalIcon } from "../Icons";
 import {
@@ -15,9 +15,10 @@ import {
   OverviewTag,
   UnderlineLink,
 } from "./styled";
+import {VECHAIN_NODE, VEX_ADDRESS} from "../../constants";
 
 export default function Overview() {
-  const { usdPerVex } = useVexData();
+  const { tokenPrices } = useTokenPriceData();
   const { poolData } = useFetchStakingPoolsData();
   const calculateTotalTvlUsd = useMemo(() => {
     let total = BigNumber.from(0);
@@ -62,7 +63,7 @@ export default function Overview() {
         <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
           <Title>
-            {usdPerVex === 0 ? "Loading..." : formatCurrency(usdPerVex)}
+            {tokenPrices === null ? "Loading..." : formatCurrency(tokenPrices[VEX_ADDRESS[VECHAIN_NODE]].usdPrice)}
           </Title>
         </OverviewKPI>
         <OverviewKPI>

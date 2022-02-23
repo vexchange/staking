@@ -113,11 +113,11 @@ const useFetchStakingPoolsData = () => {
           const token1Amount = parseUnits(poolInfo[stakingPool.id].pair.reserve1.toExact());
 
           tvlInUsd = token0Amount.mul(token0UsdPrice)
-              .add(token1Amount.mul(token1UsdPrice))
-              // Takes into account that not all LP tokens are staked
-              .mul(numberOfLPTokensStaked)
-              .div(totalLPTokenSupply)
-              .div(parseUnits("1", "ether"));
+                      .add(token1Amount.mul(token1UsdPrice))
+                      // Takes into account that not all LP tokens are staked
+                      .mul(numberOfLPTokensStaked)
+                      .div(totalLPTokenSupply)
+                      .div(parseUnits("1", "ether"));
 
           const rewardDataABI = find(MultiRewards, { name: "rewardData" });
           method = connexStakingPools[stakingPool.id].rewardsContract.method(rewardDataABI);
@@ -137,7 +137,8 @@ const useFetchStakingPoolsData = () => {
                               .mul(100) // convert into percentage
                               .div(tvlInUsd)
 
-            return accumulated.add(tokenApr);
+            // need to await as this function given to reduce is async and therefore returns a promise
+            return (await accumulated).add(tokenApr);
           }, ethers.constants.Zero);
         }
         catch (err) {
@@ -166,26 +167,20 @@ const useFetchStakingPoolsData = () => {
         ].getAccountBalanceOf.call(account);
 
         let claimableRewardTokens = [];
-        await Promise.all(
-          stakingPool.rewardTokens.map(async (rewardToken) => {
-            return new Promise(async (resolve) => {
-              // Claimable token
-              const {
-                decoded: { 0: earned },
-              } = await stakingPoolsFunctions[stakingPool.id].getEarned.call(
-                account,
-                rewardToken.address[VECHAIN_NODE]
-              );
+        stakingPool.rewardTokens.map(async (rewardToken) => {
+          // Claimable token
+          const {
+            decoded: { 0: earned },
+          } = await stakingPoolsFunctions[stakingPool.id].getEarned.call(
+            account,
+            rewardToken.address[VECHAIN_NODE]
+          );
 
-              claimableRewardTokens = [
-                ...claimableRewardTokens,
-                { [rewardToken.name]: BigNumber.from(earned) },
-              ];
-
-              resolve();
-            });
-          })
-        );
+          claimableRewardTokens = [
+            ...claimableRewardTokens,
+            { [rewardToken.name]: BigNumber.from(earned) },
+          ];
+        });
 
         // Unstaked balance
         const {
