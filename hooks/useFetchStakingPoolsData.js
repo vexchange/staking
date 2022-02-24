@@ -13,7 +13,7 @@ import { useAppContext } from "../context/app";
 import useOverview from "../hooks/useOverview";
 import { defaultStakingPoolData, defaultUserData } from "../models/staking";
 import { parseUnits } from "@ethersproject/units";
-import useTokenPriceData from "./useTokenPriceData";
+import useTokensInfo from "./useTokensInfo";
 
 
 const useFetchStakingPoolsData = () => {
@@ -21,7 +21,7 @@ const useFetchStakingPoolsData = () => {
   const { connex, connexStakingPools, account, tick } = useAppContext();
   const [poolData, setPoolData] = useState(defaultStakingPoolData);
   const [userData, setUserData] = useState(defaultUserData);
-  const { tokenPrices } = useTokenPriceData();
+  const { tokensInfo } = useTokensInfo();
 
   const totalSupplyABI = find(IERC20, { name: "totalSupply" });
   const balanceOfABI = find(IERC20, { name: "balanceOf" });
@@ -106,9 +106,9 @@ const useFetchStakingPoolsData = () => {
           const totalLPTokenSupply = BigNumber.from(res.decoded[0]);
           const numberOfLPTokensStaked = poolSize;
 
-          const token0UsdPrice = parseUnits(tokenPrices[poolInfo[stakingPool.id].pair.tokenAmounts[0].token.address].usdPrice.toFixed(18), 18);
-          const token1UsdPrice = parseUnits(tokenPrices[poolInfo[stakingPool.id].pair.tokenAmounts[1].token.address].usdPrice.toFixed(18), 18);
-
+          // normalizing everything to 18 decimals for calculation purposes
+          const token0UsdPrice = parseUnits(tokensInfo[poolInfo[stakingPool.id].pair.token0.address].usdPrice.toFixed(18));
+          const token1UsdPrice = parseUnits(tokensInfo[poolInfo[stakingPool.id].pair.token1.address].usdPrice.toFixed(18));
           const token0Amount = parseUnits(poolInfo[stakingPool.id].pair.reserve0.toExact());
           const token1Amount = parseUnits(poolInfo[stakingPool.id].pair.reserve1.toExact());
 
@@ -117,7 +117,7 @@ const useFetchStakingPoolsData = () => {
                       // Takes into account that not all LP tokens are staked
                       .mul(numberOfLPTokensStaked)
                       .div(totalLPTokenSupply)
-                      .div(parseUnits("1", "ether"));
+                      .div(ethers.constants.WeiPerEther);
 
           const rewardDataABI = find(MultiRewards, { name: "rewardData" });
           method = connexStakingPools[stakingPool.id].rewardsContract.method(rewardDataABI);
@@ -126,7 +126,7 @@ const useFetchStakingPoolsData = () => {
           totalApr = await stakingPool.rewardTokens.reduce(async (accumulated, curr) => {
             const tokenAddress = curr.address[VECHAIN_NODE];
             // convert to BigNumber for calculation, complains of underflow otherwise
-            const tokenUsdPrice = parseUnits(tokenPrices[tokenAddress].usdPrice.toFixed(18), 18);
+            const tokenUsdPrice = parseUnits(tokensInfo[tokenAddress].usdPrice.toFixed(18), 18);
 
             res = await method.call(curr.address[VECHAIN_NODE]);
             const rewardRate = BigNumber.from(res.decoded.rewardRate);
@@ -221,11 +221,11 @@ const useFetchStakingPoolsData = () => {
       connexStakingPools &&
       poolInfo &&
       stakingPoolsFunctions.length > 0 &&
-      tokenPrices
+      tokensInfo
     ) {
       getStakingPoolsData();
     }
-  }, [connex, tick, connexStakingPools, poolInfo, tokenPrices]);
+  }, [connex, tick, connexStakingPools, poolInfo, tokensInfo]);
 
   useEffect(() => {
     const getAccountData = async () => {
