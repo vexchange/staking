@@ -58,7 +58,8 @@ export const TransactionsProvider = ({ children }) => {
 
           setTransactionsCounter(counter => counter + 1)
           setTransactions(newArray)
-        } catch (error) {
+        }
+        catch (error) {
           console.warn(error)
         }
       }
