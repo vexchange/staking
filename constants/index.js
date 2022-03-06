@@ -62,6 +62,13 @@ export const STAKING_POOLS = [
           testnet: "0xa9d948658eDFf0273deE1D610F2552b6954f77e8",
         },
       },
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
     ],
     stakingTokenAddress: {
       mainnet: "0xD86bed355d9d6A4c951e96755Dd0c3cf004d6CD0",
