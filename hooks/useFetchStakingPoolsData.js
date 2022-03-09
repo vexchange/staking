@@ -205,6 +205,7 @@ const useFetchStakingPoolsData = () => {
           const previousUserDataState = userData.filter(item => item.poolId === stakingPool.id)[0]
           if (
             previousUserDataState.claimableRewardTokens &&
+            previousUserDataState.claimableRewardTokens.length > 0 &&
             claimableRewardTokens.length !== previousUserDataState.claimableRewardTokens.length
           ) {
             return previousUserDataState
