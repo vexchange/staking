@@ -237,7 +237,7 @@ const useFetchStakingPoolsData = () => {
     ) {
       getStakingPoolsData();
     }
-  }, [connex, tick]);
+  }, [connex, tick, connexStakingPools, poolInfo, tokensInfo]);
 
   useEffect(() => {
     const getAccountData = async () => {
@@ -248,7 +248,7 @@ const useFetchStakingPoolsData = () => {
     if (account) {
       getAccountData();
     }
-  }, [account, connex]);
+  }, [account, connex, tick, connexStakingPools, poolInfo]);
 
   return { poolData, userData };
 };
