@@ -199,6 +199,19 @@ const useFetchStakingPoolsData = () => {
           stakingPool.rewardsAddress[VECHAIN_NODE]
         );
 
+        // depending on the event, claimableRewardTokens doesn't come
+        // in this case we just return the previous state
+        if (!userData.loading) {
+          const previousUserDataState = userData.filter(item => item.poolId === stakingPool.id)[0]
+          if (
+            previousUserDataState.claimableRewardTokens &&
+            previousUserDataState.claimableRewardTokens.length > 0 &&
+            claimableRewardTokens.length !== previousUserDataState.claimableRewardTokens.length
+          ) {
+            return previousUserDataState
+          }
+        }
+
         return {
           poolId: stakingPool.id,
           currentStake: BigNumber.from(accountBalanceOf),
@@ -225,7 +238,7 @@ const useFetchStakingPoolsData = () => {
     ) {
       getStakingPoolsData();
     }
-  }, [connex, tick]);
+  }, [connex, tick, connexStakingPools, poolInfo, tokensInfo]);
 
   useEffect(() => {
     const getAccountData = async () => {
@@ -236,7 +249,7 @@ const useFetchStakingPoolsData = () => {
     if (account) {
       getAccountData();
     }
-  }, [account, connex]);
+  }, [account, connex, tick, connexStakingPools, poolInfo]);
 
   return { poolData, userData };
 };
