@@ -1,4 +1,4 @@
-export const VECHAIN_NODE = process.env.NEXT_PUBLIC_VECHAIN_NETWORK;
+export const VECHAIN_NETWORK = process.env.NEXT_PUBLIC_VECHAIN_NETWORK;
 export const NUM_SECONDS_IN_A_YEAR = parseFloat(31536000);
 export const VEX_ADDRESS = {
   mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
@@ -14,6 +14,10 @@ export const CHAIN_ID = {
   mainnet: 1,
   testnet: 42,
 };
+
+export const VECHAIN_NODES = {
+  mainnet: "https://jp.mainnet-node.vexchange.io/",
+}
 
 /**
  * stakingTokenAddress: Fill in the actual V2Pair token address (eg. VEX-VET)

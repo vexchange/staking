@@ -15,7 +15,7 @@ import {
   OverviewTag,
   UnderlineLink,
 } from "./styled";
-import {VECHAIN_NODE, VEX_ADDRESS} from "../../constants";
+import {VECHAIN_NETWORK, VEX_ADDRESS} from "../../constants";
 
 export default function Overview() {
   const { tokensInfo } = useTokensInfo();
@@ -63,7 +63,7 @@ export default function Overview() {
         <OverviewKPI>
           <OverviewLabel>VEX Price</OverviewLabel>
           <Title>
-            {tokensInfo === null ? "Loading..." : formatCurrency(tokensInfo[VEX_ADDRESS[VECHAIN_NODE]].usdPrice)}
+            {tokensInfo === null ? "Loading..." : formatCurrency(tokensInfo[VEX_ADDRESS[VECHAIN_NETWORK]].usdPrice)}
           </Title>
         </OverviewKPI>
         <OverviewKPI>

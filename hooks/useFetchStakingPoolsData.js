@@ -7,7 +7,7 @@ import MultiRewards from "../constants/abis/MultiRewards.js";
 import {
   NUM_SECONDS_IN_A_YEAR,
   STAKING_POOLS,
-  VECHAIN_NODE,
+  VECHAIN_NETWORK,
 } from "../constants";
 import { useAppContext } from "../context/app";
 import useOverview from "../hooks/useOverview";
@@ -41,42 +41,42 @@ const useFetchStakingPoolsData = () => {
     stakingPoolsFunctions[stakingPool.id] = {
       // Pool size
       getBalanceOf: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(totalSupplyABI),
 
       // Pool Reward For Duration
       getRewardForDuration: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(getRewardForDurationABI),
 
       // Last Time Reward Applicable
       getLastTimeRewardApplicable: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(lastTimeRewardApplicableABI),
 
       // Period Finish
       getPeriodFinish: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(periodFinishABI),
 
       //  Current stake
       getAccountBalanceOf: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(accountBalanceOfABI),
 
       // Unstaked staking token balance
       getUnstakedBalanceOf: connex?.thor
-        .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
+        .account(stakingPool.stakingTokenAddress[VECHAIN_NETWORK])
         .method(balanceOfABI),
 
       // Unstaked staking token approval amount
       getUnstakedAllowanceAmount: connex?.thor
-        .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
+        .account(stakingPool.stakingTokenAddress[VECHAIN_NETWORK])
         .method(allowanceABI),
 
       // Claimable token
       getEarned: connex?.thor
-        .account(stakingPool.rewardsAddress[VECHAIN_NODE])
+        .account(stakingPool.rewardsAddress[VECHAIN_NETWORK])
         .method(earnedABI),
     };
   });
@@ -100,7 +100,7 @@ const useFetchStakingPoolsData = () => {
 
           const totalSupplyABI = find(IERC20, { name: "totalSupply" });
           method = connex.thor
-              .account(stakingPool.stakingTokenAddress[VECHAIN_NODE])
+              .account(stakingPool.stakingTokenAddress[VECHAIN_NETWORK])
               .method(totalSupplyABI);
           res = await method.call();
           const totalLPTokenSupply = BigNumber.from(res.decoded[0]);
@@ -124,11 +124,11 @@ const useFetchStakingPoolsData = () => {
 
           // reduce the different token rewards into a single APR number
           totalApr = await stakingPool.rewardTokens.reduce(async (accumulated, curr) => {
-            const tokenAddress = curr.address[VECHAIN_NODE];
+            const tokenAddress = curr.address[VECHAIN_NETWORK];
             // convert to BigNumber for calculation, complains of underflow otherwise
             const tokenUsdPrice = parseUnits(tokensInfo[tokenAddress].usdPrice.toFixed(18), 18);
 
-            res = await method.call(curr.address[VECHAIN_NODE]);
+            res = await method.call(curr.address[VECHAIN_NETWORK]);
             const rewardRate = BigNumber.from(res.decoded.rewardRate);
 
             const tokenApr = rewardRate
@@ -173,7 +173,7 @@ const useFetchStakingPoolsData = () => {
             decoded: { 0: earned },
           } = await stakingPoolsFunctions[stakingPool.id].getEarned.call(
             account,
-            rewardToken.address[VECHAIN_NODE]
+            rewardToken.address[VECHAIN_NETWORK]
           );
 
           claimableRewardTokens = [
@@ -196,7 +196,7 @@ const useFetchStakingPoolsData = () => {
           stakingPool.id
         ].getUnstakedAllowanceAmount.call(
           account,
-          stakingPool.rewardsAddress[VECHAIN_NODE]
+          stakingPool.rewardsAddress[VECHAIN_NETWORK]
         );
 
         // depending on the event, claimableRewardTokens doesn't come

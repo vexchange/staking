@@ -8,7 +8,7 @@ import {
   HeaderContainer,
   LogoContainer,
 } from "./styled";
-import { VECHAIN_NODE } from "../../constants";
+import { VECHAIN_NETWORK } from "../../constants";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ function Header() {
         </a>
       </LogoContainer>
 
-      {VECHAIN_NODE === "testnet" ? (
+      {VECHAIN_NETWORK === "testnet" ? (
         <div style={{ color: "red" }}>TESTNET</div>
       ) : null}
 
