@@ -3,7 +3,7 @@ import { BigNumber, constants } from 'ethers'
 import { find } from 'lodash'
 
 import { useAppContext } from '../context/app'
-import { VECHAIN_NODE } from '../constants'
+import { VECHAIN_NETWORK } from '../constants'
 import IERC20 from '../constants/abis/IERC20.js'
 
 const useTokenAllowance = (vaultOption) => {
@@ -18,7 +18,7 @@ const useTokenAllowance = (vaultOption) => {
         decoded: {
           0: _allowance,
         },
-      } = await method.call(account, vaultOption.rewardsAddress[VECHAIN_NODE])
+      } = await method.call(account, vaultOption.rewardsAddress[VECHAIN_NETWORK])
       setTokenAllowance(BigNumber.from(_allowance))
     }
   }

@@ -2,7 +2,7 @@ import { utils } from "ethers";
 import currency from "currency.js";
 import {
   CHAIN_ID,
-  VECHAIN_NODE,
+  VECHAIN_NETWORK,
 } from "../constants";
 import { Fetcher, Token, Route } from "vexchange-sdk";
 import numeral from "numeral";
@@ -26,14 +26,14 @@ export const getDefaultSignificantDecimalsFromAssetDecimals = (decimals) => {
 
 export const userAccount = {
   get: (account) => {
-    const savedAccount = localStorage.getItem(`staking-wallet-${VECHAIN_NODE}`);
+    const savedAccount = localStorage.getItem(`staking-wallet-${VECHAIN_NETWORK}`);
     return savedAccount ?? account;
   },
   set: (account) => {
-    localStorage.setItem(`staking-wallet-${VECHAIN_NODE}`, account);
+    localStorage.setItem(`staking-wallet-${VECHAIN_NETWORK}`, account);
   },
   remove: () => {
-    localStorage.removeItem(`staking-wallet-${VECHAIN_NODE}`);
+    localStorage.removeItem(`staking-wallet-${VECHAIN_NETWORK}`);
     window.location.href = "/";
   },
 };

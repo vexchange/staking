@@ -1,6 +1,6 @@
 import { createContext, useRef, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { STAKING_POOLS, VECHAIN_NODE } from "../constants";
+import { STAKING_POOLS, VECHAIN_NETWORK, VECHAIN_NODES } from "../constants";
 import { userAccount } from "../utils";
 
 const AppContext = createContext({});
@@ -23,8 +23,8 @@ export function AppStateProvider({ children }) {
       try {
         const { Connex } = await import("@vechain/connex");
         const _connex = new Connex({
-          node: `https://${VECHAIN_NODE}.veblocks.net/`,
-          network: VECHAIN_NODE === "testnet" ? "test" : "main",
+          node: VECHAIN_NODES[VECHAIN_NETWORK],
+          network: VECHAIN_NETWORK === "testnet" ? "test" : "main",
         });
         const _ticker = _connex.thor.ticker();
         setConnex(_connex);
@@ -37,10 +37,10 @@ export function AppStateProvider({ children }) {
         STAKING_POOLS.map((stakingPool) => {
           connexStakingPools[stakingPool.id] = {
             stakingTokenContract: _connex.thor.account(
-              stakingPool.stakingTokenAddress[VECHAIN_NODE]
+              stakingPool.stakingTokenAddress[VECHAIN_NETWORK]
             ),
             rewardsContract: _connex.thor.account(
-              stakingPool.rewardsAddress[VECHAIN_NODE]
+              stakingPool.rewardsAddress[VECHAIN_NETWORK]
             ),
           };
         });
