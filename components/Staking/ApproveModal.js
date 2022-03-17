@@ -15,7 +15,7 @@ import { useAppContext } from '../../context/app'
 import { useTransactions } from '../../context/transactions'
 import Modal from '../Modal'
 import ApproveModalInfo from '../ApproveModalInfo'
-import {VECHAIN_NODE} from "../../constants";
+import {VECHAIN_NETWORK} from "../../constants";
 
 export default function ApproveModal({
   show,
@@ -31,7 +31,7 @@ export default function ApproveModal({
   const handleApprove = useCallback(async () => {
     const approveABI = find(IERC20, { name: 'approve' })
     const method = connexStakingPools[vaultOption.id].stakingTokenContract.method(approveABI)
-    const clause = method.asClause(vaultOption.rewardsAddress[VECHAIN_NODE], constants.MaxUint256)
+    const clause = method.asClause(vaultOption.rewardsAddress[VECHAIN_NETWORK], constants.MaxUint256)
 
     setStep('approve')
 
