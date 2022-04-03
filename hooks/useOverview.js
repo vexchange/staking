@@ -15,13 +15,28 @@ const useOverview = () => {
     try {
       let poolInfo = [];
       STAKING_POOLS.map(async (stakingPool) => {
-        const result = await getMidPrice(
-          connex,
-          stakingPool.stakeAssetUrlPart.split("-")[0],
-          stakingPool.stakeAssetUrlPart.split("-")[1]
-        );
+        let result;
+        if (stakingPool.id == 1)
+        {
+          result = await getMidPrice(
+              connex,
+              stakingPool.stakeAssetUrlPart.split("-")[0],
+              stakingPool.stakeAssetUrlPart.split("-")[1],
+              6, // band-aid fix for the VeUSD 6 decimal places problem, to refactor
+          );
+        }
+        else
+        {
+          result = await getMidPrice(
+              connex,
+              stakingPool.stakeAssetUrlPart.split("-")[0],
+              stakingPool.stakeAssetUrlPart.split("-")[1],
+          );
+        }
 
         const pair = result.pair;
+
+        console.log(pair);
 
         poolInfo[stakingPool.id] = {
           pair,
