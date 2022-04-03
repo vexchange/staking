@@ -36,8 +36,6 @@ const useOverview = () => {
 
         const pair = result.pair;
 
-        console.log(pair);
-
         poolInfo[stakingPool.id] = {
           pair,
         };
