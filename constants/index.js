@@ -27,12 +27,35 @@ export const VECHAIN_NODES = {
 export const STAKING_POOLS = [
   {
     id: 1,
+    description: '<p class="title"> <b>VeUSD-VET</b> </p> <p> Stake VeUSD-VET during the period of the VeUSD trading competition to receive VEX rewards! </p>',
+    stakeAsset: "VeUSD-VET",
+    stakeAssetLogo: "/imgs/tokens/veusd.png",
+    stakeAssetUrlPart: "0x4E17357053dA4b473e2daa2c65C2c949545724b8-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0x25491130A43d43AB0951d66CdF7ddaC7B1dB681b",
+      testnet: "0x25491130A43d43AB0951d66CdF7ddaC7B1dB681b" // dummy value, contract doesn't exist here
+    },
+    rewardsAddress: {
+      mainnet: "0xf1be58861b4bcacd6c7d026ba3de994361f5d3aa",
+      testnet: "0xf1be58861b4bcacd6c7d026ba3de994361f5d3aa" // dummy value, contract doesn't exist here
+    }
+  },
+  {
+    id: 2,
     description:
-      '<p class="title"> <b>vex-vet</b> </p> <p> vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;) </p> <p> you can add your liquidity <a class="link" target="_blank" href="https://vexchange.io/add/0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6" > here </a> </p>',
+      '<p class="title"> <b>VEX-VET</b> </p> <p> vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;) </p>',
     stakeAsset: "VEX-VET",
     stakeAssetLogo: "/imgs/tokens/vex.svg",
-    stakeAssetUrlPart:
-      "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+    stakeAssetUrlPart: "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
     rewardTokens: [
       {
         name: "VEX",
@@ -52,12 +75,11 @@ export const STAKING_POOLS = [
     },
   },
   {
-    id: 2,
+    id: 3,
     description: "-",
     stakeAsset: "WOV-VET",
     stakeAssetLogo: "/imgs/tokens/wov.png",
-    stakeAssetUrlPart:
-      "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    stakeAssetUrlPart: "0x170F4BA8e7ACF6510f55dB26047C83D13498AF8A-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
     rewardTokens: [
       {
         name: "WOV",
