@@ -232,7 +232,7 @@ const useFetchStakingPoolsData = () => {
     if (
       connex &&
       connexStakingPools &&
-      poolInfo &&
+      poolInfo.length > 0 &&
       stakingPoolsFunctions.length > 0 &&
       tokensInfo
     ) {

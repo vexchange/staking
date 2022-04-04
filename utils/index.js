@@ -1,16 +1,13 @@
 import { utils } from "ethers";
 import currency from "currency.js";
 import {
-  CHAIN_ID,
   VECHAIN_NETWORK,
 } from "../constants";
-import { Fetcher, Token, Route } from "vexchange-sdk";
 import numeral from "numeral";
 
 const { commify, formatEther } = utils;
 
 export const getExploreURI = () => "https://explore.vechain.org";
-
 
 export const getDefaultSignificantDecimalsFromAssetDecimals = (decimals) => {
   switch (decimals) {
@@ -67,27 +64,6 @@ export const formatAmount = (n) => {
   if (n >= 1e12) return `${parseFloat((n / 1e12).toFixed(2))}T`;
 
   return "";
-};
-
-export const getMidPrice = async (
-  connex,
-  baseToken,
-  quoteToken,
-  baseDecimal = 18,
-  quoteDecimal = 18,
-  chainId = CHAIN_ID.mainnet
-) => {
-  let base = new Token(chainId, baseToken, baseDecimal);
-  let quote = new Token(chainId, quoteToken, quoteDecimal);
-  let pair = await Fetcher.fetchPairData(quote, base, connex);
-  let route = new Route([pair], base);
-  let base2quote = route.midPrice.toSignificant(6);
-  let quote2base = route.midPrice.invert().toSignificant(6);
-  return {
-    base2quote: parseFloat(base2quote),
-    quote2base: parseFloat(quote2base),
-    pair,
-  };
 };
 
 export const formatCurrency = (n) => numeral(n).format("$0,0.00");

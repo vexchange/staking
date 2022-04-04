@@ -1,9 +1,10 @@
 import { useAppContext } from "../context/app";
 import { useEffect, useState } from "react";
 import {
-  STAKING_POOLS,
+  CHAIN_ID,
+  STAKING_POOLS, VECHAIN_NETWORK,
 } from "../constants";
-import { getMidPrice } from "../utils";
+import { Fetcher } from "vexchange-sdk";
 
 const useOverview = () => {
   const [poolInfo, setPoolInfo] = useState(null);
@@ -15,26 +16,20 @@ const useOverview = () => {
     try {
       let poolInfo = [];
       STAKING_POOLS.map(async (stakingPool) => {
-        let result;
-        if (stakingPool.id == 1)
-        {
-          result = await getMidPrice(
-              connex,
-              stakingPool.stakeAssetUrlPart.split("-")[0],
-              stakingPool.stakeAssetUrlPart.split("-")[1],
-              6, // band-aid fix for the VeUSD 6 decimal places problem, to refactor
-          );
-        }
-        else
-        {
-          result = await getMidPrice(
-              connex,
-              stakingPool.stakeAssetUrlPart.split("-")[0],
-              stakingPool.stakeAssetUrlPart.split("-")[1],
-          );
-        }
 
-        const pair = result.pair;
+        const [token0, token1] = await Promise.all([
+            Fetcher.fetchTokenData(CHAIN_ID[VECHAIN_NETWORK],
+            stakingPool.stakeAssetUrlPart.split("-")[0],
+            connex),
+            Fetcher.fetchTokenData(CHAIN_ID[VECHAIN_NETWORK],
+            stakingPool.stakeAssetUrlPart.split("-")[1],
+            connex)
+        ]);
+
+        const pair = await Fetcher.fetchPairData(
+            token0,
+            token1,
+            connex);
 
         poolInfo[stakingPool.id] = {
           pair,
