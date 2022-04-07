@@ -27,6 +27,37 @@ export const VECHAIN_NODES = {
 export const STAKING_POOLS = [
   {
     id: 1,
+    description: '-',
+    stakeAsset: 'VEED-VET',
+    stakeAssetLogo: "/imgs/tokens/veed.png",
+    stakeAssetUrlPart: "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x67fD63f6068962937EC81AB3Ae3bF9871E524FC9",
+    rewardTokens: [
+      {
+        name: 'VEED',
+        address: {
+          mainnet: "0x67fD63f6068962937EC81AB3Ae3bF9871E524FC9",
+          testnet: "0xa39a4b2e23220305083e2e7c94c8950ef1e641c6",
+        },
+      },
+      {
+        name: 'VEX',
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0x3A778a7B141e846c53D03BA4c1899326eE0D0c14",
+      testnet: "0x3A778a7B141e846c53D03BA4c1899326eE0D0c14" // dummy value, contract doesn't exist here
+    },
+    rewardsAddress: {
+      mainnet: "0x40b0972f74d44da2b7a5a5817f81d38e293bce9f",
+      testnet: "0x40b0972f74d44da2b7a5a5817f81d38e293bce9f" // dummy value, contract doesn't exist here
+    }
+  },
+  {
+    id: 2,
     description: '<p class="title"> <b>VeUSD-VET</b> </p> <p> Stake VeUSD-VET during the period of the VeUSD trading competition to receive VEX rewards! </p>',
     stakeAsset: "VeUSD-VET",
     stakeAssetLogo: "/imgs/tokens/veusd.png",
@@ -50,7 +81,7 @@ export const STAKING_POOLS = [
     }
   },
   {
-    id: 2,
+    id: 3,
     description:
       '<p class="title"> <b>VEX-VET</b> </p> <p> vex-vet is a token that represents VEX deposits in the vex-vet liquidity pool. Stake your vex-vet tokens in the vex-vet staking pool to earn vex rewards ;) </p>',
     stakeAsset: "VEX-VET",
@@ -75,7 +106,7 @@ export const STAKING_POOLS = [
     },
   },
   {
-    id: 3,
+    id: 4,
     description: "-",
     stakeAsset: "WOV-VET",
     stakeAssetLogo: "/imgs/tokens/wov.png",
