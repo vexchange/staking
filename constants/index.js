@@ -33,13 +33,6 @@ export const STAKING_POOLS = [
     stakeAssetUrlPart: "0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997-0x67fD63f6068962937EC81AB3Ae3bF9871E524FC9",
     rewardTokens: [
       {
-        name: 'VEED',
-        address: {
-          mainnet: "0x67fD63f6068962937EC81AB3Ae3bF9871E524FC9",
-          testnet: "0xa39a4b2e23220305083e2e7c94c8950ef1e641c6",
-        },
-      },
-      {
         name: 'VEX',
         address: {
           mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",

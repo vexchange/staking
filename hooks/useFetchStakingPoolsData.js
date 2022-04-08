@@ -15,7 +15,6 @@ import { defaultStakingPoolData, defaultUserData } from "../models/staking";
 import { parseUnits } from "@ethersproject/units";
 import useTokensInfo from "./useTokensInfo";
 
-
 const useFetchStakingPoolsData = () => {
   const { poolInfo } = useOverview();
   const { connex, connexStakingPools, account, tick } = useAppContext();
