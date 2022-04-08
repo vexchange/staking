@@ -29,6 +29,7 @@ import {
   PoolTitle,
   Wrapper,
 } from "./styled";
+import {formatEther} from "ethers/lib/utils";
 
 export default function PoolCard({
   stakingPoolData,
@@ -293,7 +294,7 @@ export default function PoolCard({
             <strong>
               {stakingPoolData.poolData.apr
                 ? `${formatAmount(
-                    formatBigNumber(stakingPoolData.poolData.apr)
+                    formatEther(stakingPoolData.poolData.apr)
                   )}%`
                 : "Loading..."}
             </strong>

@@ -57,9 +57,6 @@ export const truncateAddress = (address) =>
   `${address.slice(0, 6)}...${address.slice(address.length - 4)}`;
 
 export const formatAmount = (n) => {
-  // removing commas from the string in case there is any
-  n = n.replace(/,/g, '')
-
   if (n < 1e4) return `${currency(n, { separator: ",", symbol: "" }).format()}`;
   if (n >= 1e4 && n < 1e6) return `${parseFloat((n / 1e3).toFixed(2))}K`;
   if (n >= 1e6 && n < 1e9) return `${parseFloat((n / 1e6).toFixed(2))}M`;
