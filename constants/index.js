@@ -129,6 +129,126 @@ export const STAKING_POOLS = [
       testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
     },
   },
+  {
+    id: 5,
+    description: "-",
+    stakeAsset: "MVG-VET",
+    stakeAssetLogo: "/imgs/tokens/mvg.png",
+    stakeAssetUrlPart: "0x99763494A7B545f983ee9Fe02a3b5441c7EF1396-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0xa051Db301625039C0d5fd9a1F5A41fc57fE5a709",
+      testnet: "0x0000000000000000000000000000456E65726779",
+    },
+    rewardsAddress: {
+      mainnet: "0x2ec0e35f377d6607516e7dbd8023b145bba3bd3b",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+    },
+  },
+  {
+    id: 6,
+    description: "-",
+    stakeAsset: "SHA-VET",
+    stakeAssetLogo: "/imgs/tokens/sha.png",
+    stakeAssetUrlPart: "0x5db3C8A942333f6468176a870dB36eEf120a34DC-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0xa14A5bDD5AB3D51062c5B243a2e6Fb0949fee2F3",
+      testnet: "0x0000000000000000000000000000456E65726779",
+    },
+    rewardsAddress: {
+      mainnet: "0x03e3dc7c1ce03679d4bf8b942a8e48c0175f26fe",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+    },
+  },
+  {
+    id: 7,
+    description: "-",
+    stakeAsset: "HAI-VET",
+    stakeAssetLogo: "/imgs/tokens/hai.png",
+    stakeAssetUrlPart: "0xaCc280010B2EE0efc770BCE34774376656D8cE14-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0x2a0455D09c38c22824aD5225e0B56bD1D2D31561",
+      testnet: "0x0000000000000000000000000000456E65726779",
+    },
+    rewardsAddress: {
+      mainnet: "0xbf3d59a37d2f7894563b2f4b1e0d6551b64c15d6",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+    },
+  },
+  {
+    id: 8,
+    description: "-",
+    stakeAsset: "OCE-VET",
+    stakeAssetLogo: "/imgs/tokens/oce.png",
+    stakeAssetUrlPart: "0x0CE6661b4ba86a0EA7cA2Bd86a0De87b0B860F14-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0x06475FdE6209A089dD59EBf248480F918c859920",
+      testnet: "0x0000000000000000000000000000456E65726779",
+    },
+    rewardsAddress: {
+      mainnet: "0x451257d6bf44f58861554eabb06d4616219beacb",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+    },
+  },
+  {
+    id: 9,
+    description: "-",
+    stakeAsset: "JUR-VET",
+    stakeAssetLogo: "/imgs/tokens/jur.png",
+    stakeAssetUrlPart: "0x46209D5e5a49C1D403F4Ee3a0A88c3a27E29e58D-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
+    rewardTokens: [
+      {
+        name: "VEX",
+        address: {
+          mainnet: "0x0BD802635eb9cEB3fCBe60470D2857B86841aab6",
+          testnet: "0x7e46cAd7eB7ebc587ac36c30fE705eD77a686f60",
+        },
+      }
+    ],
+    stakingTokenAddress: {
+      mainnet: "0x3310a78e395d7642F3f5F816afA451E991948cE7",
+      testnet: "0x0000000000000000000000000000456E65726779",
+    },
+    rewardsAddress: {
+      mainnet: "0xcc6c8c98d6c47133b0f13f8b234aaeb538437048",
+      testnet: "0x8d6b6445e0428304a330ce2502203cc49654f314",
+    },
+  },
 ];
 
 export const API_BASE_URL = "https://api.vexchange.io/";
