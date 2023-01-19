@@ -16,7 +16,7 @@ export const CHAIN_ID = {
 };
 
 export const VECHAIN_NODES = {
-  mainnet: "https://jp.mainnet-node.vexchange.io/",
+  mainnet: "https://mainnet.veblocks.net/",
 }
 
 /**
