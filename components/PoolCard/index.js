@@ -292,11 +292,16 @@ export default function PoolCard({
           <PoolCardInfoContainer color={color}>
             <span>Est. APR:</span>
             <strong>
-              {stakingPoolData.poolData.apr
-                ? `${formatAmount(
-                    formatEther(stakingPoolData.poolData.apr)
-                  )}%`
-                : "Loading..."}
+              {
+                stakingPoolData.poolData.farmEndTimestamp ? (
+                    Math.floor(Date.now()/1000) > stakingPoolData.poolData.farmEndTimestamp ? "0.00%" : (
+                        stakingPoolData.poolData.apr &&
+                        `${formatAmount(
+                            formatEther(stakingPoolData.poolData.apr)
+                        )}%`
+                    )
+                ) : "Loading..."
+              }
             </strong>
           </PoolCardInfoContainer>
         </div>

@@ -84,6 +84,7 @@ const useFetchStakingPoolsData = () => {
     return await Promise.all(
       STAKING_POOLS.map(async (stakingPool) => {
         let poolSize = BigNumber.from(0);
+        let farmEndTimestamp = 0;
         let totalApr = BigNumber.from(0);
         let tvlInUsd = BigNumber.from(0);
         try {
@@ -92,6 +93,12 @@ const useFetchStakingPoolsData = () => {
             decoded: { 0: poolBalanceOf },
           } = await stakingPoolsFunctions[stakingPool.id].getBalanceOf.call();
           poolSize = BigNumber.from(poolBalanceOf);
+
+          // Reward end timestamp, we only consider the first reward, other rewards are ignored
+          const {
+            decoded: { periodFinish }
+          } = await stakingPoolsFunctions[stakingPool.id].getPeriodFinish.call(stakingPool.rewardTokens[0].address[VECHAIN_NETWORK]);
+          farmEndTimestamp = parseInt(periodFinish)
 
           // placeholder for function call return values
           let method;
@@ -148,6 +155,7 @@ const useFetchStakingPoolsData = () => {
           poolId: stakingPool.id,
           vault: stakingPool.stakeAsset,
           poolSize,
+          farmEndTimestamp,
           apr: totalApr,
           tvlInUsd,
         };
