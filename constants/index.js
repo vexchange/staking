@@ -51,7 +51,7 @@ export const STAKING_POOLS = [
   },
   {
     id: 2,
-    description: '<p class="title"> <b>VeUSD-VET</b> </p> <p> Stake VeUSD-VET during the period of the VeUSD trading competition to receive VEX rewards! </p>',
+    description: '-',
     stakeAsset: "VeUSD-VET",
     stakeAssetLogo: "/imgs/tokens/veusd.png",
     stakeAssetUrlPart: "0x4E17357053dA4b473e2daa2c65C2c949545724b8-0xD8CCDD85abDbF68DFEc95f06c973e87B1b5A9997",
